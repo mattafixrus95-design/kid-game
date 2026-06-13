@@ -24,6 +24,7 @@ export default function App() {
 
   const [screen, setScreen] = useState("menu");
   const [rubric, setRubric] = useState(null);
+  const [exitHint, setExitHint] = useState(false);
 
   // Настройки каждой линейки
   const [settingsByRubric, setSettingsByRubric] = useState(()=>{
@@ -50,8 +51,41 @@ export default function App() {
 
   function handleSelect(id){ setRubric(id); setScreen("settings"); }
 
+  // ---- Кнопка "назад" на телефоне ----
+  useEffect(()=>{
+    window.history.pushState({ app: true }, "");
+    function onPopState(){
+      if(screen!=="menu"){
+        if(screen==="game") goSettings();
+        else goMenu();
+        window.history.pushState({ app: true }, "");
+      } else if(!exitHint){
+        setExitHint(true);
+        window.history.pushState({ app: true }, "");
+        setTimeout(()=>setExitHint(false), 2000);
+      }
+      // второй раз на меню — стейт не пушим, реальный "назад" сработает
+    }
+    window.addEventListener("popstate", onPopState);
+    return ()=>window.removeEventListener("popstate", onPopState);
+  },[screen, exitHint]);
+
   // ---- МЕНЮ ----
-  if(screen==="menu") return <MenuScreen onSelect={handleSelect}/>;
+  if(screen==="menu") return (
+    <>
+      <MenuScreen onSelect={handleSelect}/>
+      {exitHint && (
+        <div style={{
+          position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)",
+          background:"rgba(0,0,0,0.75)", color:"#fff", padding:"10px 20px",
+          borderRadius:999, fontSize:"0.95rem", fontWeight:700, zIndex:1000,
+          whiteSpace:"nowrap",
+        }}>
+          Нажмите «Назад» еще раз, чтобы выйти
+        </div>
+      )}
+    </>
+  );
 
   const config = REGISTRY[rubric];
   const settings = settingsByRubric[rubric];
