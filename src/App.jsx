@@ -45,31 +45,33 @@ export default function App() {
     localStorage.setItem(REGISTRY[id].recordKey, val);
   }
 
-  const goMenu     = ()=>setScreen("menu");
-  const goSettings = ()=>setScreen("settings");
-  const goGame     = ()=>setScreen("game");
+  const goBack = ()=>window.history.back();
+  const goGame = ()=>{ setScreen("game"); window.history.pushState({ screen:"game" }, "", "#game"); };
 
-  function handleSelect(id){ setRubric(id); setScreen("settings"); }
+  function handleSelect(id){
+    setRubric(id);
+    setScreen("settings");
+    window.history.pushState({ screen:"settings" }, "", "#settings");
+  }
 
   // ---- Кнопка "назад" на телефоне ----
   const exitHintRef = useRef(false);
   useEffect(()=>{
-    window.history.pushState({ app: true }, "");
+    window.history.pushState({ screen:"menu" }, "", "#menu");
     function onPopState(){
-      window.history.pushState({ app: true }, "");
-      setScreen(prev=>{
-        if(prev==="game") return "settings";
-        if(prev==="settings") return "menu";
-        // prev === "menu"
+      const hash = window.location.hash;
+      if(hash===""){
         if(exitHintRef.current){
-          window.close();
+          // повторное нажатие "назад" — даём приложению закрыться
         } else {
           exitHintRef.current = true;
           setExitHint(true);
+          window.history.pushState({ screen:"menu" }, "", "#menu");
           setTimeout(()=>{ exitHintRef.current=false; setExitHint(false); }, 2000);
         }
-        return prev;
-      });
+        return;
+      }
+      setScreen(hash==="#settings" ? "settings" : hash==="#game" ? "game" : "menu");
     }
     window.addEventListener("popstate", onPopState);
     return ()=>window.removeEventListener("popstate", onPopState);
@@ -102,7 +104,7 @@ export default function App() {
       <SettingsScreen
         emoji={config.emoji} title={config.title}
         sections={config.getSettingsSections(settings, onChangeSettings)}
-        onStart={goGame} onBack={goMenu}
+        onStart={goGame} onBack={goBack}
       />
     );
   }
@@ -116,9 +118,9 @@ export default function App() {
     const gameKey = `${rubric}-${JSON.stringify(settings)}`;
 
     if(settings.level===1)
-      return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goSettings}/>;
+      return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
     if(settings.level===2)
-      return <GameQuizScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goSettings}/>;
+      return <GameQuizScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
   }
 
   return null;
