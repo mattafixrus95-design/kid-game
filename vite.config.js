@@ -1,7 +1,27 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'icon.svg'],
+      manifest: {
+        name: 'Развивашки',
+        short_name: 'Развивашки',
+        description: 'Развивающие игры для малышей',
+        theme_color: '#FF6B35',
+        background_color: '#FFF9F0',
+        display: 'standalone',
+        orientation: 'portrait',
+        icons: [
+          { src: '/icon.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
+          { src: '/icon.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' },
+        ],
+      },
+    }),
+  ],
 })
