@@ -14,6 +14,21 @@ export function speakSequence(intro, main) {
   speak(intro, () => setTimeout(() => speak(main), 300));
 }
 
+// Проиграть звуковой файл, при отсутствии/ошибке — озвучить текст
+export function playSound(file, fallbackText) {
+  if (file) {
+    try {
+      const audio = new Audio(new URL(`../assets/sounds/${file}`, import.meta.url).href);
+      audio.play().catch(() => speak(fallbackText));
+      return;
+    } catch (e) {
+      speak(fallbackText);
+      return;
+    }
+  }
+  speak(fallbackText);
+}
+
 export function playSuccess() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
