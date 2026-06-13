@@ -1,9 +1,11 @@
 import { settingsOptStyle } from "../lib/styles";
+import VersionButton from "./VersionButton";
 
 // Общий шаблон экрана настроек
 export default function SettingsScreen({ emoji, title, sections, onStart, onBack }) {
   return (
     <div className="screen" style={{gap:"clamp(14px,3vw,24px)"}}>
+      <VersionButton/>
       <div style={{width:"100%",maxWidth:500}}>
         <button className="btn btn-back" onClick={onBack}>← Назад</button>
       </div>

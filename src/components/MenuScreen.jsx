@@ -1,5 +1,5 @@
 import { clamp } from "../lib/styles";
-import { APP_VERSION } from "../version";
+import VersionButton from "./VersionButton";
 
 const RUBRICS = [
   { id:"animals",  emoji:"🐶", label:"Животные",  color:"#4ECDC4" },
@@ -12,6 +12,7 @@ const RUBRICS = [
 export default function MenuScreen({ onSelect }) {
   return (
     <div className="screen" style={{justifyContent:"center",gap:clamp(16,24)}}>
+      <VersionButton/>
       <div style={{textAlign:"center",marginBottom:4}}>
         <div style={{fontSize:"clamp(2rem,8vw,3rem)"}}>🌟</div>
         <h1 style={{fontSize:"clamp(1.8rem,7vw,2.6rem)",fontWeight:900,color:"var(--primary)",letterSpacing:"-1px"}}>
@@ -33,7 +34,6 @@ export default function MenuScreen({ onSelect }) {
           </button>
         ))}
       </div>
-      <div style={{color:"var(--muted)",fontSize:"0.8rem",marginTop:8}}>v{APP_VERSION}</div>
     </div>
   );
 }
