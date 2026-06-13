@@ -23,7 +23,7 @@ export default function MenuScreen({ onSelect }) {
           <button key={r.id} className="pressable" onClick={()=>onSelect(r.id)} style={{
             display:"flex",alignItems:"center",gap:18,
             padding:"clamp(16px,3vw,24px) clamp(20px,5vw,32px)",
-            background:"#fff",border:`3px solid ${r.color}`,
+            background:"#fff",color:"var(--text)",border:`3px solid ${r.color}`,
             borderRadius:"var(--radius)",boxShadow:`0 6px 0 ${r.color}55`,
             cursor:"pointer",width:"100%",
           }}>
