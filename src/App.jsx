@@ -2,7 +2,7 @@
 // РАЗВИВАШКИ — App.jsx  v5
 // ============================================================
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GLOBAL_STYLES } from "./lib/styles";
 import { REGISTRY } from "./games/registry";
 import MenuScreen from "./components/MenuScreen";
@@ -52,23 +52,28 @@ export default function App() {
   function handleSelect(id){ setRubric(id); setScreen("settings"); }
 
   // ---- Кнопка "назад" на телефоне ----
+  const exitHintRef = useRef(false);
   useEffect(()=>{
     window.history.pushState({ app: true }, "");
     function onPopState(){
-      if(screen!=="menu"){
-        if(screen==="game") goSettings();
-        else goMenu();
-        window.history.pushState({ app: true }, "");
-      } else if(!exitHint){
-        setExitHint(true);
-        window.history.pushState({ app: true }, "");
-        setTimeout(()=>setExitHint(false), 2000);
-      }
-      // второй раз на меню — стейт не пушим, реальный "назад" сработает
+      window.history.pushState({ app: true }, "");
+      setScreen(prev=>{
+        if(prev==="game") return "settings";
+        if(prev==="settings") return "menu";
+        // prev === "menu"
+        if(exitHintRef.current){
+          window.close();
+        } else {
+          exitHintRef.current = true;
+          setExitHint(true);
+          setTimeout(()=>{ exitHintRef.current=false; setExitHint(false); }, 2000);
+        }
+        return prev;
+      });
     }
     window.addEventListener("popstate", onPopState);
     return ()=>window.removeEventListener("popstate", onPopState);
-  },[screen, exitHint]);
+  },[]);
 
   // ---- МЕНЮ ----
   if(screen==="menu") return (
