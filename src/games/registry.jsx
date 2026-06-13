@@ -1,5 +1,5 @@
 import { ANIMAL_SETS, playAnimalSound } from "../data/animals";
-import { VEHICLE_SETS } from "../data/vehicles";
+import { VEHICLE_SETS, playVehicleSound } from "../data/vehicles";
 import { COLOR_SETS, isLightColor } from "../data/colors";
 import { SHAPE_SETS } from "../data/shapes";
 import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
@@ -76,6 +76,7 @@ export const REGISTRY = {
     getKey: byName, getName: byName,
     introTextLearn: "Назови машину", titleLearn: "Назови машину",
     renderLearn: item => <VehicleSVG name={item.name} size={Math.min(window.innerWidth*0.7, 240)}/>,
+    onItemClick: item => playVehicleSound(item),
     introTextQuiz: "Выбери правильную машину", titleQuiz: "Выбери правильную машину",
     renderOption: item => (
       <>
@@ -85,6 +86,7 @@ export const REGISTRY = {
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#fff", padding: "6px" }),
     optionsContainerStyle: { gap: "clamp(8px,2vw,14px)", maxWidth: 580 },
+    onSelect: item => playVehicleSound(item),
   },
 
   numbers: {

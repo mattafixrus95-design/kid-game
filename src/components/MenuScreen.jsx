@@ -1,4 +1,5 @@
 import { clamp } from "../lib/styles";
+import { APP_VERSION } from "../version";
 
 const RUBRICS = [
   { id:"animals",  emoji:"🐶", label:"Животные",  color:"#4ECDC4" },
@@ -32,6 +33,7 @@ export default function MenuScreen({ onSelect }) {
           </button>
         ))}
       </div>
+      <div style={{color:"var(--muted)",fontSize:"0.8rem",marginTop:8}}>v{APP_VERSION}</div>
     </div>
   );
 }
