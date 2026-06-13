@@ -7,7 +7,6 @@ const ANIMALS_DOMESTIC = [
   { name: "Коза",    emoji: "🐐", sound: "меее" },
   { name: "Баран",   emoji: "🐑", sound: "беее" },
   { name: "Лошадь",  emoji: "🐴", sound: "и-го-го" },
-  { name: "Осёл",    emoji: "🫏", sound: "иа" },
   { name: "Петух",   emoji: "🐓", sound: "кукареку" },
   { name: "Гусь",    emoji: "🦢", sound: "га-га" },
 ];
