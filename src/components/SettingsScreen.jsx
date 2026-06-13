@@ -9,7 +9,7 @@ export default function SettingsScreen({ emoji, title, sections, onStart, onBack
       </div>
       <div style={{textAlign:"center"}}>
         <div style={{fontSize:"clamp(2rem,7vw,3rem)"}}>{emoji}</div>
-        <h2 style={{fontSize:"clamp(1.5rem,6vw,2rem)",fontWeight:900}}>{title}</h2>
+        <h2 style={{fontSize:"clamp(1.5rem,6vw,2rem)",fontWeight:900,color:"var(--text)"}}>{title}</h2>
       </div>
       {sections.map((sec,i)=>(
         <div key={i} style={{width:"100%",maxWidth:500}}>
