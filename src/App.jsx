@@ -119,7 +119,7 @@ export default function App() {
 
     if(settings.level===1)
       return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
-    if(settings.level===2)
+    if(settings.level===2 || settings.level===3)
       return <GameQuizScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
   }
 
