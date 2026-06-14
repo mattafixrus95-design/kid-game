@@ -6,8 +6,10 @@ import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
 import VehicleSVG from "../assets/VehicleSVG";
 import ShapeSVG from "../assets/ShapeSVG";
 import { cardOptionStyle, answerBorder, optionTransform } from "../lib/styles";
+import { shuffle } from "../lib/random";
 
 const byName = x => x.name;
+const lowerFirst = s => s.charAt(0).toLowerCase() + s.slice(1);
 
 // Общая секция "Уровень обучения", есть у всех игр
 function levelSection(settings, onChangeSettings) {
@@ -20,6 +22,34 @@ function levelSection(settings, onChangeSettings) {
       { id: 2, label: "Уровень 2. Узнавание",  desc: "Выбери правильный ответ" },
     ],
   };
+}
+
+// Как levelSection, но с дополнительным уровнем "Сочетания" (цвет+машина)
+function vehicleLevelSection(settings, onChangeSettings) {
+  return {
+    label: "Уровень обучения", column: true,
+    value: settings.level,
+    onChange: v => onChangeSettings({ ...settings, level: v }),
+    options: [
+      { id: 1, label: "Уровень 1. Повторение", desc: "Повтори за мной" },
+      { id: 2, label: "Уровень 2. Узнавание",  desc: "Выбери правильный ответ" },
+      { id: 3, label: "Уровень 3. Сочетания",  desc: "Цвет и машина" },
+    ],
+  };
+}
+
+// Название сочетания: согласование рода прилагательного-цвета с существительным-машиной
+const comboName = item => `${item.color.forms[item.vehicle.gender]} ${lowerFirst(item.vehicle.name)}`;
+
+// Генерирует все пары {vehicle, color} для набора машин и базовых цветов, в случайном порядке
+function vehicleCombos(set) {
+  const combos = [];
+  for (const vehicle of VEHICLE_SETS[set]) {
+    for (const color of COLOR_SETS.basic) {
+      combos.push({ vehicle, color });
+    }
+  }
+  return shuffle(combos);
 }
 
 export const REGISTRY = {
@@ -59,7 +89,7 @@ export const REGISTRY = {
   vehicles: {
     emoji: "🚗", title: "Машинки", recordKey: "rec_vehicles",
     defaultSettings: { set: "everyday", level: 1 },
-    getDataset: settings => VEHICLE_SETS[settings.set],
+    getDataset: settings => settings.level === 3 ? vehicleCombos(settings.set) : VEHICLE_SETS[settings.set],
     getSettingsSections: (settings, onChangeSettings) => [
       {
         label: "Набор машин", column: false, color: "var(--accent)",
@@ -69,24 +99,30 @@ export const REGISTRY = {
           { id: "everyday",     label: "🚗 Транспорт" },
           { id: "construction", label: "🚜 Стройка" },
           { id: "special",      label: "🚒 Спецтехника" },
+          { id: "all",          label: "🚦 Все" },
         ],
       },
-      levelSection(settings, onChangeSettings),
+      vehicleLevelSection(settings, onChangeSettings),
     ],
-    getKey: byName, getName: byName,
+    getKey: item => item.vehicle ? `${item.vehicle.name}_${item.color.name}` : item.name,
+    getName: item => item.vehicle ? comboName(item) : item.name,
     introTextLearn: "Назови машину", titleLearn: "Назови машину",
     renderLearn: item => <VehicleSVG name={item.name} size={Math.min(window.innerWidth*0.7, 240)}/>,
     onItemClick: item => playVehicleSound(item),
     introTextQuiz: "Выбери правильную машину", titleQuiz: "Выбери правильную машину",
-    renderOption: item => (
-      <>
-        <VehicleSVG name={item.name} size={Math.min(window.innerWidth*0.22, 100)}/>
-        <span style={{ fontSize: "clamp(0.65rem,2vw,0.95rem)", fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.2 }}>{item.name}</span>
-      </>
-    ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#fff", padding: "6px" }),
+    renderOption: item => {
+      const vehicle = item.vehicle || item;
+      const name = item.vehicle ? comboName(item) : item.name;
+      return (
+        <>
+          <VehicleSVG name={vehicle.name} color={item.vehicle ? item.color.css : undefined} size={Math.min(window.innerWidth*0.22, 100)}/>
+          <span style={{ fontSize: "clamp(0.65rem,2vw,0.95rem)", fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.2 }}>{name}</span>
+        </>
+      );
+    },
+    getOptionStyle: (item, state) => cardOptionStyle(item.vehicle ? comboName(item) : item.name, state, { background: "#fff", padding: "6px" }),
     optionsContainerStyle: { gap: "clamp(8px,2vw,14px)", maxWidth: 580 },
-    onSelect: item => playVehicleSound(item),
+    onSelect: item => playVehicleSound(item.vehicle || item),
   },
 
   numbers: {
