@@ -5,7 +5,7 @@ import { SHAPE_SETS } from "../data/shapes";
 import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
 import VehicleSVG from "../assets/VehicleSVG";
 import ShapeSVG from "../assets/ShapeSVG";
-import { cardOptionStyle, answerBorder, optionTransform } from "../lib/styles";
+import { cardOptionStyle, answerBorder, optionTransform, learnSvgSize, LEARN_EMOJI_SIZE, LEARN_CIRCLE_SIZE } from "../lib/styles";
 import { shuffle } from "../lib/random";
 
 const byName = x => x.name;
@@ -82,7 +82,7 @@ export const REGISTRY = {
     ],
     getKey: byName, getName: byName,
     introTextLearn: "Назови животное", titleLearn: "Назови животное",
-    renderLearn: item => <span style={{ fontSize: "clamp(5rem,22vw,9rem)" }}>{item.emoji}</span>,
+    renderLearn: item => <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
     onItemClick: item => playAnimalSound(item),
     introTextQuiz: "Выбери правильное животное", titleQuiz: "Выбери правильное животное",
     renderOption: item => (
@@ -111,7 +111,7 @@ export const REGISTRY = {
     getKey: item => item.vehicle ? `${item.vehicle.name}_${item.color.name}` : item.name,
     getName: item => item.vehicle ? comboName(item) : item.name,
     introTextLearn: "Назови машину", titleLearn: "Назови машину",
-    renderLearn: item => <VehicleSVG name={item.name} size={Math.min(window.innerWidth*0.7, 240)}/>,
+    renderLearn: item => <VehicleSVG name={item.name} size={learnSvgSize(280)}/>,
     onItemClick: item => playVehicleSound(item),
     introTextQuiz: "Выбери правильную машину", titleQuiz: "Выбери правильную машину",
     renderOption: item => {
@@ -132,6 +132,7 @@ export const REGISTRY = {
   numbers: {
     emoji: "🔢", title: "Цифры", recordKey: "rec_numbers",
     defaultSettings: { range: "1-5", level: 1 },
+    optCount: 2,
     getDataset: settings => NUMBER_RANGES[settings.range],
     getLabel: settings => settings.range,
     getSettingsSections: (settings, onChangeSettings) => [
@@ -146,7 +147,7 @@ export const REGISTRY = {
     getKey: n => n, getName: n => NUMBER_WORDS[n],
     introTextLearn: "Назови цифру", titleLearn: "Назови цифру",
     renderLearn: n => (
-      <div style={{ fontSize: "clamp(6rem,32vw,12rem)", fontWeight: 900, color: "var(--primary)", lineHeight: 1, textShadow: "0 6px 0 #E55A2655" }}>{n}</div>
+      <div style={{ fontSize: LEARN_EMOJI_SIZE, fontWeight: 900, color: "var(--primary)", lineHeight: 1, textShadow: "0 6px 0 #E55A2655" }}>{n}</div>
     ),
     introTextQuiz: "Выбери цифру", titleQuiz: "Выбери цифру",
     renderOption: n => n,
@@ -178,7 +179,7 @@ export const REGISTRY = {
     introTextLearn: "Назови цвет", titleLearn: "Назови цвет",
     renderLearn: item => (
       <div style={{
-        width: "clamp(140px,40vw,240px)", height: "clamp(140px,40vw,240px)",
+        width: LEARN_CIRCLE_SIZE, height: LEARN_CIRCLE_SIZE,
         borderRadius: "50%", background: item.css,
         border: isLightColor(item) ? "4px solid #CCC" : "4px solid rgba(0,0,0,0.08)",
         boxShadow: "0 8px 32px rgba(0,0,0,0.18)", transition: "background 0.3s",
@@ -202,15 +203,15 @@ export const REGISTRY = {
     getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор фигур", settings, onChangeSettings, [
-        { id: "simple",    label: "Простые",   desc: "4 фигуры" },
-        { id: "composite", label: "Составные",desc: "6 фигур" },
-        { id: "complex",   label: "Сложные",   desc: "6 фигур" },
+        { id: "simple",     label: "Простые",   desc: "4 фигуры" },
+        { id: "composite",  label: "Составные", desc: "8 фигур" },
+        { id: "volumetric", label: "Объёмные",  desc: "4 фигуры" },
       ], "var(--accent)", true),
       levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
     introTextLearn: "Назови фигуру", titleLearn: "Назови фигуру",
-    renderLearn: item => <ShapeSVG name={item.name} size={Math.min(window.innerWidth*0.55, 200)}/>,
+    renderLearn: item => <ShapeSVG name={item.name} size={learnSvgSize(280)}/>,
     introTextQuiz: "Выбери правильную фигуру", titleQuiz: "Выбери правильную фигуру",
     renderOption: item => (
       <>
@@ -218,7 +219,7 @@ export const REGISTRY = {
         <span style={{ fontSize: "clamp(0.85rem,2.6vw,1.15rem)", fontWeight: 700, color: "var(--text)", textAlign: "center" }}>{item.name}</span>
       </>
     ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#EEF9F9", boxShadow: "0 6px 0 rgba(0,0,0,0.10)" }),
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#FFF1E8", boxShadow: "0 6px 0 rgba(0,0,0,0.10)" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
   },
 };

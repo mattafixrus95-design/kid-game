@@ -6,20 +6,20 @@ import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
-const OPT_COUNT = 3;
+const OPT_COUNT = 4;
 
-function generateQuestion(items, getKey, excludeKey = null) {
+function generateQuestion(items, getKey, excludeKey = null, optCount = OPT_COUNT) {
   const correct = excludeKey != null ? randomItemExceptKey(items, getKey, excludeKey) : randomItem(items);
-  const cnt = Math.min(OPT_COUNT, items.length);
+  const cnt = Math.min(optCount, items.length);
   const pool = shuffle(items.filter(x => getKey(x) !== getKey(correct)));
   return { correct, options: shuffle([correct, ...pool.slice(0, cnt-1)]) };
 }
 
 // Универсальный экран уровня "Узнавание" — отличия игр задаются конфигом из registry
 export default function GameQuizScreen({ config, items, label, record, onUpdateRecord, onBack }) {
-  const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, onSelect } = config;
+  const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, onSelect, optCount } = config;
 
-  const [question, setQuestion] = useState(()=>generateQuestion(items, getKey));
+  const [question, setQuestion] = useState(()=>generateQuestion(items, getKey, null, optCount));
   const [answerState, setAnswerState] = useState(null);
   const [chosen, setChosen] = useState(null);
   const [score, setScore] = useState(0);
@@ -36,7 +36,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
       playSuccess(); setAnswerState("correct");
       const ns = score+1, nst = streak+1; setScore(ns); setStreak(nst);
       if (ns > record) onUpdateRecord(ns);
-      setTimeout(()=>{ setAnswerState(null); setChosen(null); setQuestion(generateQuestion(items, getKey, getKey(question.correct))); },700);
+      setTimeout(()=>{ setAnswerState(null); setChosen(null); setQuestion(generateQuestion(items, getKey, getKey(question.correct), optCount)); },700);
     } else {
       playError(); setAnswerState("wrong"); setStreak(0);
       setTimeout(()=>{ setAnswerState(null); setChosen(null); },700);

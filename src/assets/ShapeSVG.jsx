@@ -24,16 +24,19 @@ export default function ShapeSVG({ name, size = 130 }) {
                     </>,
     "Шар":          <>
                       <circle cx="50" cy="50" r="42" fill={c}/>
-                      <ellipse cx="40" cy="36" rx="14" ry="8" fill="rgba(255,255,255,0.3)" transform="rotate(-30,40,36)"/>
+                      <path d="M50,8 A42,42 0 0 1 50,92 Z" fill={SHAPE_COLOR+"BB"}/>
+                      <ellipse cx="50" cy="76" rx="30" ry="10" fill={SHAPE_COLOR+"77"}/>
                     </>,
     "Конус":        <>
-                      <polygon points="50,6 90,88 10,88" fill={c}/>
-                      <ellipse cx="50" cy="88" rx="40" ry="10" fill={SHAPE_COLOR+"99"}/>
+                      <polygon points="50,6 90,88 50,88" fill={SHAPE_COLOR+"BB"}/>
+                      <polygon points="50,6 10,88 50,88" fill={c}/>
+                      <ellipse cx="50" cy="88" rx="40" ry="10" fill={SHAPE_COLOR+"77"}/>
                     </>,
     "Цилиндр":      <>
-                      <rect x="16" y="30" width="68" height="56" fill={c}/>
-                      <ellipse cx="50" cy="30" rx="34" ry="10" fill={SHAPE_COLOR+"CC"}/>
-                      <ellipse cx="50" cy="86" rx="34" ry="10" fill={SHAPE_COLOR+"88"}/>
+                      <rect x="16" y="30" width="34" height="56" fill={c}/>
+                      <rect x="50" y="30" width="34" height="56" fill={SHAPE_COLOR+"BB"}/>
+                      <ellipse cx="50" cy="30" rx="34" ry="10" fill={SHAPE_COLOR+"DD"}/>
+                      <ellipse cx="50" cy="86" rx="34" ry="10" fill={SHAPE_COLOR+"77"}/>
                     </>,
   };
   return (
