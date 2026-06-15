@@ -28,7 +28,6 @@ export const VEHICLE_SETS = {
   everyday:     VEHICLES_EVERYDAY,
   construction: VEHICLES_CONSTRUCTION,
   special:      VEHICLES_SPECIAL,
-  all:          [...VEHICLES_EVERYDAY, ...VEHICLES_CONSTRUCTION, ...VEHICLES_SPECIAL],
 };
 
 // Озвучить звук машины: реальная запись, либо имитация через SpeechSynthesis

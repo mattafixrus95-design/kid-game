@@ -10,6 +10,20 @@ import SettingsScreen from "./components/SettingsScreen";
 import GameLearnScreen from "./games/GameLearnScreen";
 import GameQuizScreen from "./games/GameQuizScreen";
 
+// Состояние экрана, сохранённое перед обновлением приложения (см. VersionButton)
+const RESTORE = (() => {
+  try {
+    const raw = sessionStorage.getItem("kg_restore");
+    if (raw) {
+      sessionStorage.removeItem("kg_restore");
+      return JSON.parse(raw);
+    }
+  } catch {
+    // ignore malformed sessionStorage value
+  }
+  return null;
+})();
+
 export default function App() {
   useEffect(()=>{
     const style=document.createElement("style");
@@ -22,15 +36,15 @@ export default function App() {
     return ()=>{ document.head.removeChild(style); document.head.removeChild(link); };
   },[]);
 
-  const [screen, setScreen] = useState("menu");
-  const [rubric, setRubric] = useState(null);
+  const [screen, setScreen] = useState(RESTORE?.screen || "menu");
+  const [rubric, setRubric] = useState(RESTORE?.rubric ?? null);
   const [exitHint, setExitHint] = useState(false);
 
   // Настройки каждой линейки
   const [settingsByRubric, setSettingsByRubric] = useState(()=>{
     const init = {};
     for (const id in REGISTRY) init[id] = REGISTRY[id].defaultSettings;
-    return init;
+    return RESTORE?.settingsByRubric ? { ...init, ...RESTORE.settingsByRubric } : init;
   });
 
   // Рекорды
@@ -58,6 +72,11 @@ export default function App() {
   const exitHintRef = useRef(false);
   useEffect(()=>{
     window.history.pushState({ screen:"menu" }, "", "#menu");
+    if (screen === "settings") {
+      window.history.pushState({ screen:"settings" }, "", "#settings");
+    } else if (screen === "game") {
+      window.history.pushState({ screen:"game" }, "", "#game");
+    }
     function onPopState(){
       const hash = window.location.hash;
       if(hash===""){
@@ -105,6 +124,7 @@ export default function App() {
         emoji={config.emoji} title={config.title}
         sections={config.getSettingsSections(settings, onChangeSettings)}
         onStart={goGame} onBack={goBack}
+        restoreState={{ screen:"settings", rubric, settingsByRubric }}
       />
     );
   }

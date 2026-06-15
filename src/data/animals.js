@@ -20,10 +20,15 @@ const ANIMALS_WILD = [
   { name: "Олень",    emoji: "🦌", sound: "э-э-э" },
   { name: "Слон",     emoji: "🐘", sound: "трууу" },
   { name: "Обезьяна", emoji: "🐒", sound: "у-у-у" },
+  { name: "Лось",     emoji: "🫎", sound: "хорк-хорк" },
+  { name: "Ёж",       emoji: "🦔", sound: "пых-пых" },
+  { name: "Бегемот",  emoji: "🦛", sound: "хрю-хрю" },
+  { name: "Носорог",  emoji: "🦏", sound: "фрр-р-р" },
+  { name: "Жираф",    emoji: "🦒", sound: "и-и-и" },
+  { name: "Белка",    emoji: "🐿️", sound: "цок-цок" },
 ];
-const ANIMALS_ALL = [...ANIMALS_DOMESTIC, ...ANIMALS_WILD];
 
-export const ANIMAL_SETS = { domestic: ANIMALS_DOMESTIC, wild: ANIMALS_WILD, all: ANIMALS_ALL };
+export const ANIMAL_SETS = { domestic: ANIMALS_DOMESTIC, wild: ANIMALS_WILD };
 
 // Озвучить звук животного: реальная запись, либо имитация через SpeechSynthesis
 export function playAnimalSound(animal) {
