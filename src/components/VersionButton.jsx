@@ -2,10 +2,13 @@ import { useState } from "react";
 import { APP_VERSION } from "../version";
 
 // Кнопка-шестерёнка: показывает версию приложения и позволяет вручную проверить обновление
-export default function VersionButton() {
+export default function VersionButton({ restoreState }) {
   const [open, setOpen] = useState(false);
 
   async function handleUpdate() {
+    if (restoreState) {
+      sessionStorage.setItem("kg_restore", JSON.stringify(restoreState));
+    }
     if ("serviceWorker" in navigator) {
       const reg = await navigator.serviceWorker.getRegistration();
       if (reg) await reg.update();

@@ -38,15 +38,31 @@ function vehicleLevelSection(settings, onChangeSettings) {
   };
 }
 
+// Секция выбора наборов через чекбоксы (множественный выбор)
+function multiSetSection(label, settings, onChangeSettings, options, color, column = false) {
+  return {
+    label, multi: true, column, color,
+    values: settings.sets,
+    onToggle: id => {
+      const has = settings.sets.includes(id);
+      const next = has ? settings.sets.filter(x => x !== id) : [...settings.sets, id];
+      onChangeSettings({ ...settings, sets: next });
+    },
+    options,
+  };
+}
+
 // Название сочетания: согласование рода прилагательного-цвета с существительным-машиной
 const comboName = item => `${item.color.forms[item.vehicle.gender]} ${lowerFirst(item.vehicle.name)}`;
 
-// Генерирует все пары {vehicle, color} для набора машин и базовых цветов, в случайном порядке
-function vehicleCombos(set) {
+// Генерирует все пары {vehicle, color} для выбранных наборов машин и базовых цветов, в случайном порядке
+function vehicleCombos(sets) {
   const combos = [];
-  for (const vehicle of VEHICLE_SETS[set]) {
-    for (const color of COLOR_SETS.basic) {
-      combos.push({ vehicle, color });
+  for (const setId of sets) {
+    for (const vehicle of VEHICLE_SETS[setId]) {
+      for (const color of COLOR_SETS.basic) {
+        combos.push({ vehicle, color });
+      }
     }
   }
   return shuffle(combos);
@@ -55,19 +71,13 @@ function vehicleCombos(set) {
 export const REGISTRY = {
   animals: {
     emoji: "🐶", title: "Животные", recordKey: "rec_animals",
-    defaultSettings: { set: "domestic", level: 1 },
-    getDataset: settings => ANIMAL_SETS[settings.set],
+    defaultSettings: { sets: ["domestic"], level: 1 },
+    getDataset: settings => settings.sets.flatMap(s => ANIMAL_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
-      {
-        label: "Набор животных", column: false, color: "var(--accent)",
-        value: settings.set,
-        onChange: v => onChangeSettings({ ...settings, set: v }),
-        options: [
-          { id: "domestic", label: "🏠 Домашние" },
-          { id: "wild",     label: "🌿 Дикие" },
-          { id: "all",      label: "🌍 Все" },
-        ],
-      },
+      multiSetSection("Набор животных", settings, onChangeSettings, [
+        { id: "domestic", label: "🏠 Домашние" },
+        { id: "wild",     label: "🌿 Дикие" },
+      ], "var(--accent)"),
       levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
@@ -77,8 +87,8 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильное животное", titleQuiz: "Выбери правильное животное",
     renderOption: item => (
       <>
-        <span style={{ fontSize: "clamp(2rem,9vw,4rem)" }}>{item.emoji}</span>
-        <span style={{ fontSize: "clamp(0.75rem,2.5vw,1.1rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
+        <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
+        <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
       </>
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--accent)" }),
@@ -88,20 +98,14 @@ export const REGISTRY = {
 
   vehicles: {
     emoji: "🚗", title: "Машинки", recordKey: "rec_vehicles",
-    defaultSettings: { set: "everyday", level: 1 },
-    getDataset: settings => settings.level === 3 ? vehicleCombos(settings.set) : VEHICLE_SETS[settings.set],
+    defaultSettings: { sets: ["everyday"], level: 1 },
+    getDataset: settings => settings.level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
-      {
-        label: "Набор машин", column: false, color: "var(--accent)",
-        value: settings.set,
-        onChange: v => onChangeSettings({ ...settings, set: v }),
-        options: [
-          { id: "everyday",     label: "🚗 Транспорт" },
-          { id: "construction", label: "🚜 Стройка" },
-          { id: "special",      label: "🚒 Спецтехника" },
-          { id: "all",          label: "🚦 Все" },
-        ],
-      },
+      multiSetSection("Набор машин", settings, onChangeSettings, [
+        { id: "everyday",     label: "🚗 Транспорт" },
+        { id: "construction", label: "🚜 Стройка" },
+        { id: "special",      label: "🚒 Спецтехника" },
+      ], "var(--accent)"),
       vehicleLevelSection(settings, onChangeSettings),
     ],
     getKey: item => item.vehicle ? `${item.vehicle.name}_${item.color.name}` : item.name,
@@ -115,8 +119,8 @@ export const REGISTRY = {
       const name = item.vehicle ? comboName(item) : item.name;
       return (
         <>
-          <VehicleSVG name={vehicle.name} color={item.vehicle ? item.color.css : undefined} size={Math.min(window.innerWidth*0.22, 100)}/>
-          <span style={{ fontSize: "clamp(0.65rem,2vw,0.95rem)", fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.2 }}>{name}</span>
+          <VehicleSVG name={vehicle.name} color={item.vehicle ? item.color.css : undefined} size={Math.min(window.innerWidth*0.36, 160)}/>
+          <span style={{ fontSize: "clamp(0.8rem,2.6vw,1.15rem)", fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.2 }}>{name}</span>
         </>
       );
     },
@@ -147,10 +151,10 @@ export const REGISTRY = {
     introTextQuiz: "Выбери цифру", titleQuiz: "Выбери цифру",
     renderOption: n => n,
     getOptionStyle: (n, { chosen, answerState }) => ({
-      flex: 1, aspectRatio: "1/1",
+      flex: "1 1 calc(50% - 8px)", minWidth: 120, maxWidth: 260, aspectRatio: "1/1",
       background: chosen === n ? (answerState === "correct" ? "var(--green)" : "var(--red)") : "var(--primary)",
       color: "#fff", border: "none",
-      borderRadius: 24, fontSize: "clamp(2.5rem,12vw,5rem)", fontWeight: 900,
+      borderRadius: 24, fontSize: "clamp(3rem,16vw,6rem)", fontWeight: 900,
       cursor: "pointer", boxShadow: "0 6px 0 rgba(0,0,0,0.15)",
       transform: optionTransform(chosen, n),
       transition: "transform 0.15s,background 0.2s",
@@ -160,19 +164,14 @@ export const REGISTRY = {
 
   colors: {
     emoji: "🎨", title: "Цвета", recordKey: "rec_colors",
-    defaultSettings: { set: "basic", level: 1 },
-    getDataset: settings => COLOR_SETS[settings.set],
+    defaultSettings: { sets: ["basic"], level: 1 },
+    getDataset: settings => settings.sets.flatMap(s => COLOR_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
-      {
-        label: "Количество цветов", column: true, color: "var(--accent)",
-        value: settings.set,
-        onChange: v => onChangeSettings({ ...settings, set: v }),
-        options: [
-          { id: "basic",    label: "Базовые",                  desc: "4 цвета" },
-          { id: "extended", label: "Базовые + Дополнительные", desc: "9 цветов" },
-          { id: "all",      label: "Все цвета",                desc: "13 цветов" },
-        ],
-      },
+      multiSetSection("Наборы цветов", settings, onChangeSettings, [
+        { id: "basic",      label: "Базовые",       desc: "4 цвета" },
+        { id: "additional", label: "Дополнительные",desc: "5 цветов" },
+        { id: "shades",     label: "Оттенки",       desc: "Еще 5 цветов" },
+      ], "var(--accent)", true),
       levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
@@ -188,7 +187,7 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильный цвет", titleQuiz: "Выбери правильный цвет",
     renderOption: () => null,
     getOptionStyle: (item, { chosen }) => ({
-      flex: 1, aspectRatio: "1/1", borderRadius: "50%", background: item.css,
+      flex: "1 1 calc(50% - 14px)", minWidth: 120, maxWidth: 260, aspectRatio: "1/1", borderRadius: "50%", background: item.css,
       border: isLightColor(item) ? "4px solid #CCC" : "4px solid rgba(0,0,0,0.08)",
       cursor: "pointer", boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
       transform: optionTransform(chosen, item.name),
@@ -199,19 +198,14 @@ export const REGISTRY = {
 
   shapes: {
     emoji: "🔷", title: "Фигуры", recordKey: "rec_shapes",
-    defaultSettings: { set: "simple", level: 1 },
-    getDataset: settings => SHAPE_SETS[settings.set],
+    defaultSettings: { sets: ["simple"], level: 1 },
+    getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
-      {
-        label: "Набор фигур", column: true, color: "var(--accent)",
-        value: settings.set,
-        onChange: v => onChangeSettings({ ...settings, set: v }),
-        options: [
-          { id: "simple", label: "Простые",             desc: "4 фигуры" },
-          { id: "medium", label: "Простые + Составные", desc: "10 фигур" },
-          { id: "all",    label: "Все фигуры",          desc: "16 фигур" },
-        ],
-      },
+      multiSetSection("Набор фигур", settings, onChangeSettings, [
+        { id: "simple",    label: "Простые",   desc: "4 фигуры" },
+        { id: "composite", label: "Составные",desc: "6 фигур" },
+        { id: "complex",   label: "Сложные",   desc: "6 фигур" },
+      ], "var(--accent)", true),
       levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
@@ -220,8 +214,8 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильную фигуру", titleQuiz: "Выбери правильную фигуру",
     renderOption: item => (
       <>
-        <ShapeSVG name={item.name} size={Math.min(window.innerWidth*0.2, 90)}/>
-        <span style={{ fontSize: "clamp(0.7rem,2.2vw,1rem)", fontWeight: 700, color: "var(--text)", textAlign: "center" }}>{item.name}</span>
+        <ShapeSVG name={item.name} size={Math.min(window.innerWidth*0.32, 140)}/>
+        <span style={{ fontSize: "clamp(0.85rem,2.6vw,1.15rem)", fontWeight: 700, color: "var(--text)", textAlign: "center" }}>{item.name}</span>
       </>
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#EEF9F9", boxShadow: "0 6px 0 rgba(0,0,0,0.10)" }),

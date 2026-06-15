@@ -42,6 +42,17 @@ export function settingsOptStyle(active, color = "var(--primary)") {
   };
 }
 
+// Кружок-чекбокс в углу карточки настроек (множественный выбор наборов)
+export function checkboxDotStyle(active) {
+  return {
+    position: "absolute", top: 8, right: 8,
+    width: 20, height: 20, borderRadius: "50%",
+    border: "2px solid currentColor",
+    background: active ? "currentColor" : "transparent",
+    transition: "all 0.15s",
+  };
+}
+
 // Рамка карточки-варианта в квизе: подсвечивает правильный/неправильный ответ
 export function answerBorder(chosen, key, answerState) {
   if (chosen !== key) return "3px solid transparent";
@@ -55,7 +66,7 @@ export function optionTransform(chosen, key) {
 // Общий стиль карточки-варианта в квизе (фон + картинка/эмодзи + подпись)
 export function cardOptionStyle(key, { chosen, answerState }, { background, boxShadow="0 6px 0 rgba(0,0,0,0.12)", padding=0 } = {}) {
   return {
-    flex:1, aspectRatio:"1/1", background,
+    flex:"1 1 calc(50% - 8px)", minWidth:120, maxWidth:260, aspectRatio:"1/1", background,
     border: answerBorder(chosen, key, answerState),
     borderRadius:20, display:"flex", flexDirection:"column",
     alignItems:"center", justifyContent:"center", gap:6,
