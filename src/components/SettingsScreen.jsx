@@ -22,14 +22,17 @@ export default function SettingsScreen({ emoji, title, sections, onStart, onBack
           <div style={{display:"flex",flexDirection:sec.column?"column":"row",flexWrap:"wrap",gap:10}}>
             {sec.options.map(opt=>{
               const active = sec.multi ? sec.values.includes(opt.id) : sec.value===opt.id;
+              const color = sec.multi ? "var(--primary)" : (sec.color||"var(--primary)");
               return (
                 <button key={opt.id} onClick={()=>sec.multi ? sec.onToggle(opt.id) : sec.onChange(opt.id)}
                   style={{
-                    ...settingsOptStyle(active, sec.color||"var(--primary)"),
+                    ...settingsOptStyle(active, color),
                     position:"relative",
-                    ...(sec.column?{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:2}:{})
+                    ...(sec.multi
+                      ? {display:"flex",flexDirection:"column",alignItems:"flex-start",gap:2,textAlign:"left",paddingRight:40}
+                      : (sec.column?{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:2}:{}))
                   }}>
-                  {sec.multi && <span style={checkboxDotStyle(active)}/>}
+                  {sec.multi && <span style={checkboxDotStyle(active, color)}>{active?"✓":""}</span>}
                   <span>{opt.label}</span>
                   {opt.desc && <span style={{fontWeight:400,fontSize:"0.9rem",opacity:0.85}}>{opt.desc}</span>}
                 </button>

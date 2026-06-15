@@ -42,16 +42,25 @@ export function settingsOptStyle(active, color = "var(--primary)") {
   };
 }
 
-// Кружок-чекбокс в углу карточки настроек (множественный выбор наборов)
-export function checkboxDotStyle(active) {
+// Кружок-чекбокс справа по центру карточки настроек (множественный выбор наборов)
+export function checkboxDotStyle(active, color = "var(--primary)") {
   return {
-    position: "absolute", top: 8, right: 8,
-    width: 20, height: 20, borderRadius: "50%",
-    border: "2px solid currentColor",
-    background: active ? "currentColor" : "transparent",
+    position: "absolute", top: "50%", right: 12, transform: "translateY(-50%)",
+    width: 24, height: 24, borderRadius: "50%",
+    border: `2px solid ${active ? "#fff" : "#D8D8D8"}`,
+    background: "#fff", color,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    fontSize: "0.85rem", fontWeight: 900, lineHeight: 1, flexShrink: 0,
     transition: "all 0.15s",
   };
 }
+
+// Единый крупный размер объекта на уровне "Повторение"
+export function learnSvgSize(max = 280) {
+  return Math.min(window.innerWidth * 0.75, max);
+}
+export const LEARN_EMOJI_SIZE = "clamp(7rem,38vw,14rem)";
+export const LEARN_CIRCLE_SIZE = "clamp(180px,75vw,280px)";
 
 // Рамка карточки-варианта в квизе: подсвечивает правильный/неправильный ответ
 export function answerBorder(chosen, key, answerState) {

@@ -11,7 +11,14 @@ export default function VersionButton({ restoreState }) {
     }
     if ("serviceWorker" in navigator) {
       const reg = await navigator.serviceWorker.getRegistration();
-      if (reg) await reg.update();
+      if (reg) {
+        await new Promise(resolve => {
+          let done = false;
+          const finish = () => { if (!done) { done = true; resolve(); } };
+          navigator.serviceWorker.addEventListener("controllerchange", finish, { once: true });
+          reg.update().then(() => setTimeout(finish, 1500)).catch(finish);
+        });
+      }
     }
     window.location.reload();
   }

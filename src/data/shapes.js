@@ -8,11 +8,11 @@ export const SHAPE_SETS = {
   composite: [
     { name: "Прямоугольник" }, { name: "Ромб" }, { name: "Трапеция" },
     { name: "Звезда" }, { name: "Полукруг" }, { name: "Сердце" },
-  ],
-  complex: [
     { name: "Пятиугольник" }, { name: "Шестиугольник" },
+  ],
+  volumetric: [
     { name: "Куб" }, { name: "Шар" }, { name: "Конус" }, { name: "Цилиндр" },
   ],
 };
 
-export const SHAPE_COLOR = "#4ECDC4";
+export const SHAPE_COLOR = "#FF6B35";
