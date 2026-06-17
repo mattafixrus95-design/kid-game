@@ -3,6 +3,7 @@ import { VEHICLE_SETS, playVehicleSound } from "../data/vehicles";
 import { COLOR_SETS, isLightColor } from "../data/colors";
 import { SHAPE_SETS } from "../data/shapes";
 import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
+import { FRUIT_SETS, playFruitSound } from "../data/fruits";
 import VehicleSVG from "../assets/VehicleSVG";
 import ShapeSVG from "../assets/ShapeSVG";
 import { cardOptionStyle, answerBorder, optionTransform, learnSvgSize, LEARN_EMOJI_SIZE, LEARN_CIRCLE_SIZE } from "../lib/styles";
@@ -195,6 +196,34 @@ export const REGISTRY = {
       transition: "transform 0.15s",
     }),
     optionsContainerStyle: { gap: "clamp(14px,4vw,28px)", maxWidth: 540 },
+  },
+
+  fruits: {
+    emoji: "🍎", title: "Фрукты", recordKey: "rec_fruits",
+    defaultSettings: { sets: ["simple"], level: 1 },
+    getDataset: settings => settings.sets.flatMap(s => FRUIT_SETS[s]),
+    getSettingsSections: (settings, onChangeSettings) => [
+      multiSetSection("Набор фруктов", settings, onChangeSettings, [
+        { id: "simple", label: "🍎 Простые",         desc: "15 фруктов" },
+        { id: "extra",  label: "🍍 Дополнительные",  desc: "10 фруктов" },
+        { id: "exotic", label: "🥭 Экзотические",    desc: "10 фруктов" },
+      ], "var(--accent)", true),
+      levelSection(settings, onChangeSettings),
+    ],
+    getKey: byName, getName: byName,
+    introTextLearn: "Назови фрукт", titleLearn: "Назови фрукт",
+    renderLearn: item => <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
+    onItemClick: item => playFruitSound(item),
+    introTextQuiz: "Выбери правильный фрукт", titleQuiz: "Выбери правильный фрукт",
+    renderOption: item => (
+      <>
+        <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
+        <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
+      </>
+    ),
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#66BB6A" }),
+    optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
+    onSelect: item => playFruitSound(item),
   },
 
   shapes: {

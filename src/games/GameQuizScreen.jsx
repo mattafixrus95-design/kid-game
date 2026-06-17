@@ -48,7 +48,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
     <div className="screen" style={{justifyContent:"space-between"}}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title={titleQuiz} subtitle={getName(question.correct)}/>
-      <div style={{flex:1,display:"flex",flexWrap:"wrap",alignItems:"center",justifyContent:"center",width:"100%",...optionsContainerStyle}}>
+      <div style={{flex:1,display:"flex",flexWrap:"wrap",alignItems:"center",alignContent:"center",justifyContent:"center",width:"100%",...optionsContainerStyle}}>
         {question.options.map(item=>(
           <button key={getKey(item)} className="pressable" onClick={()=>handleAnswer(item)}
             style={getOptionStyle(item, { chosen, answerState })}>
