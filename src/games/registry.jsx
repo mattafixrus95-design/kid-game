@@ -4,6 +4,7 @@ import { COLOR_SETS, isLightColor } from "../data/colors";
 import { SHAPE_SETS } from "../data/shapes";
 import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
 import { FRUIT_SETS, playFruitSound } from "../data/fruits";
+import { VEGETABLE_SETS, playVegetableSound } from "../data/vegetables";
 import VehicleSVG from "../assets/VehicleSVG";
 import ShapeSVG from "../assets/ShapeSVG";
 import { cardOptionStyle, answerBorder, optionTransform, learnSvgSize, LEARN_EMOJI_SIZE, LEARN_CIRCLE_SIZE } from "../lib/styles";
@@ -224,6 +225,34 @@ export const REGISTRY = {
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#66BB6A" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
     onSelect: item => playFruitSound(item),
+  },
+
+  vegetables: {
+    emoji: "🥕", title: "Овощи", recordKey: "rec_vegetables",
+    defaultSettings: { sets: ["simple"], level: 1 },
+    getDataset: settings => settings.sets.flatMap(s => VEGETABLE_SETS[s]),
+    getSettingsSections: (settings, onChangeSettings) => [
+      multiSetSection("Набор овощей", settings, onChangeSettings, [
+        { id: "simple", label: "🥔 Простые",         desc: "15 овощей" },
+        { id: "extra",  label: "🌽 Дополнительные",  desc: "10 овощей" },
+        { id: "exotic", label: "🌻 Экзотические",    desc: "10 овощей" },
+      ], "var(--accent)", true),
+      levelSection(settings, onChangeSettings),
+    ],
+    getKey: byName, getName: byName,
+    introTextLearn: "Назови овощ", titleLearn: "Назови овощ",
+    renderLearn: item => <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
+    onItemClick: item => playVegetableSound(item),
+    introTextQuiz: "Выбери правильный овощ", titleQuiz: "Выбери правильный овощ",
+    renderOption: item => (
+      <>
+        <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
+        <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
+      </>
+    ),
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#FF8F00" }),
+    optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
+    onSelect: item => playVegetableSound(item),
   },
 
   shapes: {
