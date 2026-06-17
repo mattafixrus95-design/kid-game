@@ -11,13 +11,13 @@ const CONTENT_COLORS = {
   numbers:"#FF6B35",
 };
 
-export default function ContentScreen({ skill, onSelect, onBack, restoreState }) {
+export default function ContentScreen({ skill, onSelect, onBack }) {
   const available = Object.entries(REGISTRY)
     .filter(([,cfg]) => cfg.supportsSkills?.includes(skill));
 
   return (
     <div className="screen" style={{gap:clamp(16,24)}}>
-      <VersionButton restoreState={restoreState}/>
+      <VersionButton/>
       <div style={{width:"100%",maxWidth:500}}>
         <button className="btn btn-back" onClick={onBack}>← Назад</button>
       </div>

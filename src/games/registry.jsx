@@ -47,9 +47,9 @@ export const REGISTRY = {
     getDataset: settings => settings.sets.flatMap(s => ANIMAL_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор животных", settings, onChangeSettings, [
-        { id: "domestic", label: "🏠 Домашние" },
-        { id: "wild",     label: "🌿 Дикие" },
-      ], "var(--accent)"),
+        { id: "domestic", label: "🏠 Домашние", desc: "кошка, собака, корова, лошадь..." },
+        { id: "wild",     label: "🌿 Дикие",    desc: "волк, лиса, медведь, заяц..." },
+      ], "var(--accent)", true),
     ],
     getKey: byName, getName: byName,
     introTextLearn: "Назови животное", titleLearn: "Назови животное",
@@ -74,10 +74,10 @@ export const REGISTRY = {
     getDataset: (settings, level) => level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор машин", settings, onChangeSettings, [
-        { id: "everyday",     label: "🚗 Транспорт" },
-        { id: "construction", label: "🚜 Стройка" },
-        { id: "special",      label: "🚒 Спецтехника" },
-      ], "var(--accent)"),
+        { id: "everyday",     label: "🚗 Транспорт",   desc: "легковые, автобус, грузовик..." },
+        { id: "construction", label: "🚜 Стройка",      desc: "экскаватор, кран, бульдозер..." },
+        { id: "special",      label: "🚒 Спецтехника",  desc: "пожарная, скорая, полиция..." },
+      ], "var(--accent)", true),
     ],
     getKey: item => item.vehicle ? `${item.vehicle.name}_${item.color.name}` : item.name,
     getName: item => item.vehicle ? comboName(item) : item.name,
