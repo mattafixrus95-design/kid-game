@@ -4,8 +4,8 @@ import VersionButton from "./VersionButton";
 export const SKILLS = [
   { id:"vocabulary",   emoji:"📖", label:"Словарный запас", color:"#4ECDC4", desc:"Учим новые слова" },
   { id:"quiz",         emoji:"🎯", label:"Угадывание",       color:"#FF6B35", desc:"Выбери правильный ответ" },
-  { id:"combinations", emoji:"🔗", label:"Словосочетания",   color:"#8E24AA", desc:"Цвет и предмет" },
   { id:"count",        emoji:"🔢", label:"Счёт",             color:"#00ACC1", desc:"Учим цифры" },
+  { id:"combinations", emoji:"🔗", label:"Словосочетания",   color:"#8E24AA", desc:"Цвет и предмет" },
   { id:"memory",       emoji:"🧠", label:"Память",           color:"#aaa",    desc:"Скоро", locked:true },
   { id:"logic",        emoji:"🧩", label:"Логика",           color:"#aaa",    desc:"Скоро", locked:true },
 ];
