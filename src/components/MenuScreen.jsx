@@ -7,6 +7,7 @@ const RUBRICS = [
   { id:"numbers",  emoji:"🔢", label:"Цифры",     color:"#FF6B35" },
   { id:"colors",   emoji:"🎨", label:"Цвета",     color:"#8E24AA" },
   { id:"shapes",   emoji:"🔷", label:"Фигуры",    color:"#00ACC1" },
+  { id:"fruits",   emoji:"🍎", label:"Фрукты",    color:"#66BB6A" },
 ];
 
 export default function MenuScreen({ onSelect }) {
