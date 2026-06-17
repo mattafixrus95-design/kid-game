@@ -5,20 +5,15 @@ import { APP_VERSION } from "../version";
 export default function VersionButton({ restoreState }) {
   const [open, setOpen] = useState(false);
 
-  async function handleUpdate() {
+  function handleUpdate() {
     if (restoreState) {
       sessionStorage.setItem("kg_restore", JSON.stringify(restoreState));
     }
+    // Запускаем обновление SW в фоне, затем сразу перезагружаем с восстановлением состояния
     if ("serviceWorker" in navigator) {
-      const reg = await navigator.serviceWorker.getRegistration();
-      if (reg) {
-        await new Promise(resolve => {
-          let done = false;
-          const finish = () => { if (!done) { done = true; resolve(); } };
-          navigator.serviceWorker.addEventListener("controllerchange", finish, { once: true });
-          reg.update().then(() => setTimeout(finish, 1500)).catch(finish);
-        });
-      }
+      navigator.serviceWorker.getRegistration()
+        .then(reg => reg?.update())
+        .catch(() => {});
     }
     window.location.reload();
   }
