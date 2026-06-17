@@ -2,11 +2,11 @@ import { settingsOptStyle, checkboxDotStyle } from "../lib/styles";
 import VersionButton from "./VersionButton";
 
 // Общий шаблон экрана настроек
-export default function SettingsScreen({ emoji, title, sections, onStart, onBack, restoreState }) {
+export default function SettingsScreen({ emoji, title, sections, onStart, onBack }) {
   const blocked = sections.some(sec => sec.multi && sec.values.length === 0);
   return (
     <div className="screen" style={{gap:"clamp(14px,3vw,24px)"}}>
-      <VersionButton restoreState={restoreState}/>
+      <VersionButton/>
       <div style={{width:"100%",maxWidth:500}}>
         <button className="btn btn-back" onClick={onBack}>← Назад</button>
       </div>

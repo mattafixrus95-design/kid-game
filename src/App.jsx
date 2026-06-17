@@ -117,15 +117,12 @@ export default function App() {
     </>
   );
 
-  const restoreState = { screen: "subsets", skill, rubric, settingsByRubric };
-
   // ---- КОНТЕНТ ----
   if (screen === "content") return (
     <ContentScreen
       skill={skill}
       onSelect={handleSelectContent}
       onBack={goBack}
-      restoreState={restoreState}
     />
   );
 
@@ -140,7 +137,6 @@ export default function App() {
       sections={config.getSettingsSections(settings, onChangeSettings)}
       onStart={() => goTo("game")}
       onBack={goBack}
-      restoreState={restoreState}
     />
   );
 
