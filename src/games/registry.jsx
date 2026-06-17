@@ -3,8 +3,7 @@ import { VEHICLE_SETS, playVehicleSound } from "../data/vehicles";
 import { COLOR_SETS, isLightColor } from "../data/colors";
 import { SHAPE_SETS } from "../data/shapes";
 import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
-import { FRUIT_SETS, playFruitSound } from "../data/fruits";
-import { VEGETABLE_SETS, playVegetableSound } from "../data/vegetables";
+import { FOOD_SETS, playFoodSound } from "../data/food";
 import VehicleSVG from "../assets/VehicleSVG";
 import ShapeSVG from "../assets/ShapeSVG";
 import { cardOptionStyle, answerBorder, optionTransform, learnSvgSize, LEARN_EMOJI_SIZE, LEARN_CIRCLE_SIZE } from "../lib/styles";
@@ -13,34 +12,6 @@ import { shuffle } from "../lib/random";
 const byName = x => x.name;
 const lowerFirst = s => s.charAt(0).toLowerCase() + s.slice(1);
 
-// Общая секция "Уровень обучения", есть у всех игр
-function levelSection(settings, onChangeSettings) {
-  return {
-    label: "Уровень обучения", column: true,
-    value: settings.level,
-    onChange: v => onChangeSettings({ ...settings, level: v }),
-    options: [
-      { id: 1, label: "Уровень 1. Повторение", desc: "Повтори за мной" },
-      { id: 2, label: "Уровень 2. Узнавание",  desc: "Выбери правильный ответ" },
-    ],
-  };
-}
-
-// Как levelSection, но с дополнительным уровнем "Сочетания" (цвет+машина)
-function vehicleLevelSection(settings, onChangeSettings) {
-  return {
-    label: "Уровень обучения", column: true,
-    value: settings.level,
-    onChange: v => onChangeSettings({ ...settings, level: v }),
-    options: [
-      { id: 1, label: "Уровень 1. Повторение", desc: "Повтори за мной" },
-      { id: 2, label: "Уровень 2. Узнавание",  desc: "Выбери правильный ответ" },
-      { id: 3, label: "Уровень 3. Сочетания",  desc: "Цвет и машина" },
-    ],
-  };
-}
-
-// Секция выбора наборов через чекбоксы (множественный выбор)
 function multiSetSection(label, settings, onChangeSettings, options, color, column = false) {
   return {
     label, multi: true, column, color,
@@ -54,10 +25,8 @@ function multiSetSection(label, settings, onChangeSettings, options, color, colu
   };
 }
 
-// Название сочетания: согласование рода прилагательного-цвета с существительным-машиной
 const comboName = item => `${item.color.forms[item.vehicle.gender]} ${lowerFirst(item.vehicle.name)}`;
 
-// Генерирует все пары {vehicle, color} для выбранных наборов машин и базовых цветов, в случайном порядке
 function vehicleCombos(sets) {
   const combos = [];
   for (const setId of sets) {
@@ -73,14 +42,14 @@ function vehicleCombos(sets) {
 export const REGISTRY = {
   animals: {
     emoji: "🐶", title: "Животные", recordKey: "rec_animals",
-    defaultSettings: { sets: ["domestic"], level: 1 },
+    supportsSkills: ["vocabulary", "quiz"],
+    defaultSettings: { sets: ["domestic"] },
     getDataset: settings => settings.sets.flatMap(s => ANIMAL_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор животных", settings, onChangeSettings, [
         { id: "domestic", label: "🏠 Домашние" },
         { id: "wild",     label: "🌿 Дикие" },
       ], "var(--accent)"),
-      levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
     introTextLearn: "Назови животное", titleLearn: "Назови животное",
@@ -99,16 +68,16 @@ export const REGISTRY = {
   },
 
   vehicles: {
-    emoji: "🚗", title: "Машинки", recordKey: "rec_vehicles",
-    defaultSettings: { sets: ["everyday"], level: 1 },
-    getDataset: settings => settings.level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
+    emoji: "🚗", title: "Транспорт", recordKey: "rec_vehicles",
+    supportsSkills: ["vocabulary", "quiz", "combinations"],
+    defaultSettings: { sets: ["everyday"] },
+    getDataset: (settings, level) => level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор машин", settings, onChangeSettings, [
         { id: "everyday",     label: "🚗 Транспорт" },
         { id: "construction", label: "🚜 Стройка" },
         { id: "special",      label: "🚒 Спецтехника" },
       ], "var(--accent)"),
-      vehicleLevelSection(settings, onChangeSettings),
     ],
     getKey: item => item.vehicle ? `${item.vehicle.name}_${item.color.name}` : item.name,
     getName: item => item.vehicle ? comboName(item) : item.name,
@@ -131,51 +100,50 @@ export const REGISTRY = {
     onSelect: item => playVehicleSound(item.vehicle || item),
   },
 
-  numbers: {
-    emoji: "🔢", title: "Цифры", recordKey: "rec_numbers",
-    defaultSettings: { range: "1-5", level: 1 },
-    optCount: 2,
-    getDataset: settings => NUMBER_RANGES[settings.range],
-    getLabel: settings => settings.range,
+  food: {
+    emoji: "🍎", title: "Еда", recordKey: "rec_food",
+    supportsSkills: ["vocabulary", "quiz"],
+    defaultSettings: { sets: ["fruits_simple"] },
+    getDataset: settings => settings.sets.flatMap(s => FOOD_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
-      {
-        label: "Диапазон цифр", column: false, color: "var(--accent)",
-        value: settings.range,
-        onChange: v => onChangeSettings({ ...settings, range: v }),
-        options: [{ id: "1-3", label: "1–3" }, { id: "1-5", label: "1–5" }, { id: "1-9", label: "1–9" }],
-      },
-      levelSection(settings, onChangeSettings),
+      multiSetSection("Фрукты", settings, onChangeSettings, [
+        { id: "fruits_simple", label: "🍎 Простые",        desc: "15 фруктов" },
+        { id: "fruits_extra",  label: "🍍 Дополнительные", desc: "10 фруктов" },
+        { id: "fruits_exotic", label: "🥭 Экзотические",   desc: "10 фруктов" },
+      ], "#66BB6A", true),
+      multiSetSection("Овощи", settings, onChangeSettings, [
+        { id: "vegetables_simple", label: "🥔 Простые",        desc: "15 овощей" },
+        { id: "vegetables_extra",  label: "🌽 Дополнительные", desc: "10 овощей" },
+        { id: "vegetables_exotic", label: "🌻 Экзотические",   desc: "10 овощей" },
+      ], "#FF8F00", true),
     ],
-    getKey: n => n, getName: n => NUMBER_WORDS[n],
-    introTextLearn: "Назови цифру", titleLearn: "Назови цифру",
-    renderLearn: n => (
-      <div style={{ fontSize: LEARN_EMOJI_SIZE, fontWeight: 900, color: "var(--primary)", lineHeight: 1, textShadow: "0 6px 0 #E55A2655" }}>{n}</div>
+    getKey: byName, getName: byName,
+    introTextLearn: "Назови", titleLearn: "Назови",
+    renderLearn: item => <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
+    onItemClick: item => playFoodSound(item),
+    introTextQuiz: "Выбери правильный ответ", titleQuiz: "Выбери правильный ответ",
+    renderOption: item => (
+      <>
+        <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
+        <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
+      </>
     ),
-    introTextQuiz: "Выбери цифру", titleQuiz: "Выбери цифру",
-    renderOption: n => n,
-    getOptionStyle: (n, { chosen, answerState }) => ({
-      flex: "1 1 calc(50% - 8px)", minWidth: 120, maxWidth: 260, aspectRatio: "1/1",
-      background: chosen === n ? (answerState === "correct" ? "var(--green)" : "var(--red)") : "var(--primary)",
-      color: "#fff", border: "none",
-      borderRadius: 24, fontSize: "clamp(3rem,16vw,6rem)", fontWeight: 900,
-      cursor: "pointer", boxShadow: "0 6px 0 rgba(0,0,0,0.15)",
-      transform: optionTransform(chosen, n),
-      transition: "transform 0.15s,background 0.2s",
-    }),
-    optionsContainerStyle: { gap: "clamp(12px,3vw,20px)", maxWidth: 500 },
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#66BB6A" }),
+    optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
+    onSelect: item => playFoodSound(item),
   },
 
   colors: {
     emoji: "🎨", title: "Цвета", recordKey: "rec_colors",
-    defaultSettings: { sets: ["basic"], level: 1 },
+    supportsSkills: ["vocabulary", "quiz"],
+    defaultSettings: { sets: ["basic"] },
     getDataset: settings => settings.sets.flatMap(s => COLOR_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Наборы цветов", settings, onChangeSettings, [
-        { id: "basic",      label: "Базовые",       desc: "4 цвета" },
-        { id: "additional", label: "Дополнительные",desc: "5 цветов" },
-        { id: "shades",     label: "Оттенки",       desc: "Еще 5 цветов" },
+        { id: "basic",      label: "Базовые",        desc: "4 цвета" },
+        { id: "additional", label: "Дополнительные", desc: "5 цветов" },
+        { id: "shades",     label: "Оттенки",        desc: "Еще 5 цветов" },
       ], "var(--accent)", true),
-      levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
     introTextLearn: "Назови цвет", titleLearn: "Назови цвет",
@@ -199,65 +167,10 @@ export const REGISTRY = {
     optionsContainerStyle: { gap: "clamp(14px,4vw,28px)", maxWidth: 540 },
   },
 
-  fruits: {
-    emoji: "🍎", title: "Фрукты", recordKey: "rec_fruits",
-    defaultSettings: { sets: ["simple"], level: 1 },
-    getDataset: settings => settings.sets.flatMap(s => FRUIT_SETS[s]),
-    getSettingsSections: (settings, onChangeSettings) => [
-      multiSetSection("Набор фруктов", settings, onChangeSettings, [
-        { id: "simple", label: "🍎 Простые",         desc: "15 фруктов" },
-        { id: "extra",  label: "🍍 Дополнительные",  desc: "10 фруктов" },
-        { id: "exotic", label: "🥭 Экзотические",    desc: "10 фруктов" },
-      ], "var(--accent)", true),
-      levelSection(settings, onChangeSettings),
-    ],
-    getKey: byName, getName: byName,
-    introTextLearn: "Назови фрукт", titleLearn: "Назови фрукт",
-    renderLearn: item => <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
-    onItemClick: item => playFruitSound(item),
-    introTextQuiz: "Выбери правильный фрукт", titleQuiz: "Выбери правильный фрукт",
-    renderOption: item => (
-      <>
-        <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
-        <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
-      </>
-    ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#66BB6A" }),
-    optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
-    onSelect: item => playFruitSound(item),
-  },
-
-  vegetables: {
-    emoji: "🥕", title: "Овощи", recordKey: "rec_vegetables",
-    defaultSettings: { sets: ["simple"], level: 1 },
-    getDataset: settings => settings.sets.flatMap(s => VEGETABLE_SETS[s]),
-    getSettingsSections: (settings, onChangeSettings) => [
-      multiSetSection("Набор овощей", settings, onChangeSettings, [
-        { id: "simple", label: "🥔 Простые",         desc: "15 овощей" },
-        { id: "extra",  label: "🌽 Дополнительные",  desc: "10 овощей" },
-        { id: "exotic", label: "🌻 Экзотические",    desc: "10 овощей" },
-      ], "var(--accent)", true),
-      levelSection(settings, onChangeSettings),
-    ],
-    getKey: byName, getName: byName,
-    introTextLearn: "Назови овощ", titleLearn: "Назови овощ",
-    renderLearn: item => <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
-    onItemClick: item => playVegetableSound(item),
-    introTextQuiz: "Выбери правильный овощ", titleQuiz: "Выбери правильный овощ",
-    renderOption: item => (
-      <>
-        <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
-        <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
-      </>
-    ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#FF8F00" }),
-    optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
-    onSelect: item => playVegetableSound(item),
-  },
-
   shapes: {
     emoji: "🔷", title: "Фигуры", recordKey: "rec_shapes",
-    defaultSettings: { sets: ["simple"], level: 1 },
+    supportsSkills: ["vocabulary", "quiz"],
+    defaultSettings: { sets: ["simple"] },
     getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор фигур", settings, onChangeSettings, [
@@ -265,7 +178,6 @@ export const REGISTRY = {
         { id: "composite",  label: "Составные", desc: "8 фигур" },
         { id: "volumetric", label: "Объёмные",  desc: "4 фигуры" },
       ], "var(--accent)", true),
-      levelSection(settings, onChangeSettings),
     ],
     getKey: byName, getName: byName,
     introTextLearn: "Назови фигуру", titleLearn: "Назови фигуру",
@@ -279,5 +191,39 @@ export const REGISTRY = {
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#FFF1E8", boxShadow: "0 6px 0 rgba(0,0,0,0.10)" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
+  },
+
+  numbers: {
+    emoji: "🔢", title: "Цифры", recordKey: "rec_numbers",
+    supportsSkills: ["vocabulary", "quiz", "count"],
+    defaultSettings: { range: "1-5" },
+    optCount: 2,
+    getDataset: settings => NUMBER_RANGES[settings.range],
+    getLabel: settings => settings.range,
+    getSettingsSections: (settings, onChangeSettings) => [
+      {
+        label: "Диапазон цифр", column: false, color: "var(--accent)",
+        value: settings.range,
+        onChange: v => onChangeSettings({ ...settings, range: v }),
+        options: [{ id: "1-3", label: "1–3" }, { id: "1-5", label: "1–5" }, { id: "1-9", label: "1–9" }],
+      },
+    ],
+    getKey: n => n, getName: n => NUMBER_WORDS[n],
+    introTextLearn: "Назови цифру", titleLearn: "Назови цифру",
+    renderLearn: n => (
+      <div style={{ fontSize: LEARN_EMOJI_SIZE, fontWeight: 900, color: "var(--primary)", lineHeight: 1, textShadow: "0 6px 0 #E55A2655" }}>{n}</div>
+    ),
+    introTextQuiz: "Выбери цифру", titleQuiz: "Выбери цифру",
+    renderOption: n => n,
+    getOptionStyle: (n, { chosen, answerState }) => ({
+      flex: "1 1 calc(50% - 8px)", minWidth: 120, maxWidth: 260, aspectRatio: "1/1",
+      background: chosen === n ? (answerState === "correct" ? "var(--green)" : "var(--red)") : "var(--primary)",
+      color: "#fff", border: "none",
+      borderRadius: 24, fontSize: "clamp(3rem,16vw,6rem)", fontWeight: 900,
+      cursor: "pointer", boxShadow: "0 6px 0 rgba(0,0,0,0.15)",
+      transform: optionTransform(chosen, n),
+      transition: "transform 0.15s,background 0.2s",
+    }),
+    optionsContainerStyle: { gap: "clamp(12px,3vw,20px)", maxWidth: 500 },
   },
 };

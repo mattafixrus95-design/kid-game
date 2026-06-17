@@ -1,16 +1,16 @@
-// ============================================================
-// РАЗВИВАШКИ — App.jsx  v5
-// ============================================================
-
 import { useState, useEffect, useRef } from "react";
 import { GLOBAL_STYLES } from "./lib/styles";
 import { REGISTRY } from "./games/registry";
-import MenuScreen from "./components/MenuScreen";
+import SkillsScreen from "./components/SkillsScreen";
+import ContentScreen from "./components/ContentScreen";
 import SettingsScreen from "./components/SettingsScreen";
 import GameLearnScreen from "./games/GameLearnScreen";
 import GameQuizScreen from "./games/GameQuizScreen";
 
-// Состояние экрана, сохранённое перед обновлением приложения (см. VersionButton)
+// skill → game level
+const SKILL_LEVEL = { vocabulary: 1, quiz: 2, combinations: 3, count: 2 };
+
+// Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
   try {
     const raw = sessionStorage.getItem("kg_restore");
@@ -18,37 +18,35 @@ const RESTORE = (() => {
       sessionStorage.removeItem("kg_restore");
       return JSON.parse(raw);
     }
-  } catch {
-    // ignore malformed sessionStorage value
-  }
+  } catch {}
   return null;
 })();
 
 export default function App() {
-  useEffect(()=>{
-    const style=document.createElement("style");
-    style.textContent=GLOBAL_STYLES;
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = GLOBAL_STYLES;
     document.head.appendChild(style);
-    const link=document.createElement("link");
-    link.rel="stylesheet";
-    link.href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap";
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap";
     document.head.appendChild(link);
-    return ()=>{ document.head.removeChild(style); document.head.removeChild(link); };
-  },[]);
+    return () => { document.head.removeChild(style); document.head.removeChild(link); };
+  }, []);
 
-  const [screen, setScreen] = useState(RESTORE?.screen || "menu");
+  // screen: "skills" | "content" | "subsets" | "game"
+  const [screen, setScreen] = useState(RESTORE?.screen || "skills");
+  const [skill, setSkill]   = useState(RESTORE?.skill ?? null);
   const [rubric, setRubric] = useState(RESTORE?.rubric ?? null);
   const [exitHint, setExitHint] = useState(false);
 
-  // Настройки каждой линейки
-  const [settingsByRubric, setSettingsByRubric] = useState(()=>{
+  const [settingsByRubric, setSettingsByRubric] = useState(() => {
     const init = {};
     for (const id in REGISTRY) init[id] = REGISTRY[id].defaultSettings;
     return RESTORE?.settingsByRubric ? { ...init, ...RESTORE.settingsByRubric } : init;
   });
 
-  // Рекорды
-  const [records, setRecords] = useState(()=>{
+  const [records, setRecords] = useState(() => {
     const init = {};
     for (const id in REGISTRY) init[id] = parseInt(localStorage.getItem(REGISTRY[id].recordKey) || "0", 10);
     return init;
@@ -59,53 +57,59 @@ export default function App() {
     localStorage.setItem(REGISTRY[id].recordKey, val);
   }
 
-  const goBack = ()=>window.history.back();
-  const goGame = ()=>{ setScreen("game"); window.history.pushState({ screen:"game" }, "", "#game"); };
-
-  function handleSelect(id){
-    setRubric(id);
-    setScreen("settings");
-    window.history.pushState({ screen:"settings" }, "", "#settings");
-  }
-
   // ---- Кнопка "назад" на телефоне ----
   const exitHintRef = useRef(false);
-  useEffect(()=>{
-    window.history.pushState({ screen:"menu" }, "", "#menu");
-    if (screen === "settings") {
-      window.history.pushState({ screen:"settings" }, "", "#settings");
-    } else if (screen === "game") {
-      window.history.pushState({ screen:"game" }, "", "#game");
-    }
-    function onPopState(){
+  useEffect(() => {
+    window.history.pushState({ screen: "skills" }, "", "#skills");
+    function onPopState() {
       const hash = window.location.hash;
-      if(hash===""){
-        if(exitHintRef.current){
-          // повторное нажатие "назад" — даём приложению закрыться
+      if (hash === "" || hash === "#skills") {
+        if (exitHintRef.current) {
+          // повторное нажатие — выход
         } else {
           exitHintRef.current = true;
           setExitHint(true);
-          window.history.pushState({ screen:"menu" }, "", "#menu");
-          setTimeout(()=>{ exitHintRef.current=false; setExitHint(false); }, 2000);
+          setScreen("skills");
+          window.history.pushState({ screen: "skills" }, "", "#skills");
+          setTimeout(() => { exitHintRef.current = false; setExitHint(false); }, 2000);
         }
         return;
       }
-      setScreen(hash==="#settings" ? "settings" : hash==="#game" ? "game" : "menu");
+      if (hash === "#content") { setScreen("content"); return; }
+      if (hash === "#subsets") { setScreen("subsets"); return; }
+      if (hash === "#game")    { setScreen("game");    return; }
+      setScreen("skills");
     }
     window.addEventListener("popstate", onPopState);
-    return ()=>window.removeEventListener("popstate", onPopState);
-  },[]);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
-  // ---- МЕНЮ ----
-  if(screen==="menu") return (
+  function goTo(s) {
+    setScreen(s);
+    window.history.pushState({ screen: s }, "", `#${s}`);
+  }
+  const goBack = () => window.history.back();
+
+  function handleSelectSkill(id) {
+    setSkill(id);
+    goTo("content");
+  }
+
+  function handleSelectContent(id) {
+    setRubric(id);
+    goTo("subsets");
+  }
+
+  // ---- НАВЫКИ ----
+  if (screen === "skills") return (
     <>
-      <MenuScreen onSelect={handleSelect}/>
+      <SkillsScreen onSelect={handleSelectSkill}/>
       {exitHint && (
         <div style={{
-          position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)",
-          background:"rgba(0,0,0,0.75)", color:"#fff", padding:"10px 20px",
-          borderRadius:999, fontSize:"0.95rem", fontWeight:700, zIndex:1000,
-          whiteSpace:"nowrap",
+          position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+          background: "rgba(0,0,0,0.75)", color: "#fff", padding: "10px 20px",
+          borderRadius: 999, fontSize: "0.95rem", fontWeight: 700, zIndex: 1000,
+          whiteSpace: "nowrap",
         }}>
           Нажмите «Назад» еще раз, чтобы выйти
         </div>
@@ -113,33 +117,46 @@ export default function App() {
     </>
   );
 
-  const config = REGISTRY[rubric];
+  const restoreState = { screen: "subsets", skill, rubric, settingsByRubric };
+
+  // ---- КОНТЕНТ ----
+  if (screen === "content") return (
+    <ContentScreen
+      skill={skill}
+      onSelect={handleSelectContent}
+      onBack={goBack}
+      restoreState={restoreState}
+    />
+  );
+
+  const config   = REGISTRY[rubric];
   const settings = settingsByRubric[rubric];
   const onChangeSettings = s => setSettingsByRubric(prev => ({ ...prev, [rubric]: s }));
 
-  // ---- НАСТРОЙКИ ----
-  if(screen==="settings"){
-    return (
-      <SettingsScreen
-        emoji={config.emoji} title={config.title}
-        sections={config.getSettingsSections(settings, onChangeSettings)}
-        onStart={goGame} onBack={goBack}
-        restoreState={{ screen:"settings", rubric, settingsByRubric }}
-      />
-    );
-  }
+  // ---- ПОДСЕТЫ ----
+  if (screen === "subsets") return (
+    <SettingsScreen
+      emoji={config.emoji} title={config.title}
+      sections={config.getSettingsSections(settings, onChangeSettings)}
+      onStart={() => goTo("game")}
+      onBack={goBack}
+      restoreState={restoreState}
+    />
+  );
 
   // ---- ИГРА ----
-  if(screen==="game"){
-    const items = config.getDataset(settings);
+  if (screen === "game") {
+    const level = SKILL_LEVEL[skill] ?? 1;
+    const gameSettings = { ...settings, level };
+    const items = config.getDataset(gameSettings, level);
     const label = config.getLabel ? config.getLabel(settings) : undefined;
     const record = records[rubric];
     const onUpdateRecord = v => upRecord(rubric, v);
-    const gameKey = `${rubric}-${JSON.stringify(settings)}`;
+    const gameKey = `${rubric}-${skill}-${JSON.stringify(settings)}`;
 
-    if(settings.level===1)
+    if (level === 1)
       return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
-    if(settings.level===2 || settings.level===3)
+    if (level === 2 || level === 3)
       return <GameQuizScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
   }
 
