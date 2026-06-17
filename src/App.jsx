@@ -63,13 +63,13 @@ export default function App() {
     window.history.pushState({ screen: "skills" }, "", "#skills");
     function onPopState() {
       const hash = window.location.hash;
-      if (hash === "" || hash === "#skills") {
+      if (hash === "#skills") { setScreen("skills"); return; }
+      if (hash === "") {
         if (exitHintRef.current) {
           // повторное нажатие — выход
         } else {
           exitHintRef.current = true;
           setExitHint(true);
-          setScreen("skills");
           window.history.pushState({ screen: "skills" }, "", "#skills");
           setTimeout(() => { exitHintRef.current = false; setExitHint(false); }, 2000);
         }
