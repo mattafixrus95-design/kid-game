@@ -195,7 +195,7 @@ export const REGISTRY = {
 
   numbers: {
     emoji: "🔢", title: "Цифры", recordKey: "rec_numbers",
-    supportsSkills: ["vocabulary", "quiz", "count"],
+    supportsSkills: ["count"],
     defaultSettings: { range: "1-5" },
     optCount: 2,
     getDataset: settings => NUMBER_RANGES[settings.range],
