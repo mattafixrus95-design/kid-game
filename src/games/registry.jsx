@@ -202,10 +202,14 @@ export const REGISTRY = {
     getLabel: settings => settings.range,
     getSettingsSections: (settings, onChangeSettings) => [
       {
-        label: "Диапазон цифр", column: false, color: "var(--accent)",
+        label: "Диапазон цифр", column: true, color: "var(--accent)",
         value: settings.range,
         onChange: v => onChangeSettings({ ...settings, range: v }),
-        options: [{ id: "1-3", label: "1–3" }, { id: "1-5", label: "1–5" }, { id: "1-9", label: "1–9" }],
+        options: [
+          { id: "1-3", label: "🔢 1 – 3", desc: "для самых маленьких" },
+          { id: "1-5", label: "🔢 1 – 5", desc: "базовый набор" },
+          { id: "1-9", label: "🔢 1 – 9", desc: "все однозначные цифры" },
+        ],
       },
     ],
     getKey: n => n, getName: n => NUMBER_WORDS[n],
