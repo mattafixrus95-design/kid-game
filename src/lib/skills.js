@@ -37,8 +37,22 @@ export const MECHANICS = {
   ],
 };
 
-// mechanic id → game level (только для разблокированных механик)
-// mechanic id → game level
-export const MECH_LEVEL = {
-  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9, continue: 10, spot_diff: 11, find_fast: 12, quantity: 13, counting: 14, more_less: 15,
+// mechanic id → game screen id
+export const MECH_SCREEN = {
+  words:       "learn",
+  recognition: "quiz",
+  attributes:  "quiz",
+  categories:  "categories",
+  who_missing: "who_missing",
+  memori:      "memo",
+  sequence:    "sequence",
+  odd_one:     "odd_one",
+  sort_groups: "sort",
+  continue:    "continue",
+  spot_diff:   "spot_diff",
+  find_fast:   "fast_find",
+  quantity:    "quantity",
+  counting:    "counting",
+  more_less:   "compare",
+  numbers:     "quiz",
 };
