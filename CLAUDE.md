@@ -55,20 +55,20 @@ Skills → Mechanics → Content → Subsets → Game
 | `more_less` | math | ⚖️ | Больше / меньше | ✅ активна | `compare` → GameCompareScreen |
 | `numbers` | math | 🔢 | Цифры | ✅ активна | `quiz` → GameQuizScreen |
 
-Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_LEVEL{}`.
+Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_SCREEN{}`.
 
 **Mechanic → screen:** `MECH_SCREEN` в `src/lib/skills.js` — маппинг mechanic id → screen id (строка). App.jsx переключается по screen id. `recognition`, `attributes`, `numbers` → `"quiz"` (GameQuizScreen); остальные — уникальные экраны.
 
 ### Контент (Content)
 
-| id | Emoji | Название | Тип | Механики | Примечание |
-|---|---|---|---|---|---|
-| `animals` | 🐶 | Животные | emoji + аудио | words, recognition | `src/assets/sounds/*.wav` |
-| `vehicles` | 🚗 | Транспорт | SVG | words, recognition, attributes | `VehicleSVG.jsx`, пропс `color` для attributes |
-| `food` | 🍎 | Еда | emoji | words, recognition | Фрукты + Овощи объединены |
-| `colors` | 🎨 | Цвета | CSS background | words, recognition | заливка кругом |
-| `shapes` | 🔷 | Фигуры | SVG | words, recognition | `ShapeSVG.jsx` |
-| `numbers` | 🔢 | Цифры | текст | numbers | только механика Цифры |
+| id | Emoji | Название | Тип | Поддерживаемые механики |
+|---|---|---|---|---|
+| `animals` | 🐶 | Животные | emoji + аудио (`src/assets/sounds/*.wav`) | words, recognition, categories, who_missing, memori, sequence, odd_one, sort_groups, continue, spot_diff, find_fast, quantity, counting, more_less |
+| `vehicles` | 🚗 | Транспорт | SVG (`VehicleSVG.jsx`, пропс `color` для attributes) | words, recognition, attributes, memori, sequence, odd_one |
+| `food` | 🍎 | Еда | emoji (фрукты + овощи объединены) | words, recognition, categories, who_missing, memori, sequence, odd_one, sort_groups, continue, spot_diff, find_fast, quantity, counting, more_less |
+| `colors` | 🎨 | Цвета | CSS background (заливка кругом) | words, recognition |
+| `shapes` | 🔷 | Фигуры | SVG (`ShapeSVG.jsx`) | words, recognition, memori |
+| `numbers` | 🔢 | Цифры | текст | numbers, continue |
 
 Определено в `src/games/registry.jsx` → `REGISTRY{}` с полем `supportsMechanics: string[]`.
 
