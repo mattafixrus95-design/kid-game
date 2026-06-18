@@ -41,7 +41,7 @@ Skills → Mechanics → Content → Subsets → Game
 | `words` | speech | 📖 | Слова | ✅ активна | 1 (GameLearnScreen) |
 | `recognition` | speech | 🎯 | Узнавание | ✅ активна | 2 (GameQuizScreen) |
 | `attributes` | speech | 🔗 | Признаки | ✅ активна | 3 (GameQuizScreen) |
-| `categories` | speech | 📦 | Категории | 🔒 Скоро | — |
+| `categories` | speech | 📦 | Категории | ✅ активна | 4 (GameCategoriesScreen) |
 | `who_missing` | memory | ❓ | Кто пропал | 🔒 Скоро | — |
 | `memori` | memory | 🃏 | Мемори | 🔒 Скоро | — |
 | `sequence` | memory | ➡️ | Последовательность | 🔒 Скоро | — |
