@@ -4,110 +4,136 @@
 
 ## Текущая версия
 
-`src/version.js` — `APP_VERSION = "2.1"`  
+`src/version.js` — `APP_VERSION = "3.0"`  
 При каждом релизе обновлять это значение и указывать номер версии в PR.
 
-Версия увеличивается на 0.1 за каждый релиз: 2.1 → 2.2 → 2.3 → ...  
-После 1.9 идёт 1.10 (не 2.0) — это намеренно, версия не семантическая.
+Версия увеличивается на 0.1 за каждый релиз: 3.0 → 3.1 → 3.2 → ...  
+После 3.9 идёт 3.10 (не 4.0) — версия не семантическая.
 
 **Что такое релиз:** каждый смерженный PR в master = релиз = +0.1 к версии. Без исключений для "мелких" правок. Перед каждым PR обновлять `src/version.js`.
 
-## Архитектура
+## Навигация
 
-### Точки входа
+```
+Skills → Mechanics → Content → Subsets → Game
+```
 
-| Файл | Роль |
-|---|---|
-| `src/App.jsx` | Роутер: menu → settings → game. Хранит `screen`, `rubric`, `settingsByRubric`, `records` |
-| `src/games/registry.jsx` | **Единственный источник правды** для всех категорий |
-| `src/components/MenuScreen.jsx` | Главное меню с **хардкодированным** массивом `RUBRICS` — обновлять вручную |
+Состояние в `App.jsx`: `screen`, `skill`, `mechanic`, `rubric`, `settingsByRubric`, `records`.
 
-### Игровые экраны
+## Структура приложения
 
-- `GameLearnScreen` — Уровень 1 «Повторение»: показывает предмет, тап → TTS
-- `GameQuizScreen` — Уровень 2 «Узнавание» + Уровень 3 «Сочетания»: 4 варианта, выбрать правильный
+### Главное меню (Skills)
 
-### Восстановление состояния после reload
+| id | Emoji | Название |
+|---|---|---|
+| `speech` | 🗣 | Речь |
+| `memory` | 🧠 | Память |
+| `logic` | 🧩 | Логика |
+| `attention` | 🔍 | Внимание |
+| `math` | 🔢 | Математика |
 
-`App.jsx` читает `sessionStorage.getItem("kg_restore")` при инициализации модуля (до рендера).  
-`VersionButton` сохраняет туда `{ screen, rubric, settingsByRubric }` перед `window.location.reload()`.  
-Это позволяет вернуться в настройки после нажатия «Обновить» в шестерёнке.
+Определено в `src/lib/skills.js` → `SKILLS[]`.
 
-## Как добавить новую категорию
+### Механики (Mechanics)
 
-1. Создать `src/data/<name>.js` по образцу `fruits.js`:
-   - Массивы items: `{ name: "Название", emoji: "🍎" }` (или `{ name, soundFile }` для животных с аудио)
+| id | Навык | Emoji | Название | Статус | Уровень игры |
+|---|---|---|---|---|---|
+| `words` | speech | 📖 | Слова | ✅ активна | 1 (GameLearnScreen) |
+| `recognition` | speech | 🎯 | Узнавание | ✅ активна | 2 (GameQuizScreen) |
+| `attributes` | speech | 🔗 | Признаки | ✅ активна | 3 (GameQuizScreen) |
+| `categories` | speech | 📦 | Категории | 🔒 Скоро | — |
+| `who_missing` | memory | ❓ | Кто пропал | 🔒 Скоро | — |
+| `memori` | memory | 🃏 | Мемори | 🔒 Скоро | — |
+| `sequence` | memory | ➡️ | Последовательность | 🔒 Скоро | — |
+| `odd_one` | logic | 🔎 | Найди лишнее | 🔒 Скоро | — |
+| `sort_groups` | logic | 📂 | Разложи по группам | 🔒 Скоро | — |
+| `find_pair` | logic | 🔗 | Найди пару | 🔒 Скоро | — |
+| `continue` | logic | 🔄 | Продолжи ряд | 🔒 Скоро | — |
+| `spot_diff` | attention | 👀 | Найди отличие | 🔒 Скоро | — |
+| `find_fast` | attention | ⚡ | Найди быстро | 🔒 Скоро | — |
+| `quantity` | math | 🔢 | Количество | 🔒 Скоро | — |
+| `counting` | math | 🧮 | Счёт | 🔒 Скоро | — |
+| `more_less` | math | ⚖️ | Больше / меньше | 🔒 Скоро | — |
+| `numbers` | math | 🔢 | Цифры | ✅ активна | 2 (GameQuizScreen) |
+
+Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_LEVEL{}`.
+
+**Mechanic → game level:** `MECH_LEVEL` в `src/lib/skills.js`. Уровень 1 → `GameLearnScreen`, 2/3 → `GameQuizScreen`.
+
+### Контент (Content)
+
+| id | Emoji | Название | Тип | Механики | Примечание |
+|---|---|---|---|---|---|
+| `animals` | 🐶 | Животные | emoji + аудио | words, recognition | `src/assets/sounds/*.wav` |
+| `vehicles` | 🚗 | Транспорт | SVG | words, recognition, attributes | `VehicleSVG.jsx`, пропс `color` для attributes |
+| `food` | 🍎 | Еда | emoji | words, recognition | Фрукты + Овощи объединены |
+| `colors` | 🎨 | Цвета | CSS background | words, recognition | заливка кругом |
+| `shapes` | 🔷 | Фигуры | SVG | words, recognition | `ShapeSVG.jsx` |
+| `numbers` | 🔢 | Цифры | текст | numbers | только механика Цифры |
+
+Определено в `src/games/registry.jsx` → `REGISTRY{}` с полем `supportsMechanics: string[]`.
+
+## Как добавить новую категорию контента
+
+1. Создать `src/data/<name>.js`:
+   - Массивы items: `{ name: "Название", emoji: "🍎" }` (или `{ name, soundFile }` для аудио)
    - Объект `<NAME>_SETS = { simple, extra, ... }`
    - Функция `play<Name>Sound(item) { speak(item.name) }`
 
 2. Добавить запись в `REGISTRY` в `src/games/registry.jsx`:
-   - Обязательные поля: `emoji`, `title`, `recordKey`, `defaultSettings`, `getDataset`, `getSettingsSections`, `getKey`, `getName`, `introTextLearn`, `titleLearn`, `renderLearn`, `introTextQuiz`, `titleQuiz`, `renderOption`, `getOptionStyle`, `optionsContainerStyle`, `onSelect`
-   - Для многорежимных наборов использовать `multiSetSection()`
-   - Цвет фона карточек задаётся в `getOptionStyle` через `cardOptionStyle(name, state, { background: "..." })`
+   - Обязательные поля: `emoji`, `title`, `recordKey`, `supportsMechanics`, `defaultSettings`, `getDataset`, `getSettingsSections`, `getKey`, `getName`, `renderLearn`, `renderOption`, `getOptionStyle`, `optionsContainerStyle`, `onSelect`
+   - Цвет фона карточек: `cardOptionStyle(name, state, { background: "..." })`
+   - Добавить цвет в `CONTENT_COLORS` в `ContentScreen.jsx`
 
-3. Добавить в `RUBRICS` в `src/components/MenuScreen.jsx`:
-   ```js
-   { id: "<name>", emoji: "🥕", label: "Название", color: "#RRGGBB" }
-   ```
+3. Обновить версию в `src/version.js`.
 
-4. Обновить версию в `src/version.js`.
+## Как добавить новую механику
 
-## Типы визуальных ресурсов
+1. Добавить в `MECHANICS[skillId]` в `src/lib/skills.js` (убрать `locked: true`)
+2. Добавить `mechLevel` (1, 2 или 3)
+3. Добавить в `MECH_LEVEL` в `src/lib/skills.js`
+4. Добавить mechanic id в `supportsMechanics` всех подходящих контент-записей в `registry.jsx`
+5. Если нужна новая игровая логика — создать новый GameScreen (не трогать существующие)
 
-| Категория | Тип | Примечание |
-|---|---|---|
-| Животные | emoji + аудиофайл | `src/assets/sounds/*.wav` |
-| Машины | SVG-компонент | `VehicleSVG.jsx`, пропс `color` для уровня 3 |
-| Фигуры | SVG-компонент | `ShapeSVG.jsx` |
-| Цвета | CSS `background` | заливка кругом |
-| Цифры | текст | CSS-рендер числа |
-| Фрукты | emoji | TTS через `speak()` |
-| Овощи | emoji | TTS через `speak()` |
+## Игровые экраны
 
-## Настройки категорий
+- `GameLearnScreen` — уровень 1: листать предметы, тап = озвучка
+- `GameQuizScreen` — уровень 2/3: 4 варианта, угадать по имени
 
-- Множественный выбор наборов: `multiSetSection()` → `settings.sets: string[]`
-- Одиночный выбор (range, уровень): обычная radio-секция → `settings.range` / `settings.level`
-- `defaultSettings` задаётся в `REGISTRY`, инициализируется в `App.jsx`
+**Нельзя менять** `GameLearnScreen` и `GameQuizScreen` — это стабильное ядро.
 
-## Уровни обучения
+## Настройки (Subsets)
 
-- **Уровень 1** — `GameLearnScreen`: листать предметы, тап = озвучка
-- **Уровень 2** — `GameQuizScreen`: 4 варианта, угадать по имени (TTS задаёт вопрос)
-- **Уровень 3** — `GameQuizScreen` с комбо-items (сейчас только машины: цвет + машина)
-
-Для уровня 3 нужно:
-- `gender` у каждого item в данных (`"m"` / `"f"` / `"n"`)
-- `forms: { m, f, n }` у прилагательных (цвета)
-- Отдельная функция генерации комбо (см. `vehicleCombos()`)
-- Отдельная секция уровней с опцией 3 (см. `vehicleLevelSection()`)
+- `multiSetSection()` → `settings.sets: string[]`, чекбоксы с `values`/`onToggle`
+- Обычная radio-секция → `settings.range` / любой string, кнопки с `value`/`onChange`
+- `defaultSettings` задаётся в `REGISTRY`
 
 ## Стили и константы
 
-Все общие константы стилей — в `src/lib/styles.js`:
+`src/lib/styles.js`:
 - `LEARN_EMOJI_SIZE` — размер emoji на экране изучения
-- `learnSvgSize(max)` — размер SVG на экране изучения
+- `learnSvgSize(max)` — размер SVG
 - `cardOptionStyle(key, state, overrides)` — стиль карточки варианта ответа
 - `clamp(min, max)` — CSS clamp для отступов
+- `checkboxDotStyle(active, color)` — кружок-чекбокс в настройках
 - `GLOBAL_STYLES` — глобальные CSS переменные и классы
 
 Шрифт: Nunito (Google Fonts, подключается в `App.jsx`).
 
 ## Аудио
 
-- `src/lib/audio.js` — экспортирует `speak(text)` (Web Speech API TTS)
+- `src/lib/audio.js` → `speak(text)` (Web Speech API TTS)
 - Животные: реальные звуки из `src/assets/sounds/`, фоллбэк на TTS
-- Все остальные категории: только TTS
+- Остальные категории: только TTS
 
 ## PWA / Service Worker
 
-Сборка: `npm run build` → Vite + vite-plugin-pwa генерирует SW автоматически.  
-После деплоя пользователь видит новую версию через кнопку «Обновить» в шестерёнке (⚙️).  
-SW регистрируется в `main.jsx`.
+Сборка: `npm run build` → Vite + vite-plugin-pwa.  
+Обновление: кнопка «Обновить» в шестерёнке (⚙️) → перезагружает на экран навыков.
 
 ## Ветки и деплой
 
 - Основная ветка: `master` (деплой автоматический через CI)
 - Фича-ветки: `claude/<описание>`
-- Коммиты: на русском, формат `v1.X: краткое описание`
+- Коммиты: на русском, формат `v3.X: краткое описание`
 - PR создавать с явным указанием версии в описании

@@ -42,7 +42,7 @@ function vehicleCombos(sets) {
 export const REGISTRY = {
   animals: {
     emoji: "🐶", title: "Животные", recordKey: "rec_animals",
-    supportsSkills: ["vocabulary", "quiz"],
+    supportsMechanics: ["words", "recognition"],
     defaultSettings: { sets: ["domestic"] },
     getDataset: settings => settings.sets.flatMap(s => ANIMAL_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -69,7 +69,7 @@ export const REGISTRY = {
 
   vehicles: {
     emoji: "🚗", title: "Транспорт", recordKey: "rec_vehicles",
-    supportsSkills: ["vocabulary", "quiz", "combinations"],
+    supportsMechanics: ["words", "recognition", "attributes"],
     defaultSettings: { sets: ["everyday"] },
     getDataset: (settings, level) => level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -102,7 +102,7 @@ export const REGISTRY = {
 
   food: {
     emoji: "🍎", title: "Еда", recordKey: "rec_food",
-    supportsSkills: ["vocabulary", "quiz"],
+    supportsMechanics: ["words", "recognition"],
     defaultSettings: { sets: ["fruits_simple"] },
     getDataset: settings => settings.sets.flatMap(s => FOOD_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -135,7 +135,7 @@ export const REGISTRY = {
 
   colors: {
     emoji: "🎨", title: "Цвета", recordKey: "rec_colors",
-    supportsSkills: ["vocabulary", "quiz"],
+    supportsMechanics: ["words", "recognition"],
     defaultSettings: { sets: ["basic"] },
     getDataset: settings => settings.sets.flatMap(s => COLOR_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -169,7 +169,7 @@ export const REGISTRY = {
 
   shapes: {
     emoji: "🔷", title: "Фигуры", recordKey: "rec_shapes",
-    supportsSkills: ["vocabulary", "quiz"],
+    supportsMechanics: ["words", "recognition"],
     defaultSettings: { sets: ["simple"] },
     getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -195,7 +195,7 @@ export const REGISTRY = {
 
   numbers: {
     emoji: "🔢", title: "Цифры", recordKey: "rec_numbers",
-    supportsSkills: ["count"],
+    supportsMechanics: ["numbers"],
     defaultSettings: { range: "1-5" },
     optCount: 2,
     getDataset: settings => NUMBER_RANGES[settings.range],

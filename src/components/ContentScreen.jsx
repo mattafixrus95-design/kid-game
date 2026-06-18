@@ -11,9 +11,9 @@ const CONTENT_COLORS = {
   numbers:"#FF6B35",
 };
 
-export default function ContentScreen({ skill, onSelect, onBack }) {
+export default function ContentScreen({ mechanic, onSelect, onBack }) {
   const available = Object.entries(REGISTRY)
-    .filter(([,cfg]) => cfg.supportsSkills?.includes(skill));
+    .filter(([,cfg]) => cfg.supportsMechanics?.includes(mechanic));
 
   return (
     <div className="screen" style={{gap:clamp(16,24)}}>
