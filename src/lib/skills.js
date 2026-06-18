@@ -23,8 +23,7 @@ export const MECHANICS = {
   logic: [
     { id: "odd_one",     emoji: "🔎", label: "Найди лишнее",      desc: "Что не подходит?",      mechLevel: 8 },
     { id: "sort_groups", emoji: "📂", label: "Разложи по группам",desc: "Сортируй объекты",       mechLevel: 9 },
-    { id: "find_pair",   emoji: "🔗", label: "Найди пару",        desc: "Скоро",                 locked: true },
-    { id: "continue",    emoji: "🔄", label: "Продолжи ряд",      desc: "Скоро",                 locked: true },
+    { id: "continue",    emoji: "🔄", label: "Продолжи ряд",      desc: "Что дальше?",           mechLevel: 10 },
   ],
   attention: [
     { id: "spot_diff",   emoji: "👀", label: "Найди отличие",     desc: "Скоро",                 locked: true },
@@ -41,5 +40,5 @@ export const MECHANICS = {
 // mechanic id → game level (только для разблокированных механик)
 // mechanic id → game level
 export const MECH_LEVEL = {
-  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9,
+  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9, continue: 10,
 };
