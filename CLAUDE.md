@@ -4,7 +4,7 @@
 
 ## Текущая версия
 
-`src/version.js` — `APP_VERSION = "3.7"`  
+`src/version.js` — `APP_VERSION = "3.8"`  
 При каждом релизе обновлять это значение и указывать номер версии в PR.
 
 Версия увеличивается на 0.1 за каждый релиз: 3.0 → 3.1 → 3.2 → ...  
@@ -48,7 +48,7 @@ Skills → Mechanics → Content → Subsets → Game
 | `odd_one` | logic | 🔎 | Найди лишнее | ✅ активна | 8 (GameOddOneScreen) |
 | `sort_groups` | logic | 📂 | Разложи по группам | ✅ активна | 9 (GameStreamSortScreen) |
 | `continue` | logic | 🔄 | Продолжи ряд | ✅ активна | 10 (GameContinueScreen) |
-| `spot_diff` | attention | 👀 | Найди отличие | 🔒 Скоро | — |
+| `spot_diff` | attention | 👀 | Найди отличие | ✅ активна | 11 (GameSpotDiffScreen) |
 | `find_fast` | attention | ⚡ | Найди быстро | 🔒 Скоро | — |
 | `quantity` | math | 🔢 | Количество | 🔒 Скоро | — |
 | `counting` | math | 🧮 | Счёт | 🔒 Скоро | — |
@@ -57,7 +57,7 @@ Skills → Mechanics → Content → Subsets → Game
 
 Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_LEVEL{}`.
 
-**Mechanic → game level:** `MECH_LEVEL` в `src/lib/skills.js`. Уровень 1 → `GameLearnScreen`, 2/3 → `GameQuizScreen`, 4 → `GameCategoriesScreen`, 5 → `GameWhoMissingScreen`, 6 → `GameMemoScreen`, 7 → `GameSequenceScreen`, 8 → `GameOddOneScreen`, 9 → `GameStreamSortScreen`, 10 → `GameContinueScreen`.
+**Mechanic → game level:** `MECH_LEVEL` в `src/lib/skills.js`. Уровень 1 → `GameLearnScreen`, 2/3 → `GameQuizScreen`, 4 → `GameCategoriesScreen`, 5 → `GameWhoMissingScreen`, 6 → `GameMemoScreen`, 7 → `GameSequenceScreen`, 8 → `GameOddOneScreen`, 9 → `GameStreamSortScreen`, 10 → `GameContinueScreen`, 11 → `GameSpotDiffScreen`.
 
 ### Контент (Content)
 
