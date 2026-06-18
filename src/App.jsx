@@ -13,6 +13,7 @@ import GameWhoMissingScreen from "./games/GameWhoMissingScreen";
 import GameMemoScreen from "./games/GameMemoScreen";
 import GameSequenceScreen from "./games/GameSequenceScreen";
 import GameOddOneScreen from "./games/GameOddOneScreen";
+import GameStreamSortScreen from "./games/GameStreamSortScreen";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -156,6 +157,22 @@ export default function App() {
       return <GameSequenceScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 8)
       return <GameOddOneScreen key={gameKey} config={config} contentId={rubric} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+    if (level === 9) {
+      const sets = settings.sets?.slice(0, 2) ?? [];
+      if (sets.length < 2) return (
+        <div className="screen" style={{ justifyContent: "center", gap: 24 }}>
+          <button className="btn btn-back" onClick={goBack}>← Назад</button>
+          <p style={{ textAlign: "center", fontWeight: 700, fontSize: "1.1rem", padding: "0 24px" }}>
+            Выбери ровно 2 набора в настройках для этой игры
+          </p>
+        </div>
+      );
+      const allOptions = config.getSettingsSections(settings, () => {}).flatMap(s => s.options ?? []);
+      const getSubsetLabel = id => allOptions.find(o => o.id === id)?.label ?? id;
+      const groupA = { id: sets[0], label: getSubsetLabel(sets[0]), items: config.getDataset({ ...settings, sets: [sets[0]] }, level) };
+      const groupB = { id: sets[1], label: getSubsetLabel(sets[1]), items: config.getDataset({ ...settings, sets: [sets[1]] }, level) };
+      return <GameStreamSortScreen key={gameKey} config={config} groupA={groupA} groupB={groupB} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+    }
     if (level === 4) {
       const categoryLabel = config.getCategoryLabel
         ? config.getCategoryLabel(settings)
