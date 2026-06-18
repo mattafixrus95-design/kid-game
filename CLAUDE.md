@@ -113,18 +113,32 @@ Skills → Mechanics → Content → Subsets → Game
 
 ## Как добавить новую механику
 
-1. Добавить в `MECHANICS[skillId]` в `src/lib/skills.js` (убрать `locked: true`)
-2. Добавить `mechLevel` (1, 2 или 3)
-3. Добавить в `MECH_LEVEL` в `src/lib/skills.js`
-4. Добавить mechanic id в `supportsMechanics` всех подходящих контент-записей в `registry.jsx`
-5. Если нужна новая игровая логика — создать новый GameScreen (не трогать существующие)
+1. Добавить запись в `MECHANICS[skillId]` в `src/lib/skills.js` с полями `id`, `emoji`, `label`, `desc`, `mechLevel` (убрать `locked: true` если была заглушка)
+2. Добавить `mechanic_id: "screen_id"` в `MECH_SCREEN` в `src/lib/skills.js`
+3. Добавить mechanic id в `supportsMechanics` всех подходящих контент-записей в `registry.jsx`
+4. Добавить обработку `gameScreen === "screen_id"` в `App.jsx`
+5. Создать новый `GameXxxScreen.jsx` (не трогать существующие экраны)
 
 ## Игровые экраны
 
-- `GameLearnScreen` — уровень 1: листать предметы, тап = озвучка
-- `GameQuizScreen` — уровень 2/3: 4 варианта, угадать по имени
+| Файл | Screen id | Механики |
+|---|---|---|
+| `GameLearnScreen` | `learn` | words |
+| `GameQuizScreen` | `quiz` | recognition, attributes, numbers |
+| `GameCategoriesScreen` | `categories` | categories |
+| `GameWhoMissingScreen` | `who_missing` | who_missing |
+| `GameMemoScreen` | `memo` | memori |
+| `GameSequenceScreen` | `sequence` | sequence |
+| `GameOddOneScreen` | `odd_one` | odd_one |
+| `GameStreamSortScreen` | `sort` | sort_groups |
+| `GameContinueScreen` | `continue` | continue |
+| `GameSpotDiffScreen` | `spot_diff` | spot_diff |
+| `GameFastFindScreen` | `fast_find` | find_fast |
+| `GameQuantityScreen` | `quantity` | quantity |
+| `GameCountingScreen` | `counting` | counting |
+| `GameCompareScreen` | `compare` | more_less |
 
-**Нельзя менять** `GameLearnScreen` и `GameQuizScreen` — это стабильное ядро.
+**Нельзя менять** `GameLearnScreen` и `GameQuizScreen` — это стабильное ядро. Для новых механик всегда создавать новый экран.
 
 ## Настройки (Subsets)
 
