@@ -42,7 +42,7 @@ function vehicleCombos(sets) {
 export const REGISTRY = {
   animals: {
     emoji: "🐶", title: "Животные", recordKey: "rec_animals",
-    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence"],
+    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence", "odd_one"],
     categoryLabel: "животное",
     defaultSettings: { sets: ["domestic"] },
     getDataset: settings => settings.sets.flatMap(s => ANIMAL_SETS[s]),
@@ -70,7 +70,7 @@ export const REGISTRY = {
 
   vehicles: {
     emoji: "🚗", title: "Транспорт", recordKey: "rec_vehicles",
-    supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence"],
+    supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence", "odd_one"],
     defaultSettings: { sets: ["everyday"] },
     getDataset: (settings, level) => level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -103,7 +103,7 @@ export const REGISTRY = {
 
   food: {
     emoji: "🍎", title: "Еда", recordKey: "rec_food",
-    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence"],
+    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence", "odd_one"],
     getCategoryLabel: settings => {
       const hasFruits = settings.sets.some(s => s.startsWith("fruits_"));
       const hasVegs   = settings.sets.some(s => s.startsWith("vegetables_"));

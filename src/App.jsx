@@ -12,6 +12,7 @@ import GameCategoriesScreen from "./games/GameCategoriesScreen";
 import GameWhoMissingScreen from "./games/GameWhoMissingScreen";
 import GameMemoScreen from "./games/GameMemoScreen";
 import GameSequenceScreen from "./games/GameSequenceScreen";
+import GameOddOneScreen from "./games/GameOddOneScreen";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -153,6 +154,8 @@ export default function App() {
       return <GameMemoScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 7)
       return <GameSequenceScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+    if (level === 8)
+      return <GameOddOneScreen key={gameKey} config={config} contentId={rubric} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 4) {
       const categoryLabel = config.getCategoryLabel
         ? config.getCategoryLabel(settings)
