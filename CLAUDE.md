@@ -4,7 +4,7 @@
 
 ## Текущая версия
 
-`src/version.js` — `APP_VERSION = "3.12"`  
+`src/version.js` — `APP_VERSION = "3.13"`  
 При каждом релизе обновлять это значение и указывать номер версии в PR.
 
 Версия увеличивается на 0.1 за каждый релиз: 3.0 → 3.1 → 3.2 → ...  
@@ -36,28 +36,28 @@ Skills → Mechanics → Content → Subsets → Game
 
 ### Механики (Mechanics)
 
-| id | Навык | Emoji | Название | Статус | Уровень игры |
+| id | Навык | Emoji | Название | Статус | Экран |
 |---|---|---|---|---|---|
-| `words` | speech | 📖 | Слова | ✅ активна | 1 (GameLearnScreen) |
-| `recognition` | speech | 🎯 | Узнавание | ✅ активна | 2 (GameQuizScreen) |
-| `attributes` | speech | 🔗 | Признаки | ✅ активна | 3 (GameQuizScreen) |
-| `categories` | speech | 📦 | Категории | ✅ активна | 4 (GameCategoriesScreen) |
-| `who_missing` | memory | ❓ | Кто пропал | ✅ активна | 5 (GameWhoMissingScreen) |
-| `memori` | memory | 🃏 | Мемори | ✅ активна | 6 (GameMemoScreen) |
-| `sequence` | memory | ➡️ | Последовательность | ✅ активна | 7 (GameSequenceScreen) |
-| `odd_one` | logic | 🔎 | Найди лишнее | ✅ активна | 8 (GameOddOneScreen) |
-| `sort_groups` | logic | 📂 | Разложи по группам | ✅ активна | 9 (GameStreamSortScreen) |
-| `continue` | logic | 🔄 | Продолжи ряд | ✅ активна | 10 (GameContinueScreen) |
-| `spot_diff` | attention | 👀 | Найди отличие | ✅ активна | 11 (GameSpotDiffScreen) |
-| `find_fast` | attention | ⚡ | Найди быстро | ✅ активна | 12 (GameFastFindScreen) |
-| `quantity` | math | 🔢 | Количество | ✅ активна | 13 (GameQuantityScreen) |
-| `counting` | math | 🧮 | Счёт | ✅ активна | 14 (GameCountingScreen) |
-| `more_less` | math | ⚖️ | Больше / меньше | ✅ активна | 15 (GameCompareScreen) |
-| `numbers` | math | 🔢 | Цифры | ✅ активна | 2 (GameQuizScreen) |
+| `words` | speech | 📖 | Слова | ✅ активна | `learn` → GameLearnScreen |
+| `recognition` | speech | 🎯 | Узнавание | ✅ активна | `quiz` → GameQuizScreen |
+| `attributes` | speech | 🔗 | Признаки | ✅ активна | `quiz` → GameQuizScreen |
+| `categories` | speech | 📦 | Категории | ✅ активна | `categories` → GameCategoriesScreen |
+| `who_missing` | memory | ❓ | Кто пропал | ✅ активна | `who_missing` → GameWhoMissingScreen |
+| `memori` | memory | 🃏 | Мемори | ✅ активна | `memo` → GameMemoScreen |
+| `sequence` | memory | ➡️ | Последовательность | ✅ активна | `sequence` → GameSequenceScreen |
+| `odd_one` | logic | 🔎 | Найди лишнее | ✅ активна | `odd_one` → GameOddOneScreen |
+| `sort_groups` | logic | 📂 | Разложи по группам | ✅ активна | `sort` → GameStreamSortScreen |
+| `continue` | logic | 🔄 | Продолжи ряд | ✅ активна | `continue` → GameContinueScreen |
+| `spot_diff` | attention | 👀 | Найди отличие | ✅ активна | `spot_diff` → GameSpotDiffScreen |
+| `find_fast` | attention | ⚡ | Найди быстро | ✅ активна | `fast_find` → GameFastFindScreen |
+| `quantity` | math | 🔢 | Количество | ✅ активна | `quantity` → GameQuantityScreen |
+| `counting` | math | 🧮 | Счёт | ✅ активна | `counting` → GameCountingScreen |
+| `more_less` | math | ⚖️ | Больше / меньше | ✅ активна | `compare` → GameCompareScreen |
+| `numbers` | math | 🔢 | Цифры | ✅ активна | `quiz` → GameQuizScreen |
 
 Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_LEVEL{}`.
 
-**Mechanic → game level:** `MECH_LEVEL` в `src/lib/skills.js`. Уровень 1 → `GameLearnScreen`, 2/3 → `GameQuizScreen`, 4 → `GameCategoriesScreen`, 5 → `GameWhoMissingScreen`, 6 → `GameMemoScreen`, 7 → `GameSequenceScreen`, 8 → `GameOddOneScreen`, 9 → `GameStreamSortScreen`, 10 → `GameContinueScreen`, 11 → `GameSpotDiffScreen`, 12 → `GameFastFindScreen`, 13 → `GameQuantityScreen`, 14 → `GameCountingScreen`, 15 → `GameCompareScreen`.
+**Mechanic → screen:** `MECH_SCREEN` в `src/lib/skills.js` — маппинг mechanic id → screen id (строка). App.jsx переключается по screen id. `recognition`, `attributes`, `numbers` → `"quiz"` (GameQuizScreen); остальные — уникальные экраны.
 
 ### Контент (Content)
 

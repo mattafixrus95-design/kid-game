@@ -72,7 +72,7 @@ export const REGISTRY = {
     emoji: "🚗", title: "Транспорт", recordKey: "rec_vehicles",
     supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence", "odd_one"],
     defaultSettings: { sets: ["everyday"] },
-    getDataset: (settings, level) => level === 3 ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
+    getDataset: (settings, mechanic) => mechanic === "attributes" ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
       multiSetSection("Набор машин", settings, onChangeSettings, [
         { id: "everyday",     label: "🚗 Транспорт",   desc: "легковые, автобус, грузовик..." },

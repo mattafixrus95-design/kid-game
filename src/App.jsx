@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { GLOBAL_STYLES } from "./lib/styles";
-import { MECH_LEVEL } from "./lib/skills";
+import { MECH_SCREEN } from "./lib/skills";
 import { REGISTRY } from "./games/registry";
 import SkillsScreen from "./components/SkillsScreen";
 import MechanicsScreen from "./components/MechanicsScreen";
@@ -144,38 +144,32 @@ export default function App() {
 
   // ---- ИГРА ----
   if (screen === "game") {
-    const level = MECH_LEVEL[mechanic] ?? 1;
-    const gameSettings = { ...settings, level };
-    const items = config.getDataset(gameSettings, level);
+    const gameScreen = MECH_SCREEN[mechanic] ?? "learn";
+    const items = config.getDataset(settings, mechanic);
     const label = config.getLabel ? config.getLabel(settings) : undefined;
     const record = records[rubric];
     const gameKey = `${rubric}-${mechanic}-${JSON.stringify(settings)}`;
+    const commonProps = { key: gameKey, config, items, label, record, onUpdateRecord: v => upRecord(rubric, v), onBack: goBack };
 
-    if (level === 1)
-      return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 2 || level === 3)
-      return <GameQuizScreen  key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 5)
-      return <GameWhoMissingScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 6)
-      return <GameMemoScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 7)
-      return <GameSequenceScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 8)
-      return <GameOddOneScreen key={gameKey} config={config} contentId={rubric} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 10)
-      return <GameContinueScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 11)
-      return <GameSpotDiffScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 12)
-      return <GameFastFindScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 13)
-      return <GameQuantityScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 14)
-      return <GameCountingScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 15)
-      return <GameCompareScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    if (level === 9) {
+    if (gameScreen === "learn")      return <GameLearnScreen      {...commonProps}/>;
+    if (gameScreen === "quiz")       return <GameQuizScreen       {...commonProps}/>;
+    if (gameScreen === "who_missing") return <GameWhoMissingScreen {...commonProps}/>;
+    if (gameScreen === "memo")       return <GameMemoScreen       {...commonProps}/>;
+    if (gameScreen === "sequence")   return <GameSequenceScreen   {...commonProps}/>;
+    if (gameScreen === "odd_one")    return <GameOddOneScreen     {...commonProps} contentId={rubric}/>;
+    if (gameScreen === "continue")   return <GameContinueScreen   {...commonProps}/>;
+    if (gameScreen === "spot_diff")  return <GameSpotDiffScreen   {...commonProps}/>;
+    if (gameScreen === "fast_find")  return <GameFastFindScreen   {...commonProps}/>;
+    if (gameScreen === "quantity")   return <GameQuantityScreen   {...commonProps}/>;
+    if (gameScreen === "counting")   return <GameCountingScreen   {...commonProps}/>;
+    if (gameScreen === "compare")    return <GameCompareScreen    {...commonProps}/>;
+    if (gameScreen === "categories") {
+      const categoryLabel = config.getCategoryLabel
+        ? config.getCategoryLabel(settings)
+        : (config.categoryLabel ?? "предмет");
+      return <GameCategoriesScreen {...commonProps} contentId={rubric} categoryLabel={categoryLabel}/>;
+    }
+    if (gameScreen === "sort") {
       const sets = settings.sets?.slice(0, 2) ?? [];
       if (sets.length < 2) return (
         <div className="screen" style={{ justifyContent: "center", gap: 24 }}>
@@ -187,15 +181,9 @@ export default function App() {
       );
       const allOptions = config.getSettingsSections(settings, () => {}).flatMap(s => s.options ?? []);
       const getSubsetLabel = id => allOptions.find(o => o.id === id)?.label ?? id;
-      const groupA = { id: sets[0], label: getSubsetLabel(sets[0]), items: config.getDataset({ ...settings, sets: [sets[0]] }, level) };
-      const groupB = { id: sets[1], label: getSubsetLabel(sets[1]), items: config.getDataset({ ...settings, sets: [sets[1]] }, level) };
-      return <GameStreamSortScreen key={gameKey} config={config} groupA={groupA} groupB={groupB} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
-    }
-    if (level === 4) {
-      const categoryLabel = config.getCategoryLabel
-        ? config.getCategoryLabel(settings)
-        : (config.categoryLabel ?? "предмет");
-      return <GameCategoriesScreen key={gameKey} config={config} contentId={rubric} categoryLabel={categoryLabel} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+      const groupA = { id: sets[0], label: getSubsetLabel(sets[0]), items: config.getDataset({ ...settings, sets: [sets[0]] }, mechanic) };
+      const groupB = { id: sets[1], label: getSubsetLabel(sets[1]), items: config.getDataset({ ...settings, sets: [sets[1]] }, mechanic) };
+      return <GameStreamSortScreen {...commonProps} groupA={groupA} groupB={groupB}/>;
     }
   }
 
