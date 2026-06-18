@@ -27,7 +27,7 @@ export const MECHANICS = {
   ],
   attention: [
     { id: "spot_diff",   emoji: "👀", label: "Найди отличие",     desc: "Что изменилось?",       mechLevel: 11 },
-    { id: "find_fast",   emoji: "⚡", label: "Найди быстро",      desc: "Скоро",                 locked: true },
+    { id: "find_fast",   emoji: "⚡", label: "Найди быстро",      desc: "Быстрее!",              mechLevel: 12 },
   ],
   math: [
     { id: "quantity",    emoji: "🔢", label: "Количество",        desc: "Скоро",                 locked: true },
@@ -40,5 +40,5 @@ export const MECHANICS = {
 // mechanic id → game level (только для разблокированных механик)
 // mechanic id → game level
 export const MECH_LEVEL = {
-  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9, continue: 10, spot_diff: 11,
+  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9, continue: 10, spot_diff: 11, find_fast: 12,
 };
