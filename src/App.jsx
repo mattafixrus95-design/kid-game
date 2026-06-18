@@ -1,23 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { GLOBAL_STYLES } from "./lib/styles";
+import { MECH_LEVEL } from "./lib/skills";
 import { REGISTRY } from "./games/registry";
 import SkillsScreen from "./components/SkillsScreen";
+import MechanicsScreen from "./components/MechanicsScreen";
 import ContentScreen from "./components/ContentScreen";
 import SettingsScreen from "./components/SettingsScreen";
 import GameLearnScreen from "./games/GameLearnScreen";
 import GameQuizScreen from "./games/GameQuizScreen";
 
-// skill → game level
-const SKILL_LEVEL = { vocabulary: 1, quiz: 2, combinations: 3, count: 2 };
-
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
   try {
     const raw = sessionStorage.getItem("kg_restore");
-    if (raw) {
-      sessionStorage.removeItem("kg_restore");
-      return JSON.parse(raw);
-    }
+    if (raw) { sessionStorage.removeItem("kg_restore"); return JSON.parse(raw); }
   } catch {}
   return null;
 })();
@@ -34,10 +30,11 @@ export default function App() {
     return () => { document.head.removeChild(style); document.head.removeChild(link); };
   }, []);
 
-  // screen: "skills" | "content" | "subsets" | "game"
-  const [screen, setScreen] = useState(RESTORE?.screen || "skills");
-  const [skill, setSkill]   = useState(RESTORE?.skill ?? null);
-  const [rubric, setRubric] = useState(RESTORE?.rubric ?? null);
+  // screen: "skills" | "mechanics" | "content" | "subsets" | "game"
+  const [screen,   setScreen]   = useState(RESTORE?.screen   || "skills");
+  const [skill,    setSkill]    = useState(RESTORE?.skill    ?? null);
+  const [mechanic, setMechanic] = useState(RESTORE?.mechanic ?? null);
+  const [rubric,   setRubric]   = useState(RESTORE?.rubric   ?? null);
   const [exitHint, setExitHint] = useState(false);
 
   const [settingsByRubric, setSettingsByRubric] = useState(() => {
@@ -63,22 +60,17 @@ export default function App() {
     window.history.pushState({ screen: "skills" }, "", "#skills");
     function onPopState() {
       const hash = window.location.hash;
-      if (hash === "#skills") { setScreen("skills"); return; }
-      if (hash === "") {
-        if (exitHintRef.current) {
-          // повторное нажатие — выход
-        } else {
-          exitHintRef.current = true;
-          setExitHint(true);
-          window.history.pushState({ screen: "skills" }, "", "#skills");
-          setTimeout(() => { exitHintRef.current = false; setExitHint(false); }, 2000);
-        }
-        return;
-      }
-      if (hash === "#content") { setScreen("content"); return; }
-      if (hash === "#subsets") { setScreen("subsets"); return; }
-      if (hash === "#game")    { setScreen("game");    return; }
-      setScreen("skills");
+      if (hash === "#skills")    { setScreen("skills");    return; }
+      if (hash === "#mechanics") { setScreen("mechanics"); return; }
+      if (hash === "#content")   { setScreen("content");   return; }
+      if (hash === "#subsets")   { setScreen("subsets");   return; }
+      if (hash === "#game")      { setScreen("game");      return; }
+      // hash === "" — попытка выйти
+      if (exitHintRef.current) return;
+      exitHintRef.current = true;
+      setExitHint(true);
+      window.history.pushState({ screen: "skills" }, "", "#skills");
+      setTimeout(() => { exitHintRef.current = false; setExitHint(false); }, 2000);
     }
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
@@ -90,26 +82,15 @@ export default function App() {
   }
   const goBack = () => window.history.back();
 
-  function handleSelectSkill(id) {
-    setSkill(id);
-    goTo("content");
-  }
-
-  function handleSelectContent(id) {
-    setRubric(id);
-    goTo("subsets");
-  }
-
   // ---- НАВЫКИ ----
   if (screen === "skills") return (
     <>
-      <SkillsScreen onSelect={handleSelectSkill}/>
+      <SkillsScreen onSelect={id => { setSkill(id); goTo("mechanics"); }}/>
       {exitHint && (
         <div style={{
           position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
           background: "rgba(0,0,0,0.75)", color: "#fff", padding: "10px 20px",
-          borderRadius: 999, fontSize: "0.95rem", fontWeight: 700, zIndex: 1000,
-          whiteSpace: "nowrap",
+          borderRadius: 999, fontSize: "0.95rem", fontWeight: 700, zIndex: 1000, whiteSpace: "nowrap",
         }}>
           Нажмите «Назад» еще раз, чтобы выйти
         </div>
@@ -117,11 +98,20 @@ export default function App() {
     </>
   );
 
+  // ---- МЕХАНИКИ ----
+  if (screen === "mechanics") return (
+    <MechanicsScreen
+      skill={skill}
+      onSelect={id => { setMechanic(id); goTo("content"); }}
+      onBack={goBack}
+    />
+  );
+
   // ---- КОНТЕНТ ----
   if (screen === "content") return (
     <ContentScreen
-      skill={skill}
-      onSelect={handleSelectContent}
+      mechanic={mechanic}
+      onSelect={id => { setRubric(id); goTo("subsets"); }}
       onBack={goBack}
     />
   );
@@ -142,18 +132,17 @@ export default function App() {
 
   // ---- ИГРА ----
   if (screen === "game") {
-    const level = SKILL_LEVEL[skill] ?? 1;
+    const level = MECH_LEVEL[mechanic] ?? 1;
     const gameSettings = { ...settings, level };
     const items = config.getDataset(gameSettings, level);
     const label = config.getLabel ? config.getLabel(settings) : undefined;
     const record = records[rubric];
-    const onUpdateRecord = v => upRecord(rubric, v);
-    const gameKey = `${rubric}-${skill}-${JSON.stringify(settings)}`;
+    const gameKey = `${rubric}-${mechanic}-${JSON.stringify(settings)}`;
 
     if (level === 1)
-      return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
+      return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 2 || level === 3)
-      return <GameQuizScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={onUpdateRecord} onBack={goBack}/>;
+      return <GameQuizScreen  key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
   }
 
   return null;
