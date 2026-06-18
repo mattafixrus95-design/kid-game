@@ -31,7 +31,7 @@ export const MECHANICS = {
   ],
   math: [
     { id: "quantity",    emoji: "🔢", label: "Количество",        desc: "Сколько предметов?",    mechLevel: 13 },
-    { id: "counting",    emoji: "🧮", label: "Счёт",              desc: "Скоро",                 locked: true },
+    { id: "counting",    emoji: "🧮", label: "Счёт",              desc: "Считай по порядку",     mechLevel: 14 },
     { id: "more_less",   emoji: "⚖️", label: "Больше / меньше",   desc: "Скоро",                 locked: true },
     { id: "numbers",     emoji: "🔢", label: "Цифры",             desc: "Учим цифры",            mechLevel: 2 },
   ],
@@ -40,5 +40,5 @@ export const MECHANICS = {
 // mechanic id → game level (только для разблокированных механик)
 // mechanic id → game level
 export const MECH_LEVEL = {
-  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9, continue: 10, spot_diff: 11, find_fast: 12, quantity: 13,
+  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5, memori: 6, sequence: 7, odd_one: 8, sort_groups: 9, continue: 10, spot_diff: 11, find_fast: 12, quantity: 13, counting: 14,
 };
