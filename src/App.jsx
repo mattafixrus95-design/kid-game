@@ -18,6 +18,7 @@ import GameContinueScreen from "./games/GameContinueScreen";
 import GameSpotDiffScreen from "./games/GameSpotDiffScreen";
 import GameFastFindScreen from "./games/GameFastFindScreen";
 import GameQuantityScreen from "./games/GameQuantityScreen";
+import GameCountingScreen from "./games/GameCountingScreen";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -169,6 +170,8 @@ export default function App() {
       return <GameFastFindScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 13)
       return <GameQuantityScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+    if (level === 14)
+      return <GameCountingScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 9) {
       const sets = settings.sets?.slice(0, 2) ?? [];
       if (sets.length < 2) return (
