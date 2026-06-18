@@ -16,7 +16,7 @@ export const MECHANICS = {
     { id: "categories",  emoji: "📦", label: "Категории",         desc: "Найди нужные предметы",  mechLevel: 4 },
   ],
   memory: [
-    { id: "who_missing", emoji: "❓", label: "Кто пропал",        desc: "Скоро",                 locked: true },
+    { id: "who_missing", emoji: "❓", label: "Кто пропал",        desc: "Запомни и найди",       mechLevel: 5 },
     { id: "memori",      emoji: "🃏", label: "Мемори",            desc: "Скоро",                 locked: true },
     { id: "sequence",    emoji: "➡️", label: "Последовательность",desc: "Скоро",                 locked: true },
   ],
@@ -41,5 +41,5 @@ export const MECHANICS = {
 // mechanic id → game level (только для разблокированных механик)
 // mechanic id → game level
 export const MECH_LEVEL = {
-  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2,
+  words: 1, recognition: 2, attributes: 3, categories: 4, numbers: 2, who_missing: 5,
 };

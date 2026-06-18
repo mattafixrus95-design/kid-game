@@ -9,6 +9,7 @@ import SettingsScreen from "./components/SettingsScreen";
 import GameLearnScreen from "./games/GameLearnScreen";
 import GameQuizScreen from "./games/GameQuizScreen";
 import GameCategoriesScreen from "./games/GameCategoriesScreen";
+import GameWhoMissingScreen from "./games/GameWhoMissingScreen";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -144,6 +145,8 @@ export default function App() {
       return <GameLearnScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 2 || level === 3)
       return <GameQuizScreen  key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+    if (level === 5)
+      return <GameWhoMissingScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 4) {
       const categoryLabel = config.getCategoryLabel
         ? config.getCategoryLabel(settings)
