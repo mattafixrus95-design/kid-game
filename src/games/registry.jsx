@@ -42,7 +42,7 @@ function vehicleCombos(sets) {
 export const REGISTRY = {
   animals: {
     emoji: "🐶", title: "Животные", recordKey: "rec_animals",
-    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence", "odd_one", "sort_groups"],
+    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence", "odd_one", "sort_groups", "continue"],
     categoryLabel: "животное",
     defaultSettings: { sets: ["domestic"] },
     getDataset: settings => settings.sets.flatMap(s => ANIMAL_SETS[s]),
@@ -103,7 +103,7 @@ export const REGISTRY = {
 
   food: {
     emoji: "🍎", title: "Еда", recordKey: "rec_food",
-    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence", "odd_one", "sort_groups"],
+    supportsMechanics: ["words", "recognition", "categories", "who_missing", "memori", "sequence", "odd_one", "sort_groups", "continue"],
     getCategoryLabel: settings => {
       const hasFruits = settings.sets.some(s => s.startsWith("fruits_"));
       const hasVegs   = settings.sets.some(s => s.startsWith("vegetables_"));
@@ -203,7 +203,7 @@ export const REGISTRY = {
 
   numbers: {
     emoji: "🔢", title: "Цифры", recordKey: "rec_numbers",
-    supportsMechanics: ["numbers"],
+    supportsMechanics: ["numbers", "continue"],
     defaultSettings: { range: "1-5" },
     optCount: 2,
     getDataset: settings => NUMBER_RANGES[settings.range],

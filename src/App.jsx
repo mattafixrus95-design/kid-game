@@ -14,6 +14,7 @@ import GameMemoScreen from "./games/GameMemoScreen";
 import GameSequenceScreen from "./games/GameSequenceScreen";
 import GameOddOneScreen from "./games/GameOddOneScreen";
 import GameStreamSortScreen from "./games/GameStreamSortScreen";
+import GameContinueScreen from "./games/GameContinueScreen";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -157,6 +158,8 @@ export default function App() {
       return <GameSequenceScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 8)
       return <GameOddOneScreen key={gameKey} config={config} contentId={rubric} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
+    if (level === 10)
+      return <GameContinueScreen key={gameKey} config={config} items={items} label={label} record={record} onUpdateRecord={v => upRecord(rubric, v)} onBack={goBack}/>;
     if (level === 9) {
       const sets = settings.sets?.slice(0, 2) ?? [];
       if (sets.length < 2) return (
