@@ -4,7 +4,7 @@
 
 ## Текущая версия
 
-`src/version.js` — `APP_VERSION = "3.0"`  
+`src/version.js` — `APP_VERSION = "3.4"`  
 При каждом релизе обновлять это значение и указывать номер версии в PR.
 
 Версия увеличивается на 0.1 за каждый релиз: 3.0 → 3.1 → 3.2 → ...  
@@ -42,9 +42,9 @@ Skills → Mechanics → Content → Subsets → Game
 | `recognition` | speech | 🎯 | Узнавание | ✅ активна | 2 (GameQuizScreen) |
 | `attributes` | speech | 🔗 | Признаки | ✅ активна | 3 (GameQuizScreen) |
 | `categories` | speech | 📦 | Категории | ✅ активна | 4 (GameCategoriesScreen) |
-| `who_missing` | memory | ❓ | Кто пропал | 🔒 Скоро | — |
-| `memori` | memory | 🃏 | Мемори | 🔒 Скоро | — |
-| `sequence` | memory | ➡️ | Последовательность | 🔒 Скоро | — |
+| `who_missing` | memory | ❓ | Кто пропал | ✅ активна | 5 (GameWhoMissingScreen) |
+| `memori` | memory | 🃏 | Мемори | ✅ активна | 6 (GameMemoScreen) |
+| `sequence` | memory | ➡️ | Последовательность | ✅ активна | 7 (GameSequenceScreen) |
 | `odd_one` | logic | 🔎 | Найди лишнее | 🔒 Скоро | — |
 | `sort_groups` | logic | 📂 | Разложи по группам | 🔒 Скоро | — |
 | `find_pair` | logic | 🔗 | Найди пару | 🔒 Скоро | — |
@@ -58,7 +58,7 @@ Skills → Mechanics → Content → Subsets → Game
 
 Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_LEVEL{}`.
 
-**Mechanic → game level:** `MECH_LEVEL` в `src/lib/skills.js`. Уровень 1 → `GameLearnScreen`, 2/3 → `GameQuizScreen`.
+**Mechanic → game level:** `MECH_LEVEL` в `src/lib/skills.js`. Уровень 1 → `GameLearnScreen`, 2/3 → `GameQuizScreen`, 4 → `GameCategoriesScreen`, 5 → `GameWhoMissingScreen`, 6 → `GameMemoScreen`, 7 → `GameSequenceScreen`.
 
 ### Контент (Content)
 

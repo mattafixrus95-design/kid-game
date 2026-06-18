@@ -24,6 +24,7 @@ export const GLOBAL_STYLES = `
     overflow-y:auto;gap:clamp(8px,2vw,16px);}
   .pressable{transition:transform 0.15s;}
   .pressable:active{transform:scale(0.93);}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 `;
 
 export function clamp(a, b) {
