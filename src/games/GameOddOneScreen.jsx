@@ -50,6 +50,7 @@ export default function GameOddOneScreen({ config, contentId, items, label, reco
   const [answerState, setAnswerState] = useState(null);
   const [score, setScore]         = useState(0);
   const [streak, setStreak]       = useState(0);
+  const [nextDisabled, setNextDisabled] = useState(false);
 
   const introRef = useRef(false);
   useEffect(() => {
@@ -123,7 +124,12 @@ export default function GameOddOneScreen({ config, contentId, items, label, reco
       </div>
       <BottomBar>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(task)}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Следующий ➡️</button>
+        <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
+          if (nextDisabled) return;
+          setNextDisabled(true);
+          setTimeout(() => setNextDisabled(false), 500);
+          advanceRound();
+        }} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>
     </div>
   );

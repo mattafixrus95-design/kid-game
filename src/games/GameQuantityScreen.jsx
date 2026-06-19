@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
+import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
@@ -8,33 +9,33 @@ import BottomBar from "../components/BottomBar";
 const MIN_COUNT = 1;
 const MAX_COUNT = 5;
 
-function generateRound(items, prevCount) {
-  // Pick a count, avoid repeating the same count twice in a row
-  const counts = Array.from({ length: MAX_COUNT - MIN_COUNT + 1 }, (_, i) => i + MIN_COUNT)
-    .filter(n => n !== prevCount);
-  const count = counts[Math.floor(Math.random() * counts.length)];
-
-  // Pick one item to repeat (simpler to count)
-  const item = items[Math.floor(Math.random() * items.length)];
-
-  // Distractors: nearby numbers, deduplicated, in range
+function makeOptions(count) {
   const dists = new Set();
   for (const delta of [-2, -1, 1, 2]) {
     const n = count + delta;
     if (n >= MIN_COUNT && n <= MAX_COUNT + 2 && n !== count) dists.add(n);
   }
-  // Ensure we have at least 3 distractors
   for (let n = 1; dists.size < 3; n++) {
     if (n !== count) dists.add(n);
   }
-
-  const options = shuffle([count, ...[...dists].slice(0, 3)]);
-  return { item, count, options };
+  return shuffle([count, ...[...dists].slice(0, 3)]);
 }
 
 export default function GameQuantityScreen({ config, items, label, record, onUpdateRecord, onBack }) {
   const task = "Сколько предметов?";
-  const [round, setRound]         = useState(() => generateRound(items, null));
+  const nextItem = useBag(items);
+  const [nextDisabled, setNextDisabled] = useState(false);
+
+  const prevCountRef = useRef(null);
+  function makeRound() {
+    const counts = Array.from({ length: MAX_COUNT - MIN_COUNT + 1 }, (_, i) => i + MIN_COUNT)
+      .filter(n => n !== prevCountRef.current);
+    const count = counts[Math.floor(Math.random() * counts.length)];
+    prevCountRef.current = count;
+    return { item: nextItem(), count, options: makeOptions(count) };
+  }
+
+  const [round, setRound]         = useState(() => makeRound());
   const [chosen, setChosen]       = useState(null);
   const [answerState, setAnswerState] = useState(null);
   const [score, setScore]         = useState(0);
@@ -51,9 +52,16 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
   }, [round]);
 
   function advanceRound() {
-    setRound(generateRound(items, round.count));
+    setRound(makeRound());
     setChosen(null);
     setAnswerState(null);
+  }
+
+  function handleNext() {
+    if (nextDisabled) return;
+    setNextDisabled(true);
+    setTimeout(() => setNextDisabled(false), 500);
+    advanceRound();
   }
 
   function handleAnswer(n) {
@@ -74,7 +82,6 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
     }
   }
 
-  // Emoji display: N copies arranged in a friendly layout
   const emojis = Array.from({ length: round.count }, (_, i) => i);
   const cols = round.count <= 3 ? round.count : Math.ceil(Math.sqrt(round.count));
 
@@ -83,7 +90,6 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title={task} subtitle="Выбери правильное число"/>
 
-      {/* Item display */}
       <div style={{
         flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
       }}>
@@ -113,7 +119,6 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
         </div>
       </div>
 
-      {/* Number answer buttons */}
       <div style={{
         display: "flex", flexWrap: "wrap",
         alignItems: "center", justifyContent: "center",
@@ -146,7 +151,7 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
 
       <BottomBar>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(task)}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Следующий ➡️</button>
+        <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>
     </div>
   );

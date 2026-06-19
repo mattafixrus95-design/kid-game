@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
+import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
@@ -23,40 +24,44 @@ const DISTRACTORS = {
   ],
 };
 
-function generateRound(targetItems, distractors, prevCorrectName) {
-  const pool = targetItems.filter(i => i.name !== prevCorrectName);
-  const available = pool.length > 0 ? pool : targetItems;
-  const correct = available[Math.floor(Math.random() * available.length)];
-  const dists = shuffle(distractors.filter(d => d.name !== correct.name)).slice(0, 3);
-  return { correct, options: shuffle([correct, ...dists]) };
-}
-
 export default function GameCategoriesScreen({ config, contentId, categoryLabel, items, label, record, onUpdateRecord, onBack }) {
   const distractors = DISTRACTORS[contentId] || DISTRACTORS.food;
   const task = `Найди ${categoryLabel}`;
+  const nextCorrect = useBag(items);
+  const [nextDisabled, setNextDisabled] = useState(false);
 
-  const [round, setRound] = useState(() => generateRound(items, distractors, null));
+  function makeRound() {
+    const correct = nextCorrect();
+    const dists = shuffle(distractors.filter(d => d.name !== correct.name)).slice(0, 3);
+    return { correct, options: shuffle([correct, ...dists]) };
+  }
+
+  const [round, setRound] = useState(() => makeRound());
   const [chosen, setChosen] = useState(null);
   const [answerState, setAnswerState] = useState(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
 
-  const introRef = useRef(false);
+  // Озвучка только при входе на экран
   useEffect(() => {
-    const t = setTimeout(() => {
-      if (!introRef.current) { introRef.current = true; speakSequence(task, ""); }
-      else speak(task);
-    }, 400);
+    const t = setTimeout(() => { speakSequence(task, ""); }, 400);
     return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [round.correct.name]);
+  }, []);
 
   function handleRepeat() { speak(task); }
 
   function advanceRound() {
-    setRound(generateRound(items, distractors, round.correct.name));
+    setRound(makeRound());
     setChosen(null);
     setAnswerState(null);
+  }
+
+  function handleNext() {
+    if (nextDisabled) return;
+    setNextDisabled(true);
+    setTimeout(() => setNextDisabled(false), 500);
+    advanceRound();
   }
 
   function handleAnswer(item) {
@@ -114,7 +119,7 @@ export default function GameCategoriesScreen({ config, contentId, categoryLabel,
       </div>
       <BottomBar>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={handleRepeat}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Следующий ➡️</button>
+        <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>
     </div>
   );
