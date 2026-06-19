@@ -5,7 +5,7 @@ import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
-const PAIR_COUNT = 8;
+const PAIR_COUNT = 6;
 const FLIP_BACK_DELAY = 900;
 const CARD_BACK = "#6C63FF";
 
@@ -60,7 +60,7 @@ function MemoCard({ card, config, forceOpen, onClick }) {
           gap: 1, overflow: "hidden", padding: "4px 2px",
           boxShadow: "0 3px 0 rgba(0,0,0,0.12)",
         }}>
-          <div style={{ fontSize: "clamp(1.6rem,10vw,3rem)", lineHeight: 1 }}>
+          <div style={{ fontSize: "clamp(1.8rem,12vw,3.5rem)", lineHeight: 1 }}>
             {card.item.emoji ?? config.renderLearn(card.item)}
           </div>
           <div style={{ fontSize: "clamp(0.55rem,2vw,0.85rem)", fontWeight: 700, color: "#fff", textAlign: "center", lineHeight: 1.1 }}>
@@ -76,13 +76,13 @@ function MemoCard({ card, config, forceOpen, onClick }) {
 function MemoGrid({ cards, config, phase, onCardClick }) {
   return (
     <div style={{
-      // Квадратная сетка, ограничена меньшим из ширины и доступной высоты
-      width: "min(calc(100vw - 24px), calc(100dvh - 190px))",
-      aspectRatio: "1/1",
+      // Сетка 4×3: ограничена шириной экрана или доступной высотой
+      width: "min(calc(100vw - 24px), calc((100dvh - 190px) * 4 / 3))",
+      aspectRatio: "4/3",
       display: "grid",
       gridTemplateColumns: "repeat(4, 1fr)",
-      gridTemplateRows: "repeat(4, 1fr)",
-      gap: "clamp(4px,1.2vw,8px)",
+      gridTemplateRows: "repeat(3, 1fr)",
+      gap: "clamp(4px,1.5vw,10px)",
     }}>
       {cards.map((card, idx) => (
         <MemoCard
