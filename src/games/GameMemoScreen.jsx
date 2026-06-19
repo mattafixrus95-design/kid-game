@@ -5,7 +5,7 @@ import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
-const PAIR_COUNT = 6;
+const PAIR_COUNT = 4;
 const FLIP_BACK_DELAY = 900;
 const CARD_BACK = "#6C63FF";
 
@@ -141,12 +141,12 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
     }
   }
 
-  const grid = (
+  const makeGrid = (cols) => (
     <div style={{
       display: "grid",
-      gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-      gap: "clamp(6px,2vw,12px)",
-      width: "100%", maxWidth: 480,
+      gridTemplateColumns: `repeat(${cols}, 1fr)`,
+      gap: "clamp(8px,2.5vw,14px)",
+      width: "100%", maxWidth: cols === 2 ? 340 : 480,
     }}>
       {cards.map((card, idx) => (
         <MemoCard
@@ -166,7 +166,7 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Запомни карточки" subtitle="Посмотри внимательно"/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {grid}
+        {makeGrid(2)}
       </div>
       <BottomBar>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={startGame}>Начать ➡️</button>
@@ -202,7 +202,7 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
         subtitle={`Попыток: ${attempts} · Пар: ${matchedCount} / ${totalPairs}`}
       />
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {grid}
+        {makeGrid(4)}
       </div>
       <BottomBar>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={restart}>🔄 Заново</button>

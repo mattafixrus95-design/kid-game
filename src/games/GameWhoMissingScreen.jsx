@@ -100,18 +100,21 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
     }
   }
 
+  const rowStyle = {
+    display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+    gap: "clamp(8px,2.5vw,14px)", width: "100%", maxWidth: 460,
+  };
+  const cardSize = "clamp(2rem,12vw,3.6rem)";
+
   // ── Экран 1: Запомни ──────────────────────────────────
   if (phase === "memorize") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Запомни предметы" subtitle="Посмотри внимательно"/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{
-          display: "flex", flexWrap: "wrap", justifyContent: "center",
-          gap: "clamp(10px,3vw,20px)", width: "100%", maxWidth: 560,
-        }}>
+        <div style={rowStyle}>
           {round.shown.map(item => (
-            <ItemCard key={getKey(item)} item={item} getName={getName} size="clamp(3rem,18vw,6rem)" flex/>
+            <ItemCard key={getKey(item)} item={item} getName={getName} size={cardSize}/>
           ))}
         </div>
       </div>
@@ -127,13 +130,10 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Кто пропал?"/>
 
-      {/* 3 оставшихся предмета */}
-      <div style={{
-        display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "clamp(8px,2.5vw,14px)", width: "100%", maxWidth: 360,
-      }}>
+      {/* 3 оставшихся предмета — те же размеры, та же сетка */}
+      <div style={{ ...rowStyle, gridTemplateColumns: "repeat(3, 1fr)", maxWidth: 345 }}>
         {round.visible.map(item => (
-          <ItemCard key={getKey(item)} item={item} getName={getName} size="clamp(1.8rem,10vw,3rem)"/>
+          <ItemCard key={getKey(item)} item={item} getName={getName} size={cardSize}/>
         ))}
       </div>
 
