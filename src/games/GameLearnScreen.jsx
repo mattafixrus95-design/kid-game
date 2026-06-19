@@ -1,27 +1,31 @@
 import { useState } from "react";
-import { randomItem, randomItemExceptKey } from "../lib/random";
 import { speak } from "../lib/audio";
 import { useIntroSpeech } from "../hooks/useSpeech";
+import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
-// Универсальный экран уровня "Повторение" — отличия игр задаются конфигом из registry
 export default function GameLearnScreen({ config, items, label, record, onUpdateRecord, onBack }) {
   const { getKey, getName, introTextLearn, titleLearn, renderLearn, onItemClick } = config;
-  const [current, setCurrent] = useState(()=>randomItem(items));
+  const nextItem = useBag(items);
+  const [current, setCurrent] = useState(() => nextItem());
   const [streak, setStreak] = useState(0);
   const [score, setScore] = useState(0);
+  const [nextDisabled, setNextDisabled] = useState(false);
 
   useIntroSpeech(getName(current), introTextLearn);
 
   function handleRepeat() { speak(getName(current)); }
+
   function handleNext() {
-    const next = randomItemExceptKey(items, getKey, getKey(current));
-    const ns = score+1, nst = streak+1;
+    if (nextDisabled) return;
+    setNextDisabled(true);
+    setTimeout(() => setNextDisabled(false), 500);
+    const ns = score + 1, nst = streak + 1;
     setScore(ns); setStreak(nst);
     if (ns > record) onUpdateRecord(ns);
-    setCurrent(next);
+    setCurrent(nextItem(getKey(current), getKey));
   }
 
   return (
@@ -35,7 +39,7 @@ export default function GameLearnScreen({ config, items, label, record, onUpdate
       </div>
       <BottomBar>
         <button className="btn btn-ghost" style={{flex:1}} onClick={handleRepeat}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{flex:1}} onClick={handleNext}>Следующий ➡️</button>
+        <button className="btn btn-primary" style={{flex:1}} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>
     </div>
   );

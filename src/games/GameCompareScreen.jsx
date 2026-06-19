@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
-import { shuffle } from "../lib/random";
+import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
@@ -8,34 +8,8 @@ import BottomBar from "../components/BottomBar";
 const MIN_COUNT = 1;
 const MAX_COUNT = 5;
 
-function generateRound(items, prevMode) {
-  // Alternate modes or pick randomly
-  const mode = prevMode === "more" ? "less" : "more";
-  const task = mode === "more" ? "Где больше?" : "Где меньше?";
-
-  // Pick two different counts
-  let countA = Math.floor(Math.random() * MAX_COUNT) + MIN_COUNT;
-  let countB;
-  do {
-    countB = Math.floor(Math.random() * MAX_COUNT) + MIN_COUNT;
-  } while (countB === countA);
-
-  // Correct side is whichever satisfies the mode
-  const correctSide = mode === "more"
-    ? (countA > countB ? "left" : "right")
-    : (countA < countB ? "left" : "right");
-
-  // Pick items for each group (can be different or same)
-  const pool = shuffle([...items]);
-  const itemA = pool[0];
-  const itemB = pool[Math.min(1, pool.length - 1)];
-
-  return { mode, task, countA, countB, itemA, itemB, correctSide };
-}
-
 function GroupPanel({ item, count, side, chosen, answerState, onClick }) {
   const isChosen = chosen === side;
-  const isCorrectSide = answerState === "correct" && isChosen;
 
   let bg = "#fff";
   if (isChosen && answerState === "correct") bg = "var(--green)";
@@ -66,11 +40,7 @@ function GroupPanel({ item, count, side, chosen, answerState, onClick }) {
         justifyItems: "center",
       }}>
         {Array.from({ length: count }, (_, i) => (
-          <span key={i} style={{
-            fontSize: "clamp(1.6rem,8vw,2.4rem)", lineHeight: 1,
-            display: "block",
-            filter: isChosen && answerState ? "none" : "none",
-          }}>
+          <span key={i} style={{ fontSize: "clamp(1.6rem,8vw,2.4rem)", lineHeight: 1, display: "block" }}>
             {item.emoji}
           </span>
         ))}
@@ -80,7 +50,22 @@ function GroupPanel({ item, count, side, chosen, answerState, onClick }) {
 }
 
 export default function GameCompareScreen({ config, items, label, record, onUpdateRecord, onBack }) {
-  const [round, setRound]         = useState(() => generateRound(items, null));
+  const nextItem = useBag(items);
+  const [nextDisabled, setNextDisabled] = useState(false);
+
+  function makeRound(prevMode) {
+    const mode = prevMode === "more" ? "less" : "more";
+    const task = mode === "more" ? "Где больше?" : "Где меньше?";
+    let countA = Math.floor(Math.random() * MAX_COUNT) + MIN_COUNT;
+    let countB;
+    do { countB = Math.floor(Math.random() * MAX_COUNT) + MIN_COUNT; } while (countB === countA);
+    const correctSide = mode === "more"
+      ? (countA > countB ? "left" : "right")
+      : (countA < countB ? "left" : "right");
+    return { mode, task, countA, countB, itemA: nextItem(), itemB: nextItem(), correctSide };
+  }
+
+  const [round, setRound]         = useState(() => makeRound(null));
   const [chosen, setChosen]       = useState(null);
   const [answerState, setAnswerState] = useState(null);
   const [score, setScore]         = useState(0);
@@ -97,9 +82,16 @@ export default function GameCompareScreen({ config, items, label, record, onUpda
   }, [round]);
 
   function advanceRound() {
-    setRound(generateRound(items, round.mode));
+    setRound(makeRound(round.mode));
     setChosen(null);
     setAnswerState(null);
+  }
+
+  function handleNext() {
+    if (nextDisabled) return;
+    setNextDisabled(true);
+    setTimeout(() => setNextDisabled(false), 500);
+    advanceRound();
   }
 
   function handleChoice(side) {
@@ -126,27 +118,18 @@ export default function GameCompareScreen({ config, items, label, record, onUpda
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title={round.task} subtitle="Нажми на нужную группу"/>
 
-      {/* Two groups */}
       <div style={{
         flex: 1, display: "flex", alignItems: "center",
         gap: "clamp(10px,3vw,20px)",
         width: "100%", maxWidth: 500,
       }}>
-        <GroupPanel
-          item={round.itemA} count={round.countA}
-          side="left" chosen={chosen} answerState={answerState}
-          onClick={() => handleChoice("left")}
-        />
-        <GroupPanel
-          item={round.itemB} count={round.countB}
-          side="right" chosen={chosen} answerState={answerState}
-          onClick={() => handleChoice("right")}
-        />
+        <GroupPanel item={round.itemA} count={round.countA} side="left" chosen={chosen} answerState={answerState} onClick={() => handleChoice("left")}/>
+        <GroupPanel item={round.itemB} count={round.countB} side="right" chosen={chosen} answerState={answerState} onClick={() => handleChoice("right")}/>
       </div>
 
       <BottomBar>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(round.task)}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Следующий ➡️</button>
+        <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>
     </div>
   );

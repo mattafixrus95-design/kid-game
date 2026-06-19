@@ -23,9 +23,15 @@ export default function ShapeSVG({ name, size = 130 }) {
                       <polygon points="20,80 70,60 94,72 44,92" fill={SHAPE_COLOR+"77"}/>
                     </>,
     "Шар":          <>
-                      <circle cx="50" cy="50" r="42" fill={c}/>
-                      <path d="M50,8 A42,42 0 0 1 50,92 Z" fill={SHAPE_COLOR+"BB"}/>
-                      <ellipse cx="50" cy="76" rx="30" ry="10" fill={SHAPE_COLOR+"77"}/>
+                      <defs>
+                        <radialGradient id="sball" cx="38%" cy="32%" r="65%">
+                          <stop offset="0%" stopColor="#fff" stopOpacity="0.9"/>
+                          <stop offset="45%" stopColor={c}/>
+                          <stop offset="100%" stopColor={c} stopOpacity="0.5"/>
+                        </radialGradient>
+                      </defs>
+                      <circle cx="50" cy="50" r="44" fill="url(#sball)"/>
+                      <ellipse cx="37" cy="32" rx="13" ry="8" fill="#fff" opacity="0.55" transform="rotate(-25 37 32)"/>
                     </>,
     "Конус":        <>
                       <polygon points="50,6 90,88 50,88" fill={SHAPE_COLOR+"BB"}/>
