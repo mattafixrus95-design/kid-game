@@ -29,7 +29,7 @@ function generateRound(items, nextItem, getKey) {
   return { shown, visible, missing, options };
 }
 
-function ItemCard({ item, getName, size = "clamp(2.4rem,13vw,4rem)" }) {
+function ItemCard({ item, getName, size = "clamp(2.4rem,13vw,4rem)", flex = false }) {
   return (
     <div style={{
       background: "var(--accent)", borderRadius: 18,
@@ -38,6 +38,7 @@ function ItemCard({ item, getName, size = "clamp(2.4rem,13vw,4rem)" }) {
       gap: 0, padding: "8px 6px",
       boxShadow: "0 4px 0 rgba(0,0,0,0.10)",
       overflow: "hidden",
+      ...(flex ? { flex: "1 1 calc(50% - 8px)", minWidth: 120, maxWidth: 260 } : {}),
     }}>
       <span style={{ fontSize: size, lineHeight: 1, flexShrink: 0 }}>{item.emoji}</span>
       <span style={{
@@ -106,11 +107,11 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
       <RoundTitle title="Запомни предметы" subtitle="Посмотри внимательно"/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{
-          display: "grid", gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "clamp(10px,3vw,18px)", width: "100%", maxWidth: 500,
+          display: "flex", flexWrap: "wrap", justifyContent: "center",
+          gap: "clamp(10px,3vw,20px)", width: "100%", maxWidth: 560,
         }}>
           {round.shown.map(item => (
-            <ItemCard key={getKey(item)} item={item} getName={getName} size="clamp(2.5rem,15vw,5rem)"/>
+            <ItemCard key={getKey(item)} item={item} getName={getName} size="clamp(3rem,18vw,6rem)" flex/>
           ))}
         </div>
       </div>
@@ -136,13 +137,13 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
         ))}
       </div>
 
-      <div style={{ fontWeight: 700, fontSize: "clamp(1rem,3.5vw,1.3rem)", color: "var(--muted)", textAlign: "center" }}>
+      <div style={{ fontWeight: 700, fontSize: "clamp(1rem,3.5vw,1.3rem)", color: "var(--text)", textAlign: "center", margin: "clamp(10px,2.5vw,18px) 0" }}>
         Кого не хватает?
       </div>
 
       {/* Варианты ответа */}
       <div style={{
-        flex: 1, display: "flex", flexWrap: "wrap",
+        display: "flex", flexWrap: "wrap",
         alignItems: "center", alignContent: "center", justifyContent: "center",
         width: "100%", gap: "clamp(10px,3vw,20px)", maxWidth: 560,
       }}>
