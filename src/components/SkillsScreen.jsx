@@ -1,5 +1,6 @@
 import { SKILLS } from "../lib/skills";
 import { clamp } from "../lib/styles";
+import { APP_VERSION } from "../version";
 import VersionButton from "./VersionButton";
 
 export default function SkillsScreen({ onSelect }) {
@@ -31,6 +32,12 @@ export default function SkillsScreen({ onSelect }) {
             </div>
           </button>
         ))}
+      </div>
+      <div style={{
+        position: "fixed", bottom: 10, right: 14,
+        fontSize: "0.75rem", color: "var(--muted)", fontWeight: 600, pointerEvents: "none",
+      }}>
+        v{APP_VERSION}
       </div>
     </div>
   );
