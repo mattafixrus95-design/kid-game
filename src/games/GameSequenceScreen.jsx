@@ -24,6 +24,7 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
   const [visible, setVisible]     = useState(true);     // fade state
   const [chosen, setChosen]       = useState([]);       // keys in tap order
   const [shaking, setShaking]     = useState(false);
+  const [locked, setLocked]       = useState(false);
   const [score, setScore]         = useState(0);
   const [streak, setStreak]       = useState(0);
 
@@ -51,10 +52,11 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
     setVisible(true);
     setChosen([]);
     setShaking(false);
+    setLocked(false);
   }
 
   function handleOption(item) {
-    if (phase !== "quiz") return;
+    if (phase !== "quiz" || locked) return;
     const key = config.getKey(item);
     if (chosen.includes(key)) return;
 
@@ -62,21 +64,22 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
     const expectedKey = config.getKey(round.sequence[chosen.length]);
 
     if (key !== expectedKey) {
-      // Wrong item or wrong order
       playError();
+      setLocked(true);
       setShaking(true);
       setTimeout(() => {
         setShaking(false);
         setChosen([]);
-      }, 600);
+        setLocked(false);
+      }, 500);
       return;
     }
 
     setChosen(nextChosen);
 
     if (nextChosen.length === round.sequence.length) {
-      // All correct
       playSuccess();
+      setLocked(true);
       const ns = score + 1, nst = streak + 1;
       setScore(ns); setStreak(nst);
       if (ns > record) onUpdateRecord(ns);
@@ -102,12 +105,13 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
               display: "flex", flexDirection: "column",
               alignItems: "center", justifyContent: "center", gap: 8,
               boxShadow: "0 8px 0 rgba(0,0,0,0.12)",
+              overflow: "hidden",
               opacity: visible ? 1 : 0,
               transform: visible ? "scale(1)" : "scale(0.85)",
               transition: "opacity 0.3s ease, transform 0.3s ease",
             }}>
-              <span style={{ fontSize: "clamp(4rem,22vw,7rem)" }}>{currentItem.emoji}</span>
-              <span style={{ fontSize: "clamp(1rem,4vw,1.5rem)", fontWeight: 800, color: "#fff", textAlign: "center" }}>
+              <span style={{ fontSize: "clamp(3.5rem,18vw,6rem)", lineHeight: 1 }}>{currentItem.emoji}</span>
+              <span style={{ fontSize: "clamp(0.9rem,3.5vw,1.3rem)", fontWeight: 800, color: "#fff", textAlign: "center", padding: "0 8px", lineHeight: 1.2 }}>
                 {config.getName(currentItem)}
               </span>
             </div>
