@@ -5,7 +5,7 @@ import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
-const PAIR_COUNT = 4;
+const PAIR_COUNT = 8;
 const FLIP_BACK_DELAY = 900;
 const CARD_BACK = "#6C63FF";
 
@@ -41,32 +41,29 @@ function MemoCard({ card, config, forceOpen, onClick }) {
         {/* Рубашка */}
         <div style={{
           position: "absolute", inset: 0,
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
-          background: CARD_BACK,
-          borderRadius: 14,
+          backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
+          background: CARD_BACK, borderRadius: 10,
           display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: "0 4px 0 rgba(0,0,0,0.12)",
-          fontSize: "clamp(1.2rem,6vw,2rem)",
+          boxShadow: "0 3px 0 rgba(0,0,0,0.15)",
+          fontSize: "clamp(0.9rem,4vw,1.4rem)",
         }}>🃏</div>
 
         {/* Лицо */}
         <div style={{
           position: "absolute", inset: 0,
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
+          backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
           background: matched ? "var(--green)" : "var(--accent)",
-          borderRadius: 14,
+          borderRadius: 10,
           display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center",
-          gap: 2, overflow: "hidden", padding: 4,
-          boxShadow: "0 4px 0 rgba(0,0,0,0.12)",
+          gap: 1, overflow: "hidden", padding: "4px 2px",
+          boxShadow: "0 3px 0 rgba(0,0,0,0.12)",
         }}>
-          <div style={{ fontSize: "clamp(1.4rem,8vw,2.8rem)", lineHeight: 1 }}>
+          <div style={{ fontSize: "clamp(1rem,5.5vw,2rem)", lineHeight: 1 }}>
             {card.item.emoji ?? config.renderLearn(card.item)}
           </div>
-          <div style={{ fontSize: "clamp(0.55rem,1.8vw,0.8rem)", fontWeight: 700, color: "#fff", textAlign: "center", lineHeight: 1.2 }}>
+          <div style={{ fontSize: "clamp(0.45rem,1.5vw,0.7rem)", fontWeight: 700, color: "#fff", textAlign: "center", lineHeight: 1.1 }}>
             {config.getName(card.item)}
           </div>
         </div>
@@ -75,18 +72,41 @@ function MemoCard({ card, config, forceOpen, onClick }) {
   );
 }
 
-const COLS = 4;
+// Сетка 4×4, заполняет доступное пространство экрана
+function MemoGrid({ cards, config, phase, onCardClick }) {
+  return (
+    <div style={{
+      // Квадратная сетка, ограничена меньшим из ширины и доступной высоты
+      width: "min(calc(100vw - 24px), calc(100dvh - 190px))",
+      aspectRatio: "1/1",
+      display: "grid",
+      gridTemplateColumns: "repeat(4, 1fr)",
+      gridTemplateRows: "repeat(4, 1fr)",
+      gap: "clamp(4px,1.2vw,8px)",
+    }}>
+      {cards.map((card, idx) => (
+        <MemoCard
+          key={card.uid}
+          card={card}
+          config={config}
+          forceOpen={phase === "preview" || card.flipped}
+          onClick={() => onCardClick(idx)}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function GameMemoScreen({ config, items, label, record, onUpdateRecord, onBack }) {
-  const [phase, setPhase]   = useState("preview"); // "preview" | "play" | "done"
+  const [phase, setPhase]   = useState("preview");
   const [cards, setCards]   = useState(() => buildCards(items));
-  const [open, setOpen]     = useState([]);         // индексы открытых непарных карточек
+  const [open, setOpen]     = useState([]);
   const [locked, setLocked] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [score, setScore]   = useState(0);
   const [streak, setStreak] = useState(0);
 
-  const totalPairs  = cards.length / 2;
+  const totalPairs   = cards.length / 2;
   const matchedCount = cards.filter(c => c.matched).length / 2;
 
   const startGame = useCallback(() => setPhase("play"), []);
@@ -110,7 +130,6 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
 
     if (newOpen.length < 2) { setOpen(newOpen); return; }
 
-    // Вторая карточка — считаем попытку
     setLocked(true);
     setAttempts(a => a + 1);
 
@@ -141,39 +160,6 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
     }
   }
 
-  const makeGrid = (cols) => (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: `repeat(${cols}, 1fr)`,
-      gap: "clamp(8px,2.5vw,14px)",
-      width: "100%", maxWidth: cols === 2 ? 340 : 480,
-    }}>
-      {cards.map((card, idx) => (
-        <MemoCard
-          key={card.uid}
-          card={card}
-          config={config}
-          forceOpen={phase === "preview" || card.flipped}
-          onClick={() => handleCard(idx)}
-        />
-      ))}
-    </div>
-  );
-
-  // ── Экран 1: Запомни карточки ─────────────────────────
-  if (phase === "preview") return (
-    <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
-      <RoundTitle title="Запомни карточки" subtitle="Посмотри внимательно"/>
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {makeGrid(2)}
-      </div>
-      <BottomBar>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={startGame}>Начать ➡️</button>
-      </BottomBar>
-    </div>
-  );
-
   // ── Экран завершения ──────────────────────────────────
   if (phase === "done") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
@@ -193,6 +179,20 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
     </div>
   );
 
+  // ── Экран запоминания ─────────────────────────────────
+  if (phase === "preview") return (
+    <div className="screen" style={{ justifyContent: "space-between" }}>
+      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <RoundTitle title="Запомни карточки" subtitle="Посмотри внимательно"/>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <MemoGrid cards={cards} config={config} phase="preview" onCardClick={() => {}}/>
+      </div>
+      <BottomBar>
+        <button className="btn btn-primary" style={{ flex: 1 }} onClick={startGame}>Начать ➡️</button>
+      </BottomBar>
+    </div>
+  );
+
   // ── Экран игры ────────────────────────────────────────
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
@@ -202,7 +202,7 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
         subtitle={`Попыток: ${attempts} · Пар: ${matchedCount} / ${totalPairs}`}
       />
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {makeGrid(4)}
+        <MemoGrid cards={cards} config={config} phase="play" onCardClick={handleCard}/>
       </div>
       <BottomBar>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={restart}>🔄 Заново</button>
