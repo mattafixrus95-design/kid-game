@@ -177,7 +177,7 @@ export const REGISTRY = {
 
   shapes: {
     emoji: "🔷", title: "Фигуры", recordKey: "rec_shapes",
-    supportsMechanics: ["words", "recognition", "memori"],
+    supportsMechanics: ["words", "recognition", "memori", "categories"],
     defaultSettings: { sets: ["simple"] },
     getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -188,6 +188,8 @@ export const REGISTRY = {
       ], "var(--accent)", true),
     ],
     getKey: byName, getName: byName,
+    categoryLabel: "фигуру",
+    renderCategoryItem: item => <ShapeSVG name={item.name} size={Math.min(window.innerWidth * 0.22, 90)}/>,
     introTextLearn: "Назови фигуру", titleLearn: "Назови фигуру",
     renderLearn: item => <ShapeSVG name={item.name} size={learnSvgSize(280)}/>,
     introTextQuiz: "Выбери правильную фигуру", titleQuiz: "Выбери правильную фигуру",

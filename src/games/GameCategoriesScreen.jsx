@@ -22,6 +22,13 @@ const DISTRACTORS = {
     { name: "Трактор", emoji: "🚜" }, { name: "Мяч",     emoji: "⚽" },
     { name: "Дом",     emoji: "🏠" }, { name: "Звезда",  emoji: "⭐" },
   ],
+  shapes: [
+    { name: "Яблоко",  emoji: "🍎" }, { name: "Собака",  emoji: "🐶" },
+    { name: "Машина",  emoji: "🚗" }, { name: "Мяч",     emoji: "⚽" },
+    { name: "Дом",     emoji: "🏠" }, { name: "Книга",   emoji: "📚" },
+    { name: "Звезда",  emoji: "⭐" }, { name: "Банан",   emoji: "🍌" },
+    { name: "Кошка",   emoji: "🐱" }, { name: "Автобус", emoji: "🚌" },
+  ],
 };
 
 export default function GameCategoriesScreen({ config, contentId, categoryLabel, items, label, record, onUpdateRecord, onBack }) {
@@ -109,7 +116,10 @@ export default function GameCategoriesScreen({ config, contentId, categoryLabel,
                 transform: isChosen ? "scale(0.93)" : "scale(1)",
                 transition: "transform 0.15s, background 0.2s",
               }}>
-              <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
+              {config.renderCategoryItem && !item.emoji
+                ? config.renderCategoryItem(item)
+                : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
+              }
               <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>
                 {item.name}
               </span>
