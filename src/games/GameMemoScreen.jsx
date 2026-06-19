@@ -60,10 +60,10 @@ function MemoCard({ card, config, forceOpen, onClick }) {
           gap: 1, overflow: "hidden", padding: "4px 2px",
           boxShadow: "0 3px 0 rgba(0,0,0,0.12)",
         }}>
-          <div style={{ fontSize: "clamp(1rem,5.5vw,2rem)", lineHeight: 1 }}>
+          <div style={{ fontSize: "clamp(1.6rem,10vw,3rem)", lineHeight: 1 }}>
             {card.item.emoji ?? config.renderLearn(card.item)}
           </div>
-          <div style={{ fontSize: "clamp(0.45rem,1.5vw,0.7rem)", fontWeight: 700, color: "#fff", textAlign: "center", lineHeight: 1.1 }}>
+          <div style={{ fontSize: "clamp(0.55rem,2vw,0.85rem)", fontWeight: 700, color: "#fff", textAlign: "center", lineHeight: 1.1 }}>
             {config.getName(card.item)}
           </div>
         </div>
