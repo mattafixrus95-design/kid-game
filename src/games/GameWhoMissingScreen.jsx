@@ -99,23 +99,18 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
     }
   }
 
-  const gridStyle2x2 = {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "clamp(10px,3vw,18px)",
-    width: "100%",
-    maxWidth: 380,
-  };
-
   // ── Экран 1: Запомни ──────────────────────────────────
   if (phase === "memorize") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Запомни предметы" subtitle="Посмотри внимательно"/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={gridStyle2x2}>
+        <div style={{
+          display: "grid", gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "clamp(10px,3vw,18px)", width: "100%", maxWidth: 500,
+        }}>
           {round.shown.map(item => (
-            <ItemCard key={getKey(item)} item={item} getName={getName}/>
+            <ItemCard key={getKey(item)} item={item} getName={getName} size="clamp(2.5rem,15vw,5rem)"/>
           ))}
         </div>
       </div>
@@ -129,7 +124,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
-      <RoundTitle title="Кто пропал?" subtitle="Кого не хватает?"/>
+      <RoundTitle title="Кто пропал?"/>
 
       {/* 3 оставшихся предмета */}
       <div style={{
@@ -139,6 +134,10 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
         {round.visible.map(item => (
           <ItemCard key={getKey(item)} item={item} getName={getName} size="clamp(1.8rem,10vw,3rem)"/>
         ))}
+      </div>
+
+      <div style={{ fontWeight: 700, fontSize: "clamp(1rem,3.5vw,1.3rem)", color: "var(--muted)", textAlign: "center" }}>
+        Кого не хватает?
       </div>
 
       {/* Варианты ответа */}
@@ -156,7 +155,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
           return (
             <button key={key} onClick={() => handleAnswer(item)}
               style={{
-                flex: "1 1 calc(50% - 8px)", minWidth: 120, maxWidth: 260, aspectRatio: "1/1",
+                flex: "1 1 calc(50% - 8px)", minWidth: 100, maxWidth: 210, aspectRatio: "1/1",
                 background: bg, border: "3px solid transparent",
                 borderRadius: 20, display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
