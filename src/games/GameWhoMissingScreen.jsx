@@ -9,7 +9,6 @@ import BottomBar from "../components/BottomBar";
 const SHOWN_COUNT = 4;
 
 function generateRound(items, nextItem, getKey) {
-  // Pick 4 unique items via bag
   const shown = [];
   const usedKeys = new Set();
   while (shown.length < Math.min(SHOWN_COUNT, items.length)) {
@@ -21,33 +20,60 @@ function generateRound(items, nextItem, getKey) {
   }
   const missingIdx = Math.floor(Math.random() * shown.length);
   const missing = shown[missingIdx];
-  // Remaining visible items (3 slots)
-  const visible = shown.filter((_, i) => i !== missingIdx);
-  // Distractors: items not in shown set
+  // null = пустой слот на месте пропавшего
+  const withSlot = shown.map((item, i) => i === missingIdx ? null : item);
   const distractors = shuffle(items.filter(i => !usedKeys.has(getKey(i)))).slice(0, 3);
   const options = shuffle([missing, ...distractors]);
-  return { shown, visible, missing, options };
+  return { shown, withSlot, missing, options };
 }
 
-function ItemCard({ item, getName, size = "clamp(2.4rem,13vw,4rem)", flex = false }) {
+// Одна карточка — используется и для показа, и для вариантов ответа
+function ItemCard({ item, getName, emojiSize, as: As = "div", onClick, chosen, answerState, getKey }) {
+  const isChosen = chosen && item && getKey && getKey(item) === chosen;
+  const bg = isChosen
+    ? (answerState === "correct" ? "var(--green)" : "var(--red)")
+    : "var(--accent)";
+
   return (
-    <div style={{
-      background: "var(--accent)", borderRadius: 18,
-      aspectRatio: "1/1", display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center",
-      gap: 0, padding: "8px 6px",
-      boxShadow: "0 4px 0 rgba(0,0,0,0.10)",
-      overflow: "hidden",
-      ...(flex ? { flex: "1 1 calc(50% - 8px)", minWidth: 120, maxWidth: 260 } : {}),
-    }}>
-      <span style={{ fontSize: size, lineHeight: 1, flexShrink: 0 }}>{item.emoji}</span>
+    <As
+      onClick={onClick}
+      style={{
+        aspectRatio: "1/1",
+        background: bg,
+        borderRadius: 18,
+        border: "3px solid transparent",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 0, padding: "6px 4px",
+        boxShadow: onClick ? "0 6px 0 rgba(0,0,0,0.12)" : "0 4px 0 rgba(0,0,0,0.10)",
+        cursor: onClick ? "pointer" : "default",
+        transform: isChosen ? "scale(0.93)" : "scale(1)",
+        transition: "transform 0.15s, background 0.2s",
+        animation: isChosen && answerState === "wrong" ? "shake 0.5s" : "none",
+        overflow: "hidden",
+      }}
+    >
+      <span style={{ fontSize: emojiSize, lineHeight: 1, flexShrink: 0 }}>{item.emoji}</span>
       <span style={{
-        fontSize: "clamp(0.65rem,2.2vw,0.9rem)", fontWeight: 700,
-        color: "#fff", textAlign: "center", marginTop: 4,
+        fontSize: "clamp(0.6rem,2vw,0.85rem)", fontWeight: 700,
+        color: "#fff", textAlign: "center", marginTop: 3,
         lineHeight: 1.1, wordBreak: "break-word",
       }}>
         {getName(item)}
       </span>
+    </As>
+  );
+}
+
+// Пустой слот — место пропавшей карточки
+function EmptySlot() {
+  return (
+    <div style={{
+      aspectRatio: "1/1", borderRadius: 18,
+      border: "3px dashed #CCC", background: "rgba(0,0,0,0.03)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+    }}>
+      <span style={{ fontSize: "clamp(1.4rem,8vw,2.2rem)", color: "#CCC" }}>?</span>
     </div>
   );
 }
@@ -63,7 +89,6 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
   const [streak, setStreak]       = useState(0);
   const [nextDisabled, setNextDisabled] = useState(false);
 
-  // Озвучка только при переходе на экран "Кто пропал?"
   useEffect(() => {
     if (phase === "quiz") {
       const t = setTimeout(() => speak("Кто пропал?"), 300);
@@ -83,9 +108,8 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
   function handleAnswer(item) {
     if (answerState !== null) return;
     const key = getKey(item);
-    const correctKey = getKey(round.missing);
     setChosen(key);
-    if (key === correctKey) {
+    if (key === getKey(round.missing)) {
       playSuccess();
       setAnswerState("correct");
       const ns = score + 1, nst = streak + 1;
@@ -100,11 +124,13 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
     }
   }
 
-  const rowStyle = {
+  // Единая сетка 4 колонки, растягивается на всю ширину
+  const gridStyle = {
     display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-    gap: "clamp(8px,2.5vw,14px)", width: "100%", maxWidth: 460,
+    gap: "clamp(8px,2.5vw,12px)", width: "100%", maxWidth: 480,
   };
-  const cardSize = "clamp(2rem,12vw,3.6rem)";
+  // Размер emoji подбирается под ширину карточки ≈ 22vw (с учётом 4 карточки + гэп)
+  const emojiSize = "clamp(1.8rem,11vw,3.2rem)";
 
   // ── Экран 1: Запомни ──────────────────────────────────
   if (phase === "memorize") return (
@@ -112,9 +138,9 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Запомни предметы" subtitle="Посмотри внимательно"/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={rowStyle}>
+        <div style={gridStyle}>
           {round.shown.map(item => (
-            <ItemCard key={getKey(item)} item={item} getName={getName} size={cardSize}/>
+            <ItemCard key={getKey(item)} item={item} getName={getName} emojiSize={emojiSize}/>
           ))}
         </div>
       </div>
@@ -130,49 +156,28 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Кто пропал?"/>
 
-      {/* 3 оставшихся предмета — те же размеры, та же сетка */}
-      <div style={{ ...rowStyle, gridTemplateColumns: "repeat(3, 1fr)", maxWidth: 345 }}>
-        {round.visible.map(item => (
-          <ItemCard key={getKey(item)} item={item} getName={getName} size={cardSize}/>
-        ))}
+      {/* Те же 4 слота — один заменён на ? */}
+      <div style={gridStyle}>
+        {round.withSlot.map((item, i) =>
+          item
+            ? <ItemCard key={getKey(item)} item={item} getName={getName} emojiSize={emojiSize}/>
+            : <EmptySlot key={`empty-${i}`}/>
+        )}
       </div>
 
-      <div style={{ fontWeight: 700, fontSize: "clamp(1rem,3.5vw,1.3rem)", color: "var(--text)", textAlign: "center", margin: "clamp(10px,2.5vw,18px) 0" }}>
+      <div style={{ fontWeight: 700, fontSize: "clamp(1rem,3.5vw,1.3rem)", color: "var(--text)", textAlign: "center" }}>
         Кого не хватает?
       </div>
 
-      {/* Варианты ответа */}
-      <div style={{
-        display: "flex", flexWrap: "wrap",
-        alignItems: "center", alignContent: "center", justifyContent: "center",
-        width: "100%", gap: "clamp(10px,3vw,20px)", maxWidth: 560,
-      }}>
-        {round.options.map(item => {
-          const key = getKey(item);
-          const isChosen = chosen === key;
-          const bg = isChosen
-            ? (answerState === "correct" ? "var(--green)" : "var(--red)")
-            : "var(--accent)";
-          return (
-            <button key={key} onClick={() => handleAnswer(item)}
-              style={{
-                flex: "1 1 calc(50% - 8px)", minWidth: 100, maxWidth: 210, aspectRatio: "1/1",
-                background: bg, border: "3px solid transparent",
-                borderRadius: 20, display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center",
-                gap: 4, padding: "8px 6px",
-                cursor: "pointer", boxShadow: "0 6px 0 rgba(0,0,0,0.12)",
-                transform: isChosen ? "scale(0.93)" : "scale(1)",
-                transition: "transform 0.15s, background 0.2s",
-                animation: isChosen && answerState === "wrong" ? "shake 0.5s" : "none",
-              }}>
-              <span style={{ fontSize: "clamp(2.5rem,15vw,5rem)", lineHeight: 1 }}>{item.emoji}</span>
-              <span style={{ fontSize: "clamp(0.8rem,2.8vw,1.1rem)", fontWeight: 700, color: "#fff", textAlign: "center", lineHeight: 1.1 }}>
-                {getName(item)}
-              </span>
-            </button>
-          );
-        })}
+      {/* Варианты ответа — та же сетка, те же карточки, интерактивные */}
+      <div style={gridStyle}>
+        {round.options.map(item => (
+          <ItemCard
+            key={getKey(item)} item={item} getName={getName} emojiSize={emojiSize}
+            as="button" onClick={() => handleAnswer(item)}
+            chosen={chosen} answerState={answerState} getKey={getKey}
+          />
+        ))}
       </div>
 
       <BottomBar>
