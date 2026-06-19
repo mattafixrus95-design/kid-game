@@ -25,7 +25,10 @@ export default function SkillsScreen({ onSelect }) {
               cursor: "pointer", width: "100%",
             }}>
             <span style={{ fontSize: "clamp(2rem,6vw,2.6rem)" }}>{s.emoji}</span>
-            <span style={{ fontSize: "clamp(1.3rem,5vw,1.8rem)", fontWeight: 800 }}>{s.label}</span>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2 }}>
+              <span style={{ fontSize: "clamp(1.3rem,5vw,1.8rem)", fontWeight: 800 }}>{s.label}</span>
+              <span style={{ fontSize: "clamp(0.8rem,2.5vw,1rem)", color: "var(--muted)", fontWeight: 500 }}>{s.desc}</span>
+            </div>
           </button>
         ))}
       </div>
