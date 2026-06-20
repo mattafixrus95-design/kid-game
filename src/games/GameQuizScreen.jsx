@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { shuffle } from "../lib/random";
 import { speak, stopCurrentAudio, playSuccess, playError } from "../lib/audio";
-import { useIntroSpeech, useStopAudioOnUnmount } from "../hooks/useSpeech";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
@@ -13,6 +13,8 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
   useStopAudioOnUnmount();
   const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, optCount } = config;
   const nextCorrect = useBag(items);
+  const [ready, setReady] = useState(false);
+  const prevKeyRef = useRef(null);
 
   useEffect(() => {
     items.forEach(item => {
@@ -37,7 +39,22 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
 
-  useIntroSpeech(getName(question.correct), introTextQuiz);
+  // Интро: сначала заголовок, потом показываем контент и называем объект
+  useEffect(() => {
+    speak(introTextQuiz, () => {
+      setReady(true);
+      setTimeout(() => speak(getName(question.correct)), 300);
+    });
+  }, []);
+
+  // При смене вопроса (после первого) — озвучиваем новый объект
+  useEffect(() => {
+    const key = getKey(question.correct);
+    if (!ready || prevKeyRef.current === null) { prevKeyRef.current = key; return; }
+    if (prevKeyRef.current === key) return;
+    prevKeyRef.current = key;
+    setTimeout(() => speak(getName(question.correct)), 200);
+  }, [question.correct, ready]);
 
   function advance(excludeKey) {
     setAnswerState(null); setChosen(null);
@@ -51,7 +68,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
   }
 
   function handleAnswer(item) {
-    if (answerState !== null) return;
+    if (!ready || answerState !== null) return;
     const key = getKey(item);
     setChosen(key);
     if (key === getKey(question.correct)) {
@@ -69,8 +86,8 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
   return (
     <div className="screen" style={{justifyContent:"space-between"}}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
-      <RoundTitle title={titleQuiz} subtitle={getName(question.correct)}/>
-      <div key={getKey(question.correct)} style={{flex:1,display:"flex",flexWrap:"wrap",alignItems:"center",alignContent:"center",justifyContent:"center",width:"100%",...optionsContainerStyle}}>
+      <RoundTitle title={titleQuiz} subtitle={ready ? getName(question.correct) : ""}/>
+      <div key={getKey(question.correct)} style={{flex:1,display:"flex",flexWrap:"wrap",alignItems:"center",alignContent:"center",justifyContent:"center",width:"100%",...optionsContainerStyle,opacity:ready?1:0,transition:"opacity 0.3s"}}>
         {question.options.map(item=>(
           <button key={getKey(item)} className="pressable" onClick={()=>handleAnswer(item)}
             style={getOptionStyle(item, { chosen, answerState })}>
