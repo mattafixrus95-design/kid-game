@@ -115,7 +115,7 @@ export default function GameContinueScreen({ config, items, label, record, onUpd
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={task} subtitle="Найди следующий элемент"/>
 
       {/* Sequence row */}
@@ -181,7 +181,7 @@ export default function GameContinueScreen({ config, items, label, record, onUpd
         })}
       </div>
 
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(task)}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
           if (nextDisabled) return;

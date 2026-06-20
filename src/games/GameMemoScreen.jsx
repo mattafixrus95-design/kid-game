@@ -175,13 +175,13 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
 
   if (phase === "done") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "clamp(12px,3vw,24px)" }}>
         <div style={{ fontSize: "clamp(2.5rem,12vw,5rem)", lineHeight: 1 }}>🎉</div>
         <div style={{ fontSize: "clamp(1.3rem,5vw,2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center" }}>Отлично!</div>
         <div style={{ fontSize: "clamp(0.95rem,3vw,1.3rem)", color: "var(--muted)", fontWeight: 700 }}>Попыток: {attempts}</div>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={restart}>Далее ➡️</button>
       </BottomBar>
     </div>
@@ -189,12 +189,12 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
 
   if (phase === "preview") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={INTRO_TEXT}/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <MemoGrid cards={cards} config={config} phase="preview" onCardClick={() => {}}/>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={startGame}>Начать ➡️</button>
       </BottomBar>
     </div>
@@ -202,12 +202,12 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={INTRO_TEXT} subtitle={`Попыток: ${attempts} · Пар: ${matchedCount} / ${totalPairs}`}/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <MemoGrid cards={cards} config={config} phase="play" onCardClick={handleCard}/>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={restart}>🔄 Заново</button>
       </BottomBar>
     </div>

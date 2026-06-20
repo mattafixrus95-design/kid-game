@@ -115,14 +115,14 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
 
   if (done) return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16 }}>
         <div style={{ fontSize: "clamp(3rem,16vw,6rem)" }}>🎉</div>
         <div style={{ fontSize: "clamp(1.3rem,5vw,1.9rem)", fontWeight: 900, color: "var(--text)", textAlign: "center" }}>
           Все отличия найдены!
         </div>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Ещё раз ➡️</button>
       </BottomBar>
     </div>
@@ -130,7 +130,7 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle
         title="Найди отличие"
         subtitle={`Найдено: ${found.size} / ${scene.diffSet.size}`}
@@ -180,7 +180,7 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
         </div>
       </div>
 
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={advanceRound}>Пропустить ➡️</button>
       </BottomBar>
     </div>

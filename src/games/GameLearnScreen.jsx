@@ -31,14 +31,14 @@ export default function GameLearnScreen({ config, items, label, record, onUpdate
 
   return (
     <div className="screen" style={{justifyContent:"space-between"}}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={titleLearn} subtitle={getName(current)}/>
       <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div className="pressable" style={{cursor:"pointer"}} onClick={()=>onItemClick ? onItemClick(current) : handleRepeat()}>
           {renderLearn(current)}
         </div>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{flex:1}} onClick={handleRepeat}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{flex:1}} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>

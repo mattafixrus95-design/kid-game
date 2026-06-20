@@ -121,7 +121,7 @@ export default function GameFastFindScreen({ config, items, label, record, onUpd
 
   if (phase === "result") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
         <div style={{ fontSize: "clamp(3rem,16vw,6rem)" }}>⏰</div>
         <div style={{ fontSize: "clamp(1.3rem,5vw,1.9rem)", fontWeight: 900, color: "var(--text)", textAlign: "center" }}>
@@ -131,7 +131,7 @@ export default function GameFastFindScreen({ config, items, label, record, onUpd
           Найдено раундов: {roundScore}
         </div>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
           setRoundScore(0);
           setTotalFound(0);
@@ -143,7 +143,7 @@ export default function GameFastFindScreen({ config, items, label, record, onUpd
 
   return (
     <div className="screen" style={{ justifyContent: "space-between", gap: "clamp(6px,2vw,12px)" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
 
       {/* Target + Timer */}
       <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 8 }}>

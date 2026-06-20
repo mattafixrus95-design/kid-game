@@ -71,7 +71,7 @@ export default function GameStreamSortScreen({ config, groupA, groupB, label, re
 
   return (
     <div className="screen" style={{ justifyContent: "space-between", gap: 0 }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
 
       {/* Score bar */}
       <div style={{

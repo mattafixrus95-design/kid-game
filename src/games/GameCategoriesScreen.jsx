@@ -94,7 +94,7 @@ export default function GameCategoriesScreen({ config, contentId, categoryLabel,
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={task} subtitle={`Выбери ${categoryLabel}`}/>
       <div style={{
         flex: 1, display: "flex", flexWrap: "wrap",
@@ -129,7 +129,7 @@ export default function GameCategoriesScreen({ config, contentId, categoryLabel,
           );
         })}
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={handleRepeat}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>

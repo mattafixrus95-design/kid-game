@@ -105,7 +105,7 @@ export default function GameCountingScreen({ config, items, label, record, onUpd
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
 
       <RoundTitle
         title={phase === "reveal" ? "Считай вместе!" : "Сколько всего?"}
@@ -161,7 +161,7 @@ export default function GameCountingScreen({ config, items, label, record, onUpd
 
       {/* Bottom: reveal button or number options */}
       {phase === "reveal" ? (
-        <BottomBar>
+        <BottomBar onBack={onBack}>
           {revealed < round.count ? (
             <button className="btn btn-primary" style={{ flex: 1 }} onClick={revealNext}>
               {revealed === 0 ? "Начать ▶️" : `Ещё ▶️ (${revealed}/${round.count})`}

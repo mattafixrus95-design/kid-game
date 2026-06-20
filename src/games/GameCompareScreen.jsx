@@ -117,7 +117,7 @@ export default function GameCompareScreen({ config, items, label, record, onUpda
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={round.task} subtitle="Нажми на нужную группу"/>
 
       <div style={{
@@ -129,7 +129,7 @@ export default function GameCompareScreen({ config, items, label, record, onUpda
         <GroupPanel item={round.itemB} count={round.countB} side="right" chosen={chosen} answerState={answerState} onClick={() => handleChoice("right")}/>
       </div>
 
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(round.task)}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
       </BottomBar>

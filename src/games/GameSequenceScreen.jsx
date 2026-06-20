@@ -100,7 +100,7 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
 
       {phase === "show" ? (
         <>
@@ -128,7 +128,7 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
               }}/>
             ))}
           </div>
-          <BottomBar>
+          <BottomBar onBack={onBack}>
             <div style={{ flex: 1, textAlign: "center", color: "#888", fontSize: "0.95rem", fontWeight: 700 }}>
               Смотри внимательно…
             </div>
@@ -203,7 +203,7 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
             })}
           </div>
 
-          <BottomBar>
+          <BottomBar onBack={onBack}>
             <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setChosen([])}>↩️ Сбросить</button>
             <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Пропустить ➡️</button>
           </BottomBar>

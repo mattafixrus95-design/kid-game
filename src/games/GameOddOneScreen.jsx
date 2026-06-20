@@ -91,7 +91,7 @@ export default function GameOddOneScreen({ config, contentId, items, label, reco
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={task} subtitle="Что здесь лишнее?"/>
       <div style={{
         flex: 1, display: "flex", flexWrap: "wrap",
@@ -124,7 +124,7 @@ export default function GameOddOneScreen({ config, contentId, items, label, reco
           );
         })}
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(task)}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
           if (nextDisabled) return;

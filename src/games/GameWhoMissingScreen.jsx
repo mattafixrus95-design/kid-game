@@ -136,7 +136,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
 
   if (phase === "memorize") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title="Запомни предметы" subtitle="Посмотри внимательно"/>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={gridStyle}>
@@ -145,7 +145,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
           ))}
         </div>
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={startQuiz}>Далее ➡️</button>
       </BottomBar>
     </div>
@@ -153,7 +153,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title="Кто пропал?"/>
 
       <div style={gridStyle}>
@@ -178,7 +178,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
         ))}
       </div>
 
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak("Кто пропал?")}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
           if (nextDisabled) return;

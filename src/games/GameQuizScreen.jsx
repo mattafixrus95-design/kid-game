@@ -85,7 +85,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
 
   return (
     <div className="screen" style={{justifyContent:"space-between"}}>
-      <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
+      <GameHeader label={label} record={record} streak={streak}/>
       <RoundTitle title={titleQuiz} subtitle={ready ? getName(question.correct) : ""}/>
       <div key={getKey(question.correct)} style={{flex:1,display:"flex",flexWrap:"wrap",alignItems:"center",alignContent:"center",justifyContent:"center",width:"100%",...optionsContainerStyle,opacity:ready?1:0,transition:"opacity 0.3s"}}>
         {question.options.map(item=>(
@@ -95,7 +95,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
           </button>
         ))}
       </div>
-      <BottomBar>
+      <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{flex:1}} onClick={handleRepeat}>🔊 Повторить</button>
         <button className="btn btn-primary" style={{flex:1}} onClick={handleSkip}>Пропустить ⏭️</button>
       </BottomBar>
