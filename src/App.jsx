@@ -130,7 +130,11 @@ export default function App() {
   if (screen === "content") return (
     <ContentScreen
       mechanic={mechanic}
-      onSelect={id => { setRubric(id); goTo("subsets"); }}
+      onSelect={id => {
+        setRubric(id);
+        if (mechanic === "sort_groups") goTo("game");
+        else goTo("subsets");
+      }}
       onBack={goBack}
       onFeedback={() => goTo("feedback")}
     />
@@ -179,20 +183,9 @@ export default function App() {
       return <GameCategoriesScreen {...commonProps} contentId={rubric} categoryLabel={categoryLabel}/>;
     }
     if (gameScreen === "sort") {
-      const sets = settings.sets?.slice(0, 2) ?? [];
-      if (sets.length < 2) return (
-        <div className="screen" style={{ justifyContent: "center", gap: 24 }}>
-          <button className="btn btn-back" onClick={goBack}>← Назад</button>
-          <p style={{ textAlign: "center", fontWeight: 700, fontSize: "1.1rem", padding: "0 24px" }}>
-            Выбери ровно 2 набора в настройках для этой игры
-          </p>
-        </div>
-      );
-      const allOptions = config.getSettingsSections(settings, () => {}).flatMap(s => s.options ?? []);
-      const getSubsetLabel = id => allOptions.find(o => o.id === id)?.label ?? id;
-      const groupA = { id: sets[0], label: getSubsetLabel(sets[0]), items: config.getDataset({ ...settings, sets: [sets[0]] }, mechanic) };
-      const groupB = { id: sets[1], label: getSubsetLabel(sets[1]), items: config.getDataset({ ...settings, sets: [sets[1]] }, mechanic) };
-      return <GameStreamSortScreen {...commonProps} groupA={groupA} groupB={groupB}/>;
+      const groups = config.getSortGroups ? config.getSortGroups() : null;
+      if (!groups) return null;
+      return <GameStreamSortScreen {...commonProps} groups={groups}/>;
     }
   }
 

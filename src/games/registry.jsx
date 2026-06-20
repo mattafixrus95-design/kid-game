@@ -67,11 +67,15 @@ export const REGISTRY = {
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
     onSelect: (item, onEnd) => playAnimalSound(item, onEnd),
+    getSortGroups: () => [
+      { id: "domestic", label: "🏠 Домашние", items: ANIMAL_SETS.domestic },
+      { id: "wild",     label: "🌿 Дикие",    items: ANIMAL_SETS.wild },
+    ],
   },
 
   vehicles: {
     emoji: "🚗", title: "Транспорт", recordKey: "rec_vehicles",
-    supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence", "odd_one", "who_missing"],
+    supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence", "odd_one", "who_missing", "sort_groups"],
     defaultSettings: { sets: ["everyday"] },
     getDataset: (settings, mechanic) => mechanic === "attributes" ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -107,6 +111,11 @@ export const REGISTRY = {
     getOptionStyle: (item, state) => cardOptionStyle(item.vehicle ? comboName(item) : item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(8px,2vw,14px)", maxWidth: 580 },
     onSelect: item => playVehicleSound(item.vehicle || item),
+    getSortGroups: () => [
+      { id: "everyday",     label: "🚗 Городской",  items: VEHICLE_SETS.everyday },
+      { id: "construction", label: "🚜 Стройка",     items: VEHICLE_SETS.construction },
+      { id: "special",      label: "🚒 Спецтехника", items: VEHICLE_SETS.special },
+    ],
   },
 
   food: {
@@ -148,6 +157,10 @@ export const REGISTRY = {
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
     onSelect: item => playFoodSound(item),
+    getSortGroups: () => [
+      { id: "fruits",     label: "🍎 Фрукты", items: [...FOOD_SETS.fruits_simple, ...FOOD_SETS.fruits_extra, ...FOOD_SETS.fruits_exotic] },
+      { id: "vegetables", label: "🥔 Овощи",  items: [...FOOD_SETS.vegetables_simple, ...FOOD_SETS.vegetables_extra, ...FOOD_SETS.vegetables_exotic] },
+    ],
   },
 
   colors: {
