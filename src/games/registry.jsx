@@ -55,14 +55,14 @@ export const REGISTRY = {
     getKey: byName, getName: byName,
     introTextLearn: "Назови животное", titleLearn: "Назови животное",
     renderLearn: item => item.image
-      ? <img src={item.image} alt={item.name} style={{ width: "clamp(140px,55vw,260px)", height: "clamp(140px,55vw,260px)", objectFit: "contain" }}/>
+      ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(140px,55vw,260px)", height: "clamp(140px,55vw,260px)", objectFit: "contain" }}/>
       : <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
     onItemClick: item => playAnimalSound(item),
     introTextQuiz: "Выбери правильное животное", titleQuiz: "Выбери правильное животное",
     renderOption: item => (
       <>
         {item.image
-          ? <img src={item.image} alt={item.name} style={{ width: "clamp(52px,18vw,90px)", height: "clamp(52px,18vw,90px)", objectFit: "contain" }}/>
+          ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(52px,18vw,90px)", height: "clamp(52px,18vw,90px)", objectFit: "contain" }}/>
           : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
         }
         <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
@@ -133,14 +133,14 @@ export const REGISTRY = {
     getKey: byName, getName: byName,
     introTextLearn: "Назови", titleLearn: "Назови",
     renderLearn: item => item.image
-      ? <img src={item.image} alt={item.name} style={{ width: "clamp(140px,55vw,260px)", height: "clamp(140px,55vw,260px)", objectFit: "contain" }}/>
+      ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(140px,55vw,260px)", height: "clamp(140px,55vw,260px)", objectFit: "contain" }}/>
       : <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
     onItemClick: item => playFoodSound(item),
     introTextQuiz: "Выбери правильный ответ", titleQuiz: "Выбери правильный ответ",
     renderOption: item => (
       <>
         {item.image
-          ? <img src={item.image} alt={item.name} style={{ width: "clamp(52px,18vw,90px)", height: "clamp(52px,18vw,90px)", objectFit: "contain" }}/>
+          ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(52px,18vw,90px)", height: "clamp(52px,18vw,90px)", objectFit: "contain" }}/>
           : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
         }
         <span style={{ fontSize: "clamp(0.85rem,3vw,1.3rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>{item.name}</span>
