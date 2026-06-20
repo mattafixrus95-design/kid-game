@@ -41,7 +41,6 @@ const FRUITS_EXOTIC = [
   { name: "Кокос",    emoji: "🥥", image: img("Кокос") },
   { name: "Авокадо",  emoji: "🥑", image: img("Авокадо") },
   { name: "Папайя",   emoji: "🍈", image: img("Папайя") },
-  { name: "Помело",   emoji: "🍋", image: img("Помело") },
   { name: "Лайм",     emoji: "🍋", image: img("Лайм") },
   { name: "Маракуйя", emoji: "🍈", image: img("Маракуйя") },
   { name: "Личи",     emoji: "🍒", image: img("Личи") },
