@@ -7,30 +7,42 @@ import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
 const SEQ_LEN = 3;
-const SHOW_DURATION = 1200; // ms per item in auto-show
+const SHOW_DURATION = 1200;
 
 function generateRound(items) {
   const pool = shuffle([...items]);
   const sequence = pool.slice(0, SEQ_LEN);
-  // Distractors: items not in sequence
   const distractors = shuffle(pool.filter(it => !sequence.includes(it))).slice(0, 3);
   const options = shuffle([...sequence, ...distractors]);
   return { sequence, options };
 }
 
+function ItemImage({ item }) {
+  if (item.image) {
+    return <img src={item.image} alt={item.name} decoding="sync"
+      style={{ width: "82%", height: "82%", objectFit: "contain" }}/>;
+  }
+  if (item.css) {
+    return <div style={{
+      width: "60%", height: "60%", borderRadius: "50%",
+      background: item.css, border: "2px solid rgba(0,0,0,0.1)",
+    }}/>;
+  }
+  return <span style={{ fontSize: "clamp(3rem,15vw,5rem)", lineHeight: 1 }}>{item.emoji}</span>;
+}
+
 export default function GameSequenceScreen({ config, items, label, record, onUpdateRecord, onBack }) {
   useStopAudioOnUnmount();
-  const [round, setRound]         = useState(() => generateRound(items));
-  const [phase, setPhase]         = useState("show");   // "show" | "quiz"
-  const [showIdx, setShowIdx]     = useState(0);        // which item is shown in show-phase
-  const [visible, setVisible]     = useState(true);     // fade state
-  const [chosen, setChosen]       = useState([]);       // keys in tap order
-  const [shaking, setShaking]     = useState(false);
-  const [locked, setLocked]       = useState(false);
-  const [score, setScore]         = useState(0);
-  const [streak, setStreak]       = useState(0);
+  const [round, setRound]     = useState(() => generateRound(items));
+  const [phase, setPhase]     = useState("show");
+  const [showIdx, setShowIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const [chosen, setChosen]   = useState([]);
+  const [shaking, setShaking] = useState(false);
+  const [locked, setLocked]   = useState(false);
+  const [score, setScore]     = useState(0);
+  const [streak, setStreak]   = useState(0);
 
-  // Auto-advance show phase
   useEffect(() => {
     if (phase !== "show") return;
     setVisible(true);
@@ -39,7 +51,6 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
       if (showIdx + 1 < round.sequence.length) {
         setShowIdx(i => i + 1);
       } else {
-        // Done showing — transition to quiz
         setPhase("quiz");
       }
     }, SHOW_DURATION + 350);
@@ -69,11 +80,7 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
       playError();
       setLocked(true);
       setShaking(true);
-      setTimeout(() => {
-        setShaking(false);
-        setChosen([]);
-        setLocked(false);
-      }, 500);
+      setTimeout(() => { setShaking(false); setChosen([]); setLocked(false); }, 500);
       return;
     }
 
@@ -98,27 +105,20 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
       {phase === "show" ? (
         <>
           <RoundTitle title="Запомни порядок!" subtitle={`${showIdx + 1} из ${round.sequence.length}`}/>
-          <div style={{
-            flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{
-              background: "var(--accent)", borderRadius: 24,
+              background: "#fff", borderRadius: 24,
               width: "clamp(160px,50vw,240px)", aspectRatio: "1/1",
-              display: "flex", flexDirection: "column",
-              alignItems: "center", justifyContent: "center", gap: 8,
-              boxShadow: "0 8px 0 rgba(0,0,0,0.12)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 8px 0 rgba(0,0,0,0.10)",
               overflow: "hidden",
               opacity: visible ? 1 : 0,
               transform: visible ? "scale(1)" : "scale(0.85)",
               transition: "opacity 0.3s ease, transform 0.3s ease",
             }}>
-              <span style={{ fontSize: "clamp(3.5rem,18vw,6rem)", lineHeight: 1 }}>{currentItem.emoji}</span>
-              <span style={{ fontSize: "clamp(0.9rem,3.5vw,1.3rem)", fontWeight: 800, color: "#fff", textAlign: "center", padding: "0 8px", lineHeight: 1.2 }}>
-                {config.getName(currentItem)}
-              </span>
+              <ItemImage item={currentItem}/>
             </div>
           </div>
-          {/* Dot indicators */}
           <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
             {round.sequence.map((_, i) => (
               <div key={i} style={{
@@ -136,29 +136,23 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
         </>
       ) : (
         <>
-          <RoundTitle
-            title="Повтори по порядку!"
-            subtitle={`${chosen.length} / ${round.sequence.length}`}
-          />
+          <RoundTitle title="Повтори последовательность!" subtitle={`${chosen.length} / ${round.sequence.length}`}/>
 
           {/* Chosen order preview */}
-          <div style={{
-            display: "flex", gap: 8, alignItems: "center", justifyContent: "center",
-            minHeight: 52,
-          }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "center", minHeight: 60 }}>
             {round.sequence.map((_, i) => {
               const chosenKey = chosen[i];
               const item = chosenKey ? round.options.find(o => config.getKey(o) === chosenKey) : null;
               return (
                 <div key={i} style={{
-                  width: 48, height: 48, borderRadius: 12,
-                  background: item ? "var(--primary)" : "rgba(0,0,0,0.08)",
-                  border: item ? "none" : "2px dashed #CCC",
+                  width: 54, height: 54, borderRadius: 12,
+                  background: item ? "#fff" : "rgba(0,0,0,0.06)",
+                  border: item ? "2px solid var(--primary)" : "2px dashed #CCC",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "1.6rem",
+                  overflow: "hidden",
                   transition: "background 0.2s",
                 }}>
-                  {item ? item.emoji : ""}
+                  {item && <ItemImage item={item}/>}
                 </div>
               );
             })}
@@ -181,44 +175,37 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
                   onClick={() => handleOption(item)}
                   style={{
                     aspectRatio: "1/1",
-                    background: isPicked ? "var(--green)" : "var(--accent)",
-                    border: "3px solid transparent",
+                    background: isPicked ? "rgba(92,184,92,0.15)" : "#fff",
+                    border: isPicked ? "3px solid var(--green)" : "3px solid #E0E0E0",
                     borderRadius: 18,
-                    display: "flex", flexDirection: "column",
-                    alignItems: "center", justifyContent: "center", gap: 4,
+                    display: "flex", alignItems: "center", justifyContent: "center",
                     cursor: isPicked ? "default" : "pointer",
-                    boxShadow: "0 4px 0 rgba(0,0,0,0.10)",
+                    boxShadow: "0 4px 0 rgba(0,0,0,0.08)",
                     transform: isPicked ? "scale(0.93)" : "scale(1)",
                     transition: "transform 0.15s, background 0.2s",
-                    position: "relative",
+                    position: "relative", overflow: "hidden",
                   }}>
                   {isPicked && (
                     <div style={{
-                      position: "absolute", top: 6, right: 8,
-                      background: "rgba(0,0,0,0.25)", borderRadius: 99,
+                      position: "absolute", top: 5, right: 6,
+                      background: "var(--green)", borderRadius: 99,
                       width: 22, height: 22,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: "0.75rem", fontWeight: 900, color: "#fff",
+                      zIndex: 1,
                     }}>
                       {chosenPos + 1}
                     </div>
                   )}
-                  <span style={{ fontSize: "clamp(2rem,10vw,3.5rem)" }}>{item.emoji}</span>
-                  <span style={{ fontSize: "clamp(0.65rem,2vw,0.9rem)", fontWeight: 700, color: "#fff", textAlign: "center" }}>
-                    {config.getName(item)}
-                  </span>
+                  <ItemImage item={item}/>
                 </button>
               );
             })}
           </div>
 
           <BottomBar>
-            <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setChosen([])}>
-              ↩️ Сбросить
-            </button>
-            <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>
-              Пропустить ➡️
-            </button>
+            <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setChosen([])}>↩️ Сбросить</button>
+            <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Пропустить ➡️</button>
           </BottomBar>
         </>
       )}
