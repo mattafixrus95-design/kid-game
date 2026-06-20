@@ -103,7 +103,7 @@ export default function FeedbackScreen({ onBack }) {
               padding: "14px 16px", borderRadius: "var(--radius)",
               border: "3px solid #DDD", fontFamily: "Nunito, sans-serif",
               fontSize: "clamp(0.95rem,3vw,1.05rem)", color: "var(--text)",
-              resize: "vertical", outline: "none",
+              background: "#fff", resize: "vertical", outline: "none",
             }}
           />
         </div>
@@ -123,7 +123,7 @@ export default function FeedbackScreen({ onBack }) {
               padding: "14px 16px", borderRadius: "var(--radius)",
               border: "3px solid #DDD", fontFamily: "Nunito, sans-serif",
               fontSize: "clamp(0.95rem,3vw,1.05rem)", color: "var(--text)",
-              outline: "none",
+              background: "#fff", outline: "none",
             }}
           />
         </div>
