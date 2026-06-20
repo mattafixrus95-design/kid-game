@@ -62,7 +62,7 @@ function AboutModal({ onClose }) {
   );
 }
 
-export default function ServiceBar() {
+export default function ServiceBar({ onBack, onFeedback }) {
   const [aboutOpen, setAboutOpen] = useState(false);
 
   return (
@@ -75,6 +75,14 @@ export default function ServiceBar() {
         padding: "6px 12px 10px",
         zIndex: 100,
       }}>
+        {onBack && <button onClick={onBack} style={btnStyle}>
+          <span style={iconStyle}>◀️</span>
+          <span style={labelStyle}>Назад</span>
+        </button>}
+        <button onClick={onFeedback} style={btnStyle}>
+          <span style={iconStyle}>✉️</span>
+          <span style={labelStyle}>Обратная связь</span>
+        </button>
         <button onClick={() => window.open(CLOUDTIPS_URL, "_blank")} style={btnStyle}>
           <span style={iconStyle}>💰</span>
           <span style={labelStyle}>Поддержать</span>
