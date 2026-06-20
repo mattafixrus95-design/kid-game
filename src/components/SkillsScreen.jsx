@@ -3,7 +3,7 @@ import { clamp } from "../lib/styles";
 import { APP_VERSION } from "../version";
 import VersionButton from "./VersionButton";
 
-export default function SkillsScreen({ onSelect }) {
+export default function SkillsScreen({ onSelect, onFeedback }) {
   return (
     <div className="screen" style={{ justifyContent: "center", gap: clamp(16, 24) }}>
       <VersionButton/>
@@ -33,6 +33,17 @@ export default function SkillsScreen({ onSelect }) {
           </button>
         ))}
       </div>
+      <button
+        onClick={onFeedback}
+        style={{
+          position: "fixed", bottom: 32, right: 14,
+          background: "none", border: "none", cursor: "pointer",
+          fontSize: "0.8rem", color: "var(--muted)", fontWeight: 700,
+          padding: "4px 0", textDecoration: "underline", textDecorationStyle: "dotted",
+        }}
+      >
+        Обратная связь
+      </button>
       <div style={{
         position: "fixed", bottom: 10, right: 14,
         fontSize: "0.75rem", color: "var(--muted)", fontWeight: 600, pointerEvents: "none",

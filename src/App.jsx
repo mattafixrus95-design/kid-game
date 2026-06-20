@@ -20,6 +20,7 @@ import GameFastFindScreen from "./games/GameFastFindScreen";
 import GameQuantityScreen from "./games/GameQuantityScreen";
 import GameCountingScreen from "./games/GameCountingScreen";
 import GameCompareScreen from "./games/GameCompareScreen";
+import FeedbackScreen from "./screens/FeedbackScreen";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -94,10 +95,15 @@ export default function App() {
   }
   const goBack = () => window.history.back();
 
+  // ---- ОБРАТНАЯ СВЯЗЬ ----
+  if (screen === "feedback") return (
+    <FeedbackScreen onBack={() => goTo("skills")}/>
+  );
+
   // ---- НАВЫКИ ----
   if (screen === "skills") return (
     <>
-      <SkillsScreen onSelect={id => { setSkill(id); goTo("mechanics"); }}/>
+      <SkillsScreen onSelect={id => { setSkill(id); goTo("mechanics"); }} onFeedback={() => goTo("feedback")}/>
       {exitHint && (
         <div style={{
           position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
