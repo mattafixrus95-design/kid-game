@@ -8,10 +8,7 @@ export default function MechanicsScreen({ skill, onSelect, onBack, onFeedback })
 
   return (
     <div className="screen" style={{ gap: clamp(14, 22), paddingBottom: 64 }}>
-      <ServiceBar onFeedback={onFeedback}/>
-      <div style={{ width: "100%", maxWidth: 500 }}>
-        <button className="btn btn-back" onClick={onBack}>← Назад</button>
-      </div>
+      <ServiceBar onBack={onBack} onFeedback={onFeedback}/>
       <div style={{ textAlign: "center" }}>
         <div style={{ fontSize: "clamp(2rem,7vw,3rem)" }}>{skillDef?.emoji}</div>
         <h2 style={{ fontSize: "clamp(1.5rem,6vw,2rem)", fontWeight: 900, color: "var(--text)" }}>{skillDef?.label}</h2>

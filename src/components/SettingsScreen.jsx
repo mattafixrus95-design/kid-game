@@ -6,10 +6,7 @@ export default function SettingsScreen({ emoji, title, sections, onStart, onBack
   const blocked = sections.some(sec => sec.multi && sec.values.length === 0);
   return (
     <div className="screen" style={{gap:"clamp(14px,3vw,24px)", paddingBottom: 64}}>
-      <ServiceBar onFeedback={onFeedback}/>
-      <div style={{width:"100%",maxWidth:500}}>
-        <button className="btn btn-back" onClick={onBack}>← Назад</button>
-      </div>
+      <ServiceBar onBack={onBack} onFeedback={onFeedback}/>
       <div style={{textAlign:"center"}}>
         <div style={{fontSize:"clamp(2rem,7vw,3rem)"}}>{emoji}</div>
         <h2 style={{fontSize:"clamp(1.5rem,6vw,2rem)",fontWeight:900,color:"var(--text)",marginTop:10}}>{title}</h2>

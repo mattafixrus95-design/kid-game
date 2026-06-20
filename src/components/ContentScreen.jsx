@@ -17,10 +17,7 @@ export default function ContentScreen({ mechanic, onSelect, onBack, onFeedback }
 
   return (
     <div className="screen" style={{gap:clamp(16,24), paddingBottom: 64}}>
-      <ServiceBar onFeedback={onFeedback}/>
-      <div style={{width:"100%",maxWidth:500}}>
-        <button className="btn btn-back" onClick={onBack}>← Назад</button>
-      </div>
+      <ServiceBar onBack={onBack} onFeedback={onFeedback}/>
       <div style={{textAlign:"center",marginBottom:4}}>
         <h2 style={{fontSize:"clamp(1.5rem,6vw,2rem)",fontWeight:900,color:"var(--text)"}}>Выбери тему</h2>
       </div>
