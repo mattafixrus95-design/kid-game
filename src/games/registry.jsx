@@ -61,7 +61,7 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильное животное", titleQuiz: "Выбери правильное животное",
     renderOption: item => (
       item.image
-        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(60px,22vw,110px)", height: "clamp(60px,22vw,110px)", objectFit: "contain" }}/>
+        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
         : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
@@ -135,7 +135,7 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильный ответ", titleQuiz: "Выбери правильный ответ",
     renderOption: item => (
       item.image
-        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(60px,22vw,110px)", height: "clamp(60px,22vw,110px)", objectFit: "contain" }}/>
+        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
         : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
