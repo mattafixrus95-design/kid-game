@@ -139,7 +139,7 @@ export const REGISTRY = {
       ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(180px,70vw,340px)", height: "clamp(180px,70vw,340px)", objectFit: "contain" }}/>
       : <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
     onItemClick: item => playFoodSound(item),
-    introTextQuiz: "Выбери правильный ответ", titleQuiz: "Выбери правильный ответ",
+    introTextQuiz: "Выбери правильную картинку", titleQuiz: "Выбери правильную картинку",
     renderOption: item => (
       item.image
         ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
