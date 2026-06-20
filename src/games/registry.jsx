@@ -84,20 +84,27 @@ export const REGISTRY = {
     getKey: item => item.vehicle ? `${item.vehicle.name}_${item.color.name}` : item.name,
     getName: item => item.vehicle ? comboName(item) : item.name,
     introTextLearn: "Назови машину", titleLearn: "Назови машину",
-    renderLearn: item => <VehicleSVG name={item.name} size={learnSvgSize(280)}/>,
+    renderLearn: item => {
+      const vehicle = item.vehicle || item;
+      return vehicle.image
+        ? <img src={vehicle.image} alt={vehicle.name} decoding="sync" style={{ width: "clamp(180px,70vw,340px)", height: "clamp(180px,70vw,340px)", objectFit: "contain" }}/>
+        : <VehicleSVG name={vehicle.name} size={learnSvgSize(280)}/>;
+    },
     onItemClick: item => playVehicleSound(item),
     introTextQuiz: "Выбери правильную машину", titleQuiz: "Выбери правильную машину",
     renderOption: item => {
       const vehicle = item.vehicle || item;
       const name = item.vehicle ? comboName(item) : item.name;
-      return (
-        <>
-          <VehicleSVG name={vehicle.name} color={item.vehicle ? item.color.css : undefined} size={Math.min(window.innerWidth*0.36, 160)}/>
-          <span style={{ fontSize: "clamp(0.8rem,2.6vw,1.15rem)", fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.2 }}>{name}</span>
-        </>
-      );
+      return vehicle.image
+        ? <img src={vehicle.image} alt={name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
+        : (
+          <>
+            <VehicleSVG name={vehicle.name} color={item.vehicle ? item.color.css : undefined} size={Math.min(window.innerWidth*0.36, 160)}/>
+            <span style={{ fontSize: "clamp(0.8rem,2.6vw,1.15rem)", fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.2 }}>{name}</span>
+          </>
+        );
     },
-    getOptionStyle: (item, state) => cardOptionStyle(item.vehicle ? comboName(item) : item.name, state, { background: "#fff", padding: "6px" }),
+    getOptionStyle: (item, state) => cardOptionStyle(item.vehicle ? comboName(item) : item.name, state, { background: "var(--primary)", padding: "6px" }),
     optionsContainerStyle: { gap: "clamp(8px,2vw,14px)", maxWidth: 580 },
     onSelect: item => playVehicleSound(item.vehicle || item),
   },
