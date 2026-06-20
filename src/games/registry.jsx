@@ -199,7 +199,7 @@ export const REGISTRY = {
 
   shapes: {
     emoji: "🔷", title: "Фигуры", recordKey: "rec_shapes",
-    supportsMechanics: ["words", "recognition", "memori", "categories", "who_missing", "sequence", "odd_one"],
+    supportsMechanics: ["words", "recognition", "memori", "categories", "who_missing", "sequence", "odd_one", "continue"],
     defaultSettings: { sets: ["simple"] },
     getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
