@@ -1,12 +1,12 @@
 import { settingsOptStyle, checkboxDotStyle } from "../lib/styles";
-import VersionButton from "./VersionButton";
+import ServiceBar from "./ServiceBar";
 
 // Общий шаблон экрана настроек
-export default function SettingsScreen({ emoji, title, sections, onStart, onBack }) {
+export default function SettingsScreen({ emoji, title, sections, onStart, onBack, onFeedback }) {
   const blocked = sections.some(sec => sec.multi && sec.values.length === 0);
   return (
-    <div className="screen" style={{gap:"clamp(14px,3vw,24px)"}}>
-      <VersionButton/>
+    <div className="screen" style={{gap:"clamp(14px,3vw,24px)", paddingBottom: 64}}>
+      <ServiceBar onFeedback={onFeedback}/>
       <div style={{width:"100%",maxWidth:500}}>
         <button className="btn btn-back" onClick={onBack}>← Назад</button>
       </div>

@@ -1,6 +1,6 @@
 import { REGISTRY } from "../games/registry";
 import { clamp } from "../lib/styles";
-import VersionButton from "./VersionButton";
+import ServiceBar from "./ServiceBar";
 
 const CONTENT_COLORS = {
   animals:"#4ECDC4",
@@ -11,13 +11,13 @@ const CONTENT_COLORS = {
   numbers:"#FF6B35",
 };
 
-export default function ContentScreen({ mechanic, onSelect, onBack }) {
+export default function ContentScreen({ mechanic, onSelect, onBack, onFeedback }) {
   const available = Object.entries(REGISTRY)
     .filter(([,cfg]) => cfg.supportsMechanics?.includes(mechanic));
 
   return (
-    <div className="screen" style={{gap:clamp(16,24)}}>
-      <VersionButton/>
+    <div className="screen" style={{gap:clamp(16,24), paddingBottom: 64}}>
+      <ServiceBar onFeedback={onFeedback}/>
       <div style={{width:"100%",maxWidth:500}}>
         <button className="btn btn-back" onClick={onBack}>← Назад</button>
       </div>

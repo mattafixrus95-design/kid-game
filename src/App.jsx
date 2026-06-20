@@ -122,6 +122,7 @@ export default function App() {
       skill={skill}
       onSelect={id => { setMechanic(id); goTo("content"); }}
       onBack={goBack}
+      onFeedback={() => goTo("feedback")}
     />
   );
 
@@ -131,6 +132,7 @@ export default function App() {
       mechanic={mechanic}
       onSelect={id => { setRubric(id); goTo("subsets"); }}
       onBack={goBack}
+      onFeedback={() => goTo("feedback")}
     />
   );
 
@@ -145,6 +147,7 @@ export default function App() {
       sections={config.getSettingsSections(settings, onChangeSettings)}
       onStart={() => goTo("game")}
       onBack={goBack}
+      onFeedback={() => goTo("feedback")}
     />
   );
 

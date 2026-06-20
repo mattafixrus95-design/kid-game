@@ -1,14 +1,14 @@
 import { SKILLS, MECHANICS } from "../lib/skills";
 import { clamp } from "../lib/styles";
-import VersionButton from "./VersionButton";
+import ServiceBar from "./ServiceBar";
 
-export default function MechanicsScreen({ skill, onSelect, onBack }) {
+export default function MechanicsScreen({ skill, onSelect, onBack, onFeedback }) {
   const skillDef = SKILLS.find(s => s.id === skill);
   const mechanics = MECHANICS[skill] || [];
 
   return (
-    <div className="screen" style={{ gap: clamp(14, 22) }}>
-      <VersionButton/>
+    <div className="screen" style={{ gap: clamp(14, 22), paddingBottom: 64 }}>
+      <ServiceBar onFeedback={onFeedback}/>
       <div style={{ width: "100%", maxWidth: 500 }}>
         <button className="btn btn-back" onClick={onBack}>← Назад</button>
       </div>
