@@ -127,7 +127,7 @@ export default function GameStreamSortScreen({ config, groups, label, record, on
       {/* Baskets */}
       <div style={{
         display: "flex", gap: "clamp(8px,2.5vw,16px)",
-        width: "100%", maxWidth: isThree ? 560 : 500, paddingBottom: 8,
+        width: "100%", maxWidth: isThree ? 560 : 500, paddingBottom: 8, marginBottom: 12,
       }}>
         {groups.map((grp, i) => {
           const isFlash = flash === grp.id;
