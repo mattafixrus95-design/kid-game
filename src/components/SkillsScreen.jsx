@@ -38,11 +38,11 @@ export default function SkillsScreen({ onSelect, onFeedback }) {
         style={{
           position: "fixed", bottom: 32, right: 14,
           background: "none", border: "none", cursor: "pointer",
-          fontSize: "0.8rem", color: "var(--muted)", fontWeight: 700,
+          fontSize: "0.8rem", color: "var(--text)", fontWeight: 700,
           padding: "4px 0", textDecoration: "underline", textDecorationStyle: "dotted",
         }}
       >
-        Обратная связь
+        ✉️ Обратная связь
       </button>
       <div style={{
         position: "fixed", bottom: 10, right: 14,
