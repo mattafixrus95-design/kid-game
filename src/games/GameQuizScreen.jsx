@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { shuffle } from "../lib/random";
-import { speak, playSuccess, playError } from "../lib/audio";
+import { speak, stopCurrentAudio, playSuccess, playError } from "../lib/audio";
 import { useIntroSpeech } from "../hooks/useSpeech";
 import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
@@ -12,9 +12,7 @@ const OPT_COUNT = 4;
 export default function GameQuizScreen({ config, items, label, record, onUpdateRecord, onBack }) {
   const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, onSelect, optCount } = config;
   const nextCorrect = useBag(items);
-  const [nextDisabled, setNextDisabled] = useState(false);
 
-  // Принудительно декодируем все картинки при старте игры
   useEffect(() => {
     items.forEach(item => {
       if (item.image) {
@@ -45,10 +43,9 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
     setQuestion(makeQuestion(excludeKey));
   }
 
-  function handleNext() {
-    if (nextDisabled) return;
-    setNextDisabled(true);
-    setTimeout(() => setNextDisabled(false), 500);
+  function handleSkip() {
+    stopCurrentAudio();
+    window.speechSynthesis?.cancel();
     advance(getKey(question.correct));
   }
 
@@ -60,11 +57,8 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
       playSuccess(); setAnswerState("correct");
       const ns = score + 1, nst = streak + 1; setScore(ns); setStreak(nst);
       if (ns > record) onUpdateRecord(ns);
-      let soundDone = false, timerDone = false;
-      const maybeAdvance = () => { if (soundDone && timerDone) advance(getKey(question.correct)); };
-      if (onSelect) onSelect(item, () => { soundDone = true; maybeAdvance(); });
-      else soundDone = true;
-      setTimeout(() => { timerDone = true; maybeAdvance(); }, 700);
+      if (onSelect) onSelect(item, () => advance(getKey(question.correct)));
+      else advance(getKey(question.correct));
     } else {
       playError(); setAnswerState("wrong"); setStreak(0);
       if (onSelect) onSelect(item);
@@ -87,7 +81,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
       </div>
       <BottomBar>
         <button className="btn btn-ghost" style={{flex:1}} onClick={handleRepeat}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{flex:1}} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
+        <button className="btn btn-primary" style={{flex:1}} onClick={handleSkip}>Пропустить ⏭️</button>
       </BottomBar>
     </div>
   );
