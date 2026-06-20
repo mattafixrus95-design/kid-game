@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import { useBag } from "../lib/useBag";
@@ -79,6 +80,7 @@ function EmptySlot() {
 }
 
 export default function GameWhoMissingScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const { getKey, getName } = config;
   const nextItem = useBag(items);
   const [phase, setPhase]         = useState("memorize");

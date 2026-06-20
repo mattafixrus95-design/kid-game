@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -31,6 +32,7 @@ function pickTarget(items, prevName) {
 }
 
 export default function GameFastFindScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const [target, setTarget]   = useState(() => pickTarget(items, null));
   const [grid, setGrid]       = useState(() => buildGrid(items, pickTarget(items, null)));
   const [timeLeft, setTimeLeft] = useState(ROUND_TIME);

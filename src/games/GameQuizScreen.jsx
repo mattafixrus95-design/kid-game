@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { shuffle } from "../lib/random";
 import { speak, stopCurrentAudio, playSuccess, playError } from "../lib/audio";
-import { useIntroSpeech } from "../hooks/useSpeech";
+import { useIntroSpeech, useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
@@ -10,6 +10,7 @@ import BottomBar from "../components/BottomBar";
 const OPT_COUNT = 4;
 
 export default function GameQuizScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, onSelect, optCount } = config;
   const nextCorrect = useBag(items);
 

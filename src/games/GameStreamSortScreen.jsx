@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -16,6 +17,7 @@ const BASKET_COLORS = {
 };
 
 export default function GameStreamSortScreen({ config, groupA, groupB, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const [pool, setPool]           = useState(() => buildPool(groupA, groupB));
   const [idx, setIdx]             = useState(0);
   const [shaking, setShaking]     = useState(false);

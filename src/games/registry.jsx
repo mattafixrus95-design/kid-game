@@ -61,10 +61,10 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильное животное", titleQuiz: "Выбери правильное животное",
     renderOption: item => (
       item.image
-        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
+        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
         : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
     ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
     onSelect: (item, onEnd) => playAnimalSound(item, onEnd),
   },
@@ -96,7 +96,7 @@ export const REGISTRY = {
       const vehicle = item.vehicle || item;
       const name = item.vehicle ? comboName(item) : item.name;
       return vehicle.image
-        ? <img src={vehicle.image} alt={name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
+        ? <img src={vehicle.image} alt={name} decoding="sync" style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
         : (
           <>
             <VehicleSVG name={vehicle.name} color={item.vehicle ? item.color.css : undefined} size={Math.min(window.innerWidth*0.36, 160)}/>
@@ -104,7 +104,7 @@ export const REGISTRY = {
           </>
         );
     },
-    getOptionStyle: (item, state) => cardOptionStyle(item.vehicle ? comboName(item) : item.name, state, { background: "var(--primary)", padding: "6px" }),
+    getOptionStyle: (item, state) => cardOptionStyle(item.vehicle ? comboName(item) : item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(8px,2vw,14px)", maxWidth: 580 },
     onSelect: item => playVehicleSound(item.vehicle || item),
   },
@@ -142,10 +142,10 @@ export const REGISTRY = {
     introTextQuiz: "Выбери правильный ответ", titleQuiz: "Выбери правильный ответ",
     renderOption: item => (
       item.image
-        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
+        ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
         : <span style={{ fontSize: "clamp(3rem,18vw,6rem)" }}>{item.emoji}</span>
     ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
     onSelect: item => playFoodSound(item),
   },
@@ -205,9 +205,9 @@ export const REGISTRY = {
       : <ShapeSVG name={item.name} size={learnSvgSize(280)}/>,
     introTextQuiz: "Выбери правильную фигуру", titleQuiz: "Выбери правильную фигуру",
     renderOption: item => item.image
-      ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
+      ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
       : <ShapeSVG name={item.name} size={Math.min(window.innerWidth*0.32, 140)}/>,
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "transparent", boxShadow: "none" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
   },
 

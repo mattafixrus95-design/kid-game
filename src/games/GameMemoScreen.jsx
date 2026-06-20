@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -98,6 +99,7 @@ function MemoGrid({ cards, config, phase, onCardClick }) {
 }
 
 export default function GameMemoScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const [phase, setPhase]   = useState("preview");
   const [cards, setCards]   = useState(() => buildCards(items));
   const [open, setOpen]     = useState([]);

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -31,6 +32,7 @@ function generateScene(items) {
 }
 
 export default function GameSpotDiffScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const [scene, setScene]         = useState(() => generateScene(items));
   const [found, setFound]         = useState(new Set());   // positions found
   const [wrong, setWrong]         = useState(null);        // position shaking

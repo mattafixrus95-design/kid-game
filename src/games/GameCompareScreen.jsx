@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
 import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
@@ -50,6 +51,7 @@ function GroupPanel({ item, count, side, chosen, answerState, onClick }) {
 }
 
 export default function GameCompareScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const nextItem = useBag(items);
   const [nextDisabled, setNextDisabled] = useState(false);
 

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { speak } from "../lib/audio";
-import { useIntroSpeech } from "../hooks/useSpeech";
+import { useIntroSpeech, useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { useBag } from "../lib/useBag";
 import GameHeader from "../components/GameHeader";
 import RoundTitle from "../components/RoundTitle";
 import BottomBar from "../components/BottomBar";
 
 export default function GameLearnScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const { getKey, getName, introTextLearn, titleLearn, renderLearn, onItemClick } = config;
   const nextItem = useBag(items);
   const [current, setCurrent] = useState(() => nextItem());

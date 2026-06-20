@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -32,6 +33,7 @@ function buildOptions(count) {
 }
 
 export default function GameCountingScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const [round, setRound]         = useState(() => generateRound(items, null));
   const [revealed, setRevealed]   = useState(0);       // how many items shown
   const [phase, setPhase]         = useState("reveal"); // "reveal" | "quiz"

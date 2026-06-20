@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import { useBag } from "../lib/useBag";
@@ -32,6 +33,7 @@ const DISTRACTORS = {
 };
 
 export default function GameCategoriesScreen({ config, contentId, categoryLabel, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const distractors = DISTRACTORS[contentId] || DISTRACTORS.food;
   const task = `Найди ${categoryLabel}`;
   const nextCorrect = useBag(items);

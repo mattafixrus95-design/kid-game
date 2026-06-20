@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -42,6 +43,7 @@ function generateRound(items, outlierPool, prevOutlierName) {
 }
 
 export default function GameOddOneScreen({ config, contentId, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const outlierPool = OUTLIER_POOL[contentId] || OUTLIER_POOL.food;
   const task = "Найди лишнее";
 

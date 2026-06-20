@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { speak, speakSequence, playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -50,6 +51,7 @@ function generateRound(items, getKey, prevCorrectKey) {
 }
 
 export default function GameContinueScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const task = "Что дальше?";
   const [round, setRound]         = useState(() => generateRound(items, config.getKey, null));
   const [chosen, setChosen]       = useState(null);

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useStopAudioOnUnmount } from "../hooks/useSpeech";
 import { playSuccess, playError } from "../lib/audio";
 import { shuffle } from "../lib/random";
 import GameHeader from "../components/GameHeader";
@@ -18,6 +19,7 @@ function generateRound(items) {
 }
 
 export default function GameSequenceScreen({ config, items, label, record, onUpdateRecord, onBack }) {
+  useStopAudioOnUnmount();
   const [round, setRound]         = useState(() => generateRound(items));
   const [phase, setPhase]         = useState("show");   // "show" | "quiz"
   const [showIdx, setShowIdx]     = useState(0);        // which item is shown in show-phase

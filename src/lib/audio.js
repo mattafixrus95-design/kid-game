@@ -8,6 +8,11 @@ export function stopCurrentAudio() {
   }
 }
 
+export function stopAllAudio() {
+  stopCurrentAudio();
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
 export function speak(text, onEnd) {
   if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
   stopCurrentAudio();
