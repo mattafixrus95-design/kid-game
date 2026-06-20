@@ -102,7 +102,7 @@ export default function GameStreamSortScreen({ config, groups, label, record, on
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{
           background: "#fff", borderRadius: 28,
-          width: "clamp(150px,44vw,230px)", aspectRatio: "1/1",
+          width: "clamp(180px,54vw,270px)", aspectRatio: "1/1",
           display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center", gap: 8,
           boxShadow: "0 10px 0 rgba(0,0,0,0.10)",
