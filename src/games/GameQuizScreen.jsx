@@ -11,7 +11,7 @@ const OPT_COUNT = 4;
 
 export default function GameQuizScreen({ config, items, label, record, onUpdateRecord, onBack }) {
   useStopAudioOnUnmount();
-  const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, onSelect, optCount } = config;
+  const { getKey, getName, introTextQuiz, titleQuiz, renderOption, getOptionStyle, optionsContainerStyle, optCount } = config;
   const nextCorrect = useBag(items);
 
   useEffect(() => {
@@ -58,11 +58,9 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
       playSuccess(); setAnswerState("correct");
       const ns = score + 1, nst = streak + 1; setScore(ns); setStreak(nst);
       if (ns > record) onUpdateRecord(ns);
-      if (onSelect) onSelect(item, () => advance(getKey(question.correct)));
-      else advance(getKey(question.correct));
+      setTimeout(() => advance(getKey(question.correct)), 600);
     } else {
       playError(); setAnswerState("wrong"); setStreak(0);
-      if (onSelect) onSelect(item);
       setTimeout(() => { setAnswerState(null); setChosen(null); }, 700);
     }
   }
