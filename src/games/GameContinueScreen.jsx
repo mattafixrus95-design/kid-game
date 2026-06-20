@@ -44,8 +44,7 @@ function generateRound(items, getKey, prevCorrectKey) {
 }
 
 function ItemVisual({ item, size = "clamp(1.6rem,9vw,3rem)" }) {
-  if (typeof item === "string") {
-    // цифра
+  if (typeof item === "number" || typeof item === "string") {
     return <span style={{ fontSize: size, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>{item}</span>;
   }
   if (item.image) {
