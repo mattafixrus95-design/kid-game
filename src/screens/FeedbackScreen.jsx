@@ -50,10 +50,7 @@ export default function FeedbackScreen({ onBack }) {
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", paddingBottom: 4 }}>
-        <button className="btn btn-ghost" style={{ padding: "8px 14px", fontSize: "1rem" }} onClick={onBack}>
-          ← Назад
-        </button>
+      <div style={{ width: "100%", textAlign: "center", paddingBottom: 4 }}>
         <span style={{ fontWeight: 900, fontSize: "clamp(1.2rem,5vw,1.6rem)", color: "var(--text)" }}>
           Обратная связь
         </span>

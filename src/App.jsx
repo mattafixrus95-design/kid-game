@@ -97,7 +97,7 @@ export default function App() {
 
   // ---- ОБРАТНАЯ СВЯЗЬ ----
   if (screen === "feedback") return (
-    <FeedbackScreen onBack={() => goTo("skills")}/>
+    <FeedbackScreen onBack={goBack}/>
   );
 
   // ---- НАВЫКИ ----
