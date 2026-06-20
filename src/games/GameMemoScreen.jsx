@@ -176,10 +176,10 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
   if (phase === "done") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
-        <div style={{ fontSize: "clamp(3rem,16vw,6rem)" }}>🎉</div>
-        <div style={{ fontSize: "clamp(1.4rem,5vw,2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center" }}>Отлично!</div>
-        <div style={{ fontSize: "clamp(1rem,3.5vw,1.4rem)", color: "var(--muted)", fontWeight: 700 }}>Попыток: {attempts}</div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "clamp(12px,3vw,24px)" }}>
+        <div style={{ fontSize: "clamp(2.5rem,12vw,5rem)", lineHeight: 1 }}>🎉</div>
+        <div style={{ fontSize: "clamp(1.3rem,5vw,2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center" }}>Отлично!</div>
+        <div style={{ fontSize: "clamp(0.95rem,3vw,1.3rem)", color: "var(--muted)", fontWeight: 700 }}>Попыток: {attempts}</div>
       </div>
       <BottomBar>
         <button className="btn btn-primary" style={{ flex: 1 }} onClick={restart}>Далее ➡️</button>

@@ -1,10 +1,10 @@
 // Стандартная шапка игрового экрана
 export default function GameHeader({ onBack, label, record, streak }) {
   return (
-    <div style={{width:"100%",maxWidth:560}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-        {label && <div style={{fontSize:"0.9rem",color:"var(--muted)",fontWeight:600}}>{label}</div>}
-        <div style={{marginLeft:"auto",fontWeight:800,fontSize:"clamp(1rem,3vw,1.2rem)",color:"var(--muted)"}}>
+    <div style={{width:"100%",maxWidth:560,display:"flex",flexDirection:"column",gap:4}}>
+      <div style={{display:"flex",justifyContent:"flex-end",alignItems:"center",gap:12}}>
+        {label && <div style={{fontSize:"0.85rem",color:"var(--muted)",fontWeight:600,marginRight:"auto"}}>{label}</div>}
+        <div style={{fontWeight:800,fontSize:"clamp(0.9rem,2.5vw,1.1rem)",color:"var(--muted)"}}>
           🏆{record} 🔥{streak}
         </div>
       </div>
