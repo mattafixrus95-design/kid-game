@@ -17,8 +17,8 @@ export const GLOBAL_STYLES = `
   .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 0 var(--primary-d);}
   .btn-ghost{background:#fff;color:var(--text);border:2px solid #E0E0E0;box-shadow:var(--shadow);}
   .btn-ghost:active{background:#F5F5F5;}
-  .btn-back{background:#fff;color:var(--muted);border:2px solid #E0E0E0;
-    padding:10px 20px;font-size:clamp(0.9rem,2.5vw,1.1rem);box-shadow:none;}
+  .btn-back{background:#fff;color:var(--muted);border:2px solid #E0E0E0;box-shadow:var(--shadow);}
+  .btn-back:active{background:#F5F5F5;}
   .screen{display:flex;flex-direction:column;align-items:center;
     height:100dvh;width:100%;padding:clamp(12px,3vw,24px) clamp(12px,4vw,20px);
     overflow-y:auto;gap:clamp(8px,2vw,16px);}

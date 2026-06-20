@@ -185,7 +185,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
           setNextDisabled(true);
           setTimeout(() => setNextDisabled(false), 500);
           advanceRound();
-        }} disabled={nextDisabled}>Пропустить ⏭️</button>
+        }} disabled={nextDisabled}>Пропустить ➡️</button>
       </BottomBar>
     </div>
   );

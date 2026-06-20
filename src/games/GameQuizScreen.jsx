@@ -97,7 +97,7 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
       </div>
       <BottomBar onBack={onBack}>
         <button className="btn btn-ghost" style={{flex:1}} onClick={handleRepeat}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{flex:1}} onClick={handleSkip}>Пропустить ⏭️</button>
+        <button className="btn btn-primary" style={{flex:1}} onClick={handleSkip}>Пропустить ➡️</button>
       </BottomBar>
     </div>
   );
