@@ -1,50 +1,52 @@
 import { speak } from "../lib/audio";
 
-// Простые овощи — узнаваемые, часто встречаются в магазине/на кухне
+const vegetableImages = import.meta.glob('/src/assets/vegetables/*.png', { eager: true });
+function img(name) {
+  return vegetableImages[`/src/assets/vegetables/${name}.png`]?.default;
+}
+
 const VEGETABLES_SIMPLE = [
-  { name: "Картофель",      emoji: "🥔" },
-  { name: "Морковь",        emoji: "🥕" },
-  { name: "Огурец",         emoji: "🥒" },
-  { name: "Помидор",        emoji: "🍅" },
-  { name: "Лук",            emoji: "🧅" },
-  { name: "Чеснок",         emoji: "🧄" },
-  { name: "Капуста",        emoji: "🥬" },
-  { name: "Свёкла",         emoji: "🍠" },
-  { name: "Перец сладкий",  emoji: "🌶️" },
-  { name: "Кабачок",        emoji: "🥦" },
-  { name: "Баклажан",       emoji: "🍆" },
-  { name: "Редис",          emoji: "🌸" },
-  { name: "Тыква",          emoji: "🎃" },
-  { name: "Зелёный горошек",emoji: "🌿" },
-  { name: "Укроп",          emoji: "🌱" },
+  { name: "Картофель",      emoji: "🥔", image: img("Картофель") },
+  { name: "Морковь",        emoji: "🥕", image: img("Морковь") },
+  { name: "Огурец",         emoji: "🥒", image: img("Огурец") },
+  { name: "Помидор",        emoji: "🍅", image: img("Помидор") },
+  { name: "Лук",            emoji: "🧅", image: img("Лук") },
+  { name: "Чеснок",         emoji: "🧄", image: img("Чеснок") },
+  { name: "Капуста",        emoji: "🥬", image: img("Капуста") },
+  { name: "Свёкла",         emoji: "🍠", image: img("Свёкла") },
+  { name: "Перец сладкий",  emoji: "🌶️", image: img("Перец сладкий") },
+  { name: "Кабачок",        emoji: "🥦", image: img("Кабачок") },
+  { name: "Баклажан",       emoji: "🍆", image: img("Баклажан") },
+  { name: "Редис",          emoji: "🌸", image: img("Редис") },
+  { name: "Тыква",          emoji: "🎃", image: img("Тыква") },
+  { name: "Зелёный горошек",emoji: "🌿", image: img("Зелёный горошек") },
+  { name: "Укроп",          emoji: "🌱", image: img("Укроп") },
 ];
 
-// Дополнительные овощи — менее распространённые, но знакомые
 const VEGETABLES_EXTRA = [
-  { name: "Цветная капуста",    emoji: "🌼" },
-  { name: "Брокколи",           emoji: "🥦" },
-  { name: "Шпинат",             emoji: "🍀" },
-  { name: "Сельдерей",          emoji: "🌾" },
-  { name: "Пекинская капуста",  emoji: "🥬" },
-  { name: "Лук-порей",          emoji: "🧅" },
-  { name: "Фасоль стручковая",  emoji: "🥒" },
-  { name: "Кукуруза",           emoji: "🌽" },
-  { name: "Пастернак",          emoji: "🥕" },
-  { name: "Редька",             emoji: "🍠" },
+  { name: "Цветная капуста",    emoji: "🌼", image: img("Цветная капуста") },
+  { name: "Брокколи",           emoji: "🥦", image: img("Брокколи") },
+  { name: "Шпинат",             emoji: "🍀", image: img("Шпинат") },
+  { name: "Сельдерей",          emoji: "🌾", image: img("Сельдерей") },
+  { name: "Пекинская капуста",  emoji: "🥬", image: img("Пекинская капуста") },
+  { name: "Лук-порей",          emoji: "🧅", image: img("Лук-порей") },
+  { name: "Фасоль стручковая",  emoji: "🥒", image: img("Фасоль стручковая") },
+  { name: "Кукуруза",           emoji: "🌽", image: img("Кукуруза") },
+  { name: "Пастернак",          emoji: "🥕", image: img("Пастернак") },
+  { name: "Редька",             emoji: "🍠", image: img("Редька") },
 ];
 
-// Экзотические / менее знакомые овощи
 const VEGETABLES_EXOTIC = [
-  { name: "Артишок",   emoji: "🌺" },
-  { name: "Батат",     emoji: "🍠" },
-  { name: "Топинамбур",emoji: "🌻" },
-  { name: "Патиссон",  emoji: "🥒" },
-  { name: "Фенхель",   emoji: "🌿" },
-  { name: "Дайкон",    emoji: "🥕" },
-  { name: "Руккола",   emoji: "🌱" },
-  { name: "Мангольд",  emoji: "🥬" },
-  { name: "Окра",      emoji: "🌶️" },
-  { name: "Кольраби",  emoji: "🥦" },
+  { name: "Артишок",   emoji: "🌺", image: img("Артишок") },
+  { name: "Батат",     emoji: "🍠", image: img("Батат") },
+  { name: "Топинамбур",emoji: "🌻", image: img("Топинамбур") },
+  { name: "Патиссон",  emoji: "🥒", image: img("Патиссон") },
+  { name: "Фенхель",   emoji: "🌿", image: img("Фенхель") },
+  { name: "Дайкон",    emoji: "🥕", image: img("Дайкон") },
+  { name: "Руккола",   emoji: "🌱", image: img("Руккола") },
+  { name: "Мангольд",  emoji: "🥬", image: img("Мангольд") },
+  { name: "Окра",      emoji: "🌶️", image: img("Окра") },
+  { name: "Кольраби",  emoji: "🥦", image: img("Кольраби") },
 ];
 
 export const VEGETABLE_SETS = {
