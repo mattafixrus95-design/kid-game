@@ -146,6 +146,7 @@ export default function GameStreamSortScreen({ config, groupA, groupB, label, re
           );
         })}
       </div>
+      <BottomBar onBack={onBack}/>
     </div>
   );
 }
