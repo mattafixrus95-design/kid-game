@@ -71,7 +71,7 @@ export const REGISTRY = {
 
   vehicles: {
     emoji: "🚗", title: "Транспорт", recordKey: "rec_vehicles",
-    supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence", "odd_one"],
+    supportsMechanics: ["words", "recognition", "attributes", "memori", "sequence", "odd_one", "who_missing"],
     defaultSettings: { sets: ["everyday"] },
     getDataset: (settings, mechanic) => mechanic === "attributes" ? vehicleCombos(settings.sets) : settings.sets.flatMap(s => VEHICLE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [
@@ -186,7 +186,7 @@ export const REGISTRY = {
 
   shapes: {
     emoji: "🔷", title: "Фигуры", recordKey: "rec_shapes",
-    supportsMechanics: ["words", "recognition", "memori", "categories"],
+    supportsMechanics: ["words", "recognition", "memori", "categories", "who_missing"],
     defaultSettings: { sets: ["simple"] },
     getDataset: settings => settings.sets.flatMap(s => SHAPE_SETS[s]),
     getSettingsSections: (settings, onChangeSettings) => [

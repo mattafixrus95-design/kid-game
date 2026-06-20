@@ -21,52 +21,55 @@ function generateRound(items, nextItem, getKey) {
   }
   const missingIdx = Math.floor(Math.random() * shown.length);
   const missing = shown[missingIdx];
-  // null = пустой слот на месте пропавшего
   const withSlot = shown.map((item, i) => i === missingIdx ? null : item);
   const distractors = shuffle(items.filter(i => !usedKeys.has(getKey(i)))).slice(0, 3);
   const options = shuffle([missing, ...distractors]);
   return { shown, withSlot, missing, options };
 }
 
-// Одна карточка — используется и для показа, и для вариантов ответа
-function ItemCard({ item, getName, emojiSize, as: As = "div", onClick, chosen, answerState, getKey }) {
+function ItemCardContent({ item }) {
+  if (item.image) {
+    return <img src={item.image} alt={item.name} decoding="sync"
+      style={{ width: "80%", height: "80%", objectFit: "contain" }}/>;
+  }
+  if (item.css) {
+    return <div style={{
+      width: "60%", height: "60%", borderRadius: "50%",
+      background: item.css, border: "2px solid rgba(0,0,0,0.1)",
+    }}/>;
+  }
+  return <span style={{ fontSize: "clamp(1.8rem,11vw,3.2rem)", lineHeight: 1 }}>{item.emoji}</span>;
+}
+
+function ItemCard({ item, getName, as: As = "div", onClick, chosen, answerState, getKey }) {
   const isChosen = chosen && item && getKey && getKey(item) === chosen;
-  const bg = isChosen
-    ? (answerState === "correct" ? "var(--green)" : "var(--red)")
-    : "var(--accent)";
+  const border = isChosen
+    ? (answerState === "correct" ? "3px solid var(--green)" : "3px solid var(--red)")
+    : "3px solid transparent";
 
   return (
     <As
       onClick={onClick}
       style={{
         aspectRatio: "1/1",
-        background: bg,
+        background: "#fff",
         borderRadius: 18,
-        border: "3px solid transparent",
+        border,
         display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
-        gap: 0, padding: "6px 4px",
-        boxShadow: onClick ? "0 6px 0 rgba(0,0,0,0.12)" : "0 4px 0 rgba(0,0,0,0.10)",
+        boxShadow: onClick ? "0 4px 0 rgba(0,0,0,0.10)" : "0 3px 0 rgba(0,0,0,0.08)",
         cursor: onClick ? "pointer" : "default",
         transform: isChosen ? "scale(0.93)" : "scale(1)",
-        transition: "transform 0.15s, background 0.2s",
+        transition: "transform 0.15s, border 0.15s",
         animation: isChosen && answerState === "wrong" ? "shake 0.5s" : "none",
         overflow: "hidden",
       }}
     >
-      <span style={{ fontSize: emojiSize, lineHeight: 1, flexShrink: 0 }}>{item.emoji}</span>
-      <span style={{
-        fontSize: "clamp(0.6rem,2vw,0.85rem)", fontWeight: 700,
-        color: "#fff", textAlign: "center", marginTop: 3,
-        lineHeight: 1.1, wordBreak: "break-word",
-      }}>
-        {getName(item)}
-      </span>
+      <ItemCardContent item={item}/>
     </As>
   );
 }
 
-// Пустой слот — место пропавшей карточки
 function EmptySlot() {
   return (
     <div style={{
@@ -126,15 +129,11 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
     }
   }
 
-  // Единая сетка 4 колонки, растягивается на всю ширину
   const gridStyle = {
     display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
     gap: "clamp(8px,2.5vw,12px)", width: "100%", maxWidth: 480,
   };
-  // Размер emoji подбирается под ширину карточки ≈ 22vw (с учётом 4 карточки + гэп)
-  const emojiSize = "clamp(1.8rem,11vw,3.2rem)";
 
-  // ── Экран 1: Запомни ──────────────────────────────────
   if (phase === "memorize") return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
@@ -142,7 +141,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={gridStyle}>
           {round.shown.map(item => (
-            <ItemCard key={getKey(item)} item={item} getName={getName} emojiSize={emojiSize}/>
+            <ItemCard key={getKey(item)} item={item} getName={getName}/>
           ))}
         </div>
       </div>
@@ -152,17 +151,15 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
     </div>
   );
 
-  // ── Экран 2: Кто пропал? ─────────────────────────────
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title="Кто пропал?"/>
 
-      {/* Те же 4 слота — один заменён на ? */}
       <div style={gridStyle}>
         {round.withSlot.map((item, i) =>
           item
-            ? <ItemCard key={getKey(item)} item={item} getName={getName} emojiSize={emojiSize}/>
+            ? <ItemCard key={getKey(item)} item={item} getName={getName}/>
             : <EmptySlot key={`empty-${i}`}/>
         )}
       </div>
@@ -171,11 +168,10 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
         Кого не хватает?
       </div>
 
-      {/* Варианты ответа — та же сетка, те же карточки, интерактивные */}
       <div style={gridStyle}>
         {round.options.map(item => (
           <ItemCard
-            key={getKey(item)} item={item} getName={getName} emojiSize={emojiSize}
+            key={getKey(item)} item={item} getName={getName}
             as="button" onClick={() => handleAnswer(item)}
             chosen={chosen} answerState={answerState} getKey={getKey}
           />
