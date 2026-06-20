@@ -138,7 +138,7 @@ export default function GameOddOneScreen({ config, contentId, items, label, reco
           setNextDisabled(true);
           setTimeout(() => setNextDisabled(false), 500);
           advanceRound();
-        }} disabled={nextDisabled}>Далее ➡️</button>
+        }} disabled={nextDisabled}>Пропустить ➡️</button>
       </BottomBar>
     </div>
   );
