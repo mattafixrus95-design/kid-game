@@ -35,6 +35,6 @@ const ANIMALS_WILD = [
 
 export const ANIMAL_SETS = { domestic: ANIMALS_DOMESTIC, wild: ANIMALS_WILD };
 
-export function playAnimalSound(animal) {
-  playSound(animal.file, animal.sound);
+export function playAnimalSound(animal, onEnd) {
+  playSound(animal.file, animal.sound, onEnd);
 }

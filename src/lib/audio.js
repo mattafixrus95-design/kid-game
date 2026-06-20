@@ -1,5 +1,16 @@
+let _currentAudio = null;
+
+export function stopCurrentAudio() {
+  if (_currentAudio) {
+    _currentAudio.pause();
+    _currentAudio.currentTime = 0;
+    _currentAudio = null;
+  }
+}
+
 export function speak(text, onEnd) {
   if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
+  stopCurrentAudio();
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "ru-RU"; u.rate = 0.8;
@@ -15,18 +26,21 @@ export function speakSequence(intro, main) {
 }
 
 // Проиграть звуковой файл, при отсутствии/ошибке — озвучить текст
-export function playSound(file, fallbackText) {
+// onEnd вызывается когда звук закончился (или сразу при ошибке)
+export function playSound(file, fallbackText, onEnd) {
   if (file) {
     try {
       const audio = new Audio(new URL(`../assets/sounds/${file}`, import.meta.url).href);
-      audio.play().catch(() => speak(fallbackText));
+      _currentAudio = audio;
+      if (onEnd) audio.onended = () => { _currentAudio = null; onEnd(); };
+      audio.play().catch(() => { _currentAudio = null; speak(fallbackText, onEnd); });
       return;
     } catch (e) {
-      speak(fallbackText);
+      speak(fallbackText, onEnd);
       return;
     }
   }
-  speak(fallbackText);
+  speak(fallbackText, onEnd);
 }
 
 export function playSuccess() {

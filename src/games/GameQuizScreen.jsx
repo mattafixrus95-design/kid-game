@@ -56,14 +56,18 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
     if (answerState !== null) return;
     const key = getKey(item);
     setChosen(key);
-    if (onSelect) onSelect(item);
     if (key === getKey(question.correct)) {
       playSuccess(); setAnswerState("correct");
       const ns = score + 1, nst = streak + 1; setScore(ns); setStreak(nst);
       if (ns > record) onUpdateRecord(ns);
-      setTimeout(() => advance(getKey(question.correct)), 700);
+      let soundDone = false, timerDone = false;
+      const maybeAdvance = () => { if (soundDone && timerDone) advance(getKey(question.correct)); };
+      if (onSelect) onSelect(item, () => { soundDone = true; maybeAdvance(); });
+      else soundDone = true;
+      setTimeout(() => { timerDone = true; maybeAdvance(); }, 700);
     } else {
       playError(); setAnswerState("wrong"); setStreak(0);
+      if (onSelect) onSelect(item);
       setTimeout(() => { setAnswerState(null); setChosen(null); }, 700);
     }
   }

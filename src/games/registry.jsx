@@ -57,7 +57,7 @@ export const REGISTRY = {
     renderLearn: item => item.image
       ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(180px,70vw,340px)", height: "clamp(180px,70vw,340px)", objectFit: "contain" }}/>
       : <span style={{ fontSize: LEARN_EMOJI_SIZE }}>{item.emoji}</span>,
-    onItemClick: item => playAnimalSound(item),
+    onItemClick: item => playAnimalSound(item, undefined),
     introTextQuiz: "Выбери правильное животное", titleQuiz: "Выбери правильное животное",
     renderOption: item => (
       item.image
@@ -66,7 +66,7 @@ export const REGISTRY = {
     ),
     getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
-    onSelect: item => playAnimalSound(item),
+    onSelect: (item, onEnd) => playAnimalSound(item, onEnd),
   },
 
   vehicles: {
