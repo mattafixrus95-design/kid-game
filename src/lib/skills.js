@@ -12,8 +12,8 @@ export const MECHANICS = {
   speech: [
     { id: "words",       emoji: "📖", label: "Слова",             desc: "Изучаем новые слова",                    mechLevel: 1 },
     { id: "recognition", emoji: "🎯", label: "Узнавание",         desc: "Находим предмет по названию",           mechLevel: 2 },
-    { id: "attributes",  emoji: "🔗", label: "Признаки",          desc: "Учимся различать свойства",             mechLevel: 3 },
-    { id: "categories",  emoji: "📦", label: "Категории",         desc: "Учимся объединять похожее",             mechLevel: 4 },
+    { id: "attributes",  emoji: "🔗", label: "Признаки",          desc: "Учимся различать свойства",             mechLevel: 3, wip: true },
+    { id: "categories",  emoji: "📦", label: "Категории",         desc: "Учимся объединять похожее",             mechLevel: 4, wip: true },
   ],
   memory: [
     { id: "who_missing", emoji: "❓", label: "Кто пропал",        desc: "Запоминаем и ищем пропажу",             mechLevel: 5 },

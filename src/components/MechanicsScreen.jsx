@@ -19,7 +19,8 @@ export default function MechanicsScreen({ skill, onSelect, onBack, onFeedback })
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(10px,2vw,14px)", width: "100%", maxWidth: 440 }}>
         {mechanics.map(m => {
           const color = skillDef?.color || "var(--primary)";
-          if (m.locked) {
+          if (m.locked || m.wip) {
+            const badge = m.wip ? "🚧 В разработке" : "🔒 Скоро";
             return (
               <div key={m.id} style={{ position: "relative", borderRadius: "var(--radius)", overflow: "hidden" }}>
                 <div style={{
@@ -43,7 +44,7 @@ export default function MechanicsScreen({ skill, onSelect, onBack, onFeedback })
                     background: "rgba(0,0,0,0.55)", color: "#fff",
                     borderRadius: 20, padding: "4px 14px",
                     fontSize: "0.85rem", fontWeight: 700,
-                  }}>🔒 Скоро</span>
+                  }}>{badge}</span>
                 </div>
               </div>
             );
