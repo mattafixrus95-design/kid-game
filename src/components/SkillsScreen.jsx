@@ -23,7 +23,7 @@ export default function SkillsScreen({ onSelect, onFeedback }) {
               background: "#fff", color: "var(--text)",
               border: `3px solid ${s.color}`,
               borderRadius: "var(--radius)", boxShadow: `0 6px 0 ${s.color}55`,
-              cursor: "pointer", width: "100%",
+              cursor: "pointer", width: "100%", textAlign: "left",
             }}>
             <span style={{ fontSize: "clamp(2rem,6vw,2.6rem)" }}>{s.emoji}</span>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2 }}>
