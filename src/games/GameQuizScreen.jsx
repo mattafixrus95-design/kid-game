@@ -60,6 +60,10 @@ export default function GameQuizScreen({ config, items, label, record, onUpdateR
 
   return (
     <div className="screen" style={{justifyContent:"space-between"}}>
+      {/* Preload all images so browser decodes them before they appear */}
+      <div style={{position:"absolute",width:0,height:0,overflow:"hidden",opacity:0,pointerEvents:"none"}}>
+        {items.map(item => item.image && <img key={getKey(item)} src={item.image} alt=""/>)}
+      </div>
       <GameHeader onBack={onBack} label={label} record={record} streak={streak}/>
       <RoundTitle title={titleQuiz} subtitle={getName(question.correct)}/>
       <div style={{flex:1,display:"flex",flexWrap:"wrap",alignItems:"center",alignContent:"center",justifyContent:"center",width:"100%",...optionsContainerStyle}}>
