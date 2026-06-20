@@ -147,7 +147,7 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
                 <div key={i} style={{
                   width: 54, height: 54, borderRadius: 12,
                   background: item ? "#fff" : "rgba(0,0,0,0.06)",
-                  border: item ? "2px solid var(--primary)" : "2px dashed #CCC",
+                  border: item ? "2px solid var(--green)" : "2px dashed #CCC",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   overflow: "hidden",
                   transition: "background 0.2s",
