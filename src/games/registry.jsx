@@ -200,15 +200,14 @@ export const REGISTRY = {
     categoryLabel: "фигуру",
     renderCategoryItem: item => <ShapeSVG name={item.name} size={Math.min(window.innerWidth * 0.22, 90)}/>,
     introTextLearn: "Назови фигуру", titleLearn: "Назови фигуру",
-    renderLearn: item => <ShapeSVG name={item.name} size={learnSvgSize(280)}/>,
+    renderLearn: item => item.image
+      ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "clamp(180px,70vw,340px)", height: "clamp(180px,70vw,340px)", objectFit: "contain" }}/>
+      : <ShapeSVG name={item.name} size={learnSvgSize(280)}/>,
     introTextQuiz: "Выбери правильную фигуру", titleQuiz: "Выбери правильную фигуру",
-    renderOption: item => (
-      <>
-        <ShapeSVG name={item.name} size={Math.min(window.innerWidth*0.32, 140)}/>
-        <span style={{ fontSize: "clamp(0.85rem,2.6vw,1.15rem)", fontWeight: 700, color: "var(--text)", textAlign: "center" }}>{item.name}</span>
-      </>
-    ),
-    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "#FFF1E8", boxShadow: "0 6px 0 rgba(0,0,0,0.10)" }),
+    renderOption: item => item.image
+      ? <img src={item.image} alt={item.name} decoding="sync" style={{ width: "80%", height: "80%", objectFit: "contain" }}/>
+      : <ShapeSVG name={item.name} size={Math.min(window.innerWidth*0.32, 140)}/>,
+    getOptionStyle: (item, state) => cardOptionStyle(item.name, state, { background: "var(--primary)" }),
     optionsContainerStyle: { gap: "clamp(10px,3vw,20px)", maxWidth: 560 },
   },
 
