@@ -43,9 +43,9 @@ function generateRound(items, getKey, prevCorrectKey) {
   return { sequence, correct, options: shuffle([correct, ...distractors.slice(0, 3)]) };
 }
 
-function ItemVisual({ item, size = "clamp(1.6rem,9vw,3rem)" }) {
+function ItemVisual({ item, size = "clamp(1.6rem,9vw,3rem)", numSize }) {
   if (typeof item === "number" || typeof item === "string") {
-    return <span style={{ fontSize: size, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>{item}</span>;
+    return <span style={{ fontSize: numSize ?? size, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>{item}</span>;
   }
   if (item.image) {
     return <img src={item.image} alt={item.name} decoding="sync"
@@ -123,7 +123,7 @@ export default function GameContinueScreen({ config, items, label, record, onUpd
             display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow: "0 4px 0 rgba(0,0,0,0.10)", flexShrink: 0, overflow: "hidden",
           }}>
-            <ItemVisual item={item}/>
+            <ItemVisual item={item} numSize="clamp(2rem,11vw,3.5rem)"/>
           </div>
         ))}
 
@@ -168,7 +168,7 @@ export default function GameContinueScreen({ config, items, label, record, onUpd
                 animation: isChosen && answerState === "wrong" ? "shake 0.5s" : "none",
                 overflow: "hidden",
               }}>
-              <ItemVisual item={item} size="clamp(2.5rem,14vw,4.5rem)"/>
+              <ItemVisual item={item} size="clamp(2.5rem,14vw,4.5rem)" numSize="clamp(4rem,32vw,8rem)"/>
             </button>
           );
         })}

@@ -230,7 +230,6 @@ export const REGISTRY = {
     defaultSettings: { range: "1-5" },
     optCount: 2,
     getDataset: settings => NUMBER_RANGES[settings.range],
-    getLabel: settings => settings.range,
     getSettingsSections: (settings, onChangeSettings) => [
       {
         label: "Диапазон цифр", column: true, color: "var(--accent)",
