@@ -52,17 +52,15 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
   const [wrong, setWrong]         = useState(null);        // position shaking
   const [score, setScore]         = useState(0);
   const [streak, setStreak]       = useState(0);
-  const [done, setDone]           = useState(false);
 
   const advanceRound = useCallback(() => {
     setScene(generateScene(items));
     setFound(new Set());
     setWrong(null);
-    setDone(false);
   }, [items]);
 
   function handleRightTap(pos) {
-    if (found.has(pos) || wrong === pos || done) return;
+    if (found.has(pos) || wrong === pos) return;
 
     if (scene.diffSet.has(pos)) {
       playSuccess();
@@ -72,7 +70,7 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
       setScore(ns); setStreak(nst);
       if (ns > record) onUpdateRecord(ns);
       if (nextFound.size === scene.diffSet.size) {
-        setTimeout(() => setDone(true), 500);
+        setTimeout(advanceRound, 800);
       }
     } else {
       playError();
@@ -127,21 +125,6 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
       </div>
     );
   }
-
-  if (done) return (
-    <div className="screen" style={{ justifyContent: "space-between" }}>
-      <GameHeader label={label} record={record} streak={streak}/>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16 }}>
-        <div style={{ fontSize: "clamp(3rem,16vw,6rem)" }}>🎉</div>
-        <div style={{ fontSize: "clamp(1.3rem,5vw,1.9rem)", fontWeight: 900, color: "var(--text)", textAlign: "center" }}>
-          Все отличия найдены!
-        </div>
-      </div>
-      <BottomBar onBack={onBack}>
-        <button className="btn btn-bar" onClick={advanceRound}>Ещё раз →</button>
-      </BottomBar>
-    </div>
-  );
 
   return (
     <div className="screen" style={{ justifyContent: "space-between" }}>

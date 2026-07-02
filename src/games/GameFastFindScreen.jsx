@@ -47,8 +47,13 @@ function pickTarget(items, prevName) {
 
 export default function GameFastFindScreen({ config, items, label, record, onUpdateRecord, onBack }) {
   useStopAudioOnUnmount();
-  const [target, setTarget]   = useState(() => pickTarget(items, null));
-  const [grid, setGrid]       = useState(() => buildGrid(items, pickTarget(items, null)));
+  // Один общий initial: цель и сетка должны строиться от одного и того же элемента
+  const [init] = useState(() => {
+    const t = pickTarget(items, null);
+    return { target: t, grid: buildGrid(items, t) };
+  });
+  const [target, setTarget]   = useState(init.target);
+  const [grid, setGrid]       = useState(init.grid);
   const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
   const [found, setFound]     = useState(0);      // targets found this round
   const [totalFound, setTotalFound] = useState(0); // all-time score
