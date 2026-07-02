@@ -8,6 +8,20 @@ import BottomBar from "../components/BottomBar";
 
 const SCENE_SIZE = 6; // 3 cols × 2 rows per panel
 
+function ItemContent({ item }) {
+  if (item.image) {
+    return <img src={item.image} alt={item.name} decoding="sync"
+      style={{ width: "82%", height: "82%", objectFit: "contain" }}/>;
+  }
+  if (item.css) {
+    return <div style={{
+      width: "60%", height: "60%", borderRadius: "50%",
+      background: item.css, border: "2px solid rgba(0,0,0,0.1)",
+    }}/>;
+  }
+  return <span style={{ fontSize: "clamp(1.4rem,7vw,2.2rem)", lineHeight: 1 }}>{item.emoji}</span>;
+}
+
 function generateScene(items) {
   const pool = shuffle([...items]);
   const left = pool.slice(0, Math.min(SCENE_SIZE, pool.length));
@@ -83,9 +97,9 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
           const isWrong   = interactive && wrong === pos;
           const isDiff    = interactive && scene.diffSet.has(pos);
 
-          let bg = "var(--accent)";
-          if (isFound) bg = "var(--green)";
-          else if (isWrong) bg = "var(--red)";
+          let bg = "#fff";
+          if (isFound) bg = "rgba(92,184,92,0.15)";
+          else if (isWrong) bg = "rgba(217,83,79,0.12)";
 
           return (
             <div
@@ -94,18 +108,19 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
               style={{
                 width: cellSize, height: cellSize,
                 background: bg,
+                border: isFound ? "2px solid var(--green)" : isWrong ? "2px solid var(--red)" : "2px solid #EEE",
                 borderRadius: 12,
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
                 cursor: interactive && !isFound ? "pointer" : "default",
-                boxShadow: isFound ? "0 0 0 3px var(--green)" : "0 3px 0 rgba(0,0,0,0.10)",
+                boxShadow: "0 3px 0 rgba(0,0,0,0.08)",
                 transform: isWrong ? undefined : isFound ? "scale(1.06)" : "scale(1)",
-                transition: "background 0.2s, transform 0.15s",
+                transition: "background 0.2s, transform 0.15s, border 0.15s",
                 animation: isWrong ? "shake 0.5s" : "none",
-                gap: 2,
+                overflow: "hidden",
               }}
             >
-              <span style={{ fontSize: "clamp(1.4rem,7vw,2.2rem)", lineHeight: 1 }}>{item.emoji}</span>
+              <ItemContent item={item}/>
             </div>
           );
         })}

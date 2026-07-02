@@ -6,6 +6,20 @@ import GameHeader from "../components/GameHeader";
 import BottomBar from "../components/BottomBar";
 
 const GRID_SIZE  = 16;   // 4×4
+
+function ItemContent({ item, emojiSize = "clamp(1.4rem,7vw,2.2rem)" }) {
+  if (item.image) {
+    return <img src={item.image} alt={item.name} decoding="sync"
+      style={{ width: "82%", height: "82%", objectFit: "contain" }}/>;
+  }
+  if (item.css) {
+    return <div style={{
+      width: "60%", height: "60%", borderRadius: "50%",
+      background: item.css, border: "2px solid rgba(0,0,0,0.1)",
+    }}/>;
+  }
+  return <span style={{ fontSize: emojiSize, lineHeight: 1 }}>{item.emoji}</span>;
+}
 const TARGET_COUNT = 3;  // targets hidden in grid
 const ROUND_TIME = 20;   // seconds per round
 
@@ -153,7 +167,13 @@ export default function GameFastFindScreen({ config, items, label, record, onUpd
           display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
         }}>
           <span style={{ fontSize: "clamp(0.95rem,3.5vw,1.2rem)", fontWeight: 800, color: "#fff" }}>Найди:</span>
-          <span style={{ fontSize: "clamp(2rem,10vw,3rem)", lineHeight: 1 }}>{target.emoji}</span>
+          <span style={{
+            width: "clamp(40px,12vw,56px)", height: "clamp(40px,12vw,56px)",
+            background: "#fff", borderRadius: 10, flexShrink: 0,
+            display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
+          }}>
+            <ItemContent item={target} emojiSize="clamp(1.6rem,8vw,2.4rem)"/>
+          </span>
           <span style={{ fontSize: "clamp(1rem,3.5vw,1.3rem)", fontWeight: 800, color: "#fff" }}>{target.name}</span>
           <button
             onClick={() => speak(`Найди: ${target.name}`)}
@@ -191,25 +211,27 @@ export default function GameFastFindScreen({ config, items, label, record, onUpd
             onClick={() => handleTap(cell.id)}
             style={{
               aspectRatio: "1/1",
-              background: cell.found ? "var(--green)" : "var(--accent)",
-              border: "none", borderRadius: 12,
+              background: cell.found ? "rgba(92,184,92,0.15)" : "#fff",
+              border: cell.found ? "2px solid var(--green)" : "2px solid #EEE",
+              borderRadius: 12,
               display: "flex", alignItems: "center", justifyContent: "center",
               cursor: cell.found ? "default" : "pointer",
-              boxShadow: "0 3px 0 rgba(0,0,0,0.10)",
-              opacity: cell.found ? 0.5 : 1,
+              boxShadow: "0 3px 0 rgba(0,0,0,0.08)",
+              opacity: cell.found ? 0.6 : 1,
               transform: cell.found ? "scale(0.85)" : "scale(1)",
               transition: "opacity 0.3s, transform 0.2s, background 0.2s",
               animation: cell.shake ? "shake 0.45s" : "none",
+              overflow: "hidden",
             }}
           >
-            <span style={{ fontSize: "clamp(1.4rem,7vw,2.2rem)", lineHeight: 1 }}>
-              {cell.item.emoji}
-            </span>
+            <ItemContent item={cell.item}/>
           </button>
         ))}
       </div>
 
-      <div style={{ height: 4 }}/>
+      <BottomBar onBack={onBack}>
+        <button className="btn btn-bar" onClick={() => startRound(target.name)}>Пропустить →</button>
+      </BottomBar>
     </div>
   );
 }
