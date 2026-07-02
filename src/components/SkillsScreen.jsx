@@ -11,7 +11,6 @@ export default function SkillsScreen({ onSelect, onFeedback }) {
         <h1 style={{ fontSize: "clamp(1.8rem,7vw,2.6rem)", fontWeight: 900, color: "var(--primary)", letterSpacing: "-1px" }}>
           Развивашки
         </h1>
-        <p style={{ color: "var(--muted)", fontSize: "clamp(0.9rem,3vw,1.1rem)", marginTop: 4 }}>Выбери навык</p>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(12px,2.5vw,18px)", width: "100%", maxWidth: 440 }}>
         {SKILLS.map(s => (
