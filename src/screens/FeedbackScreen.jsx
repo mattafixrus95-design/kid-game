@@ -52,7 +52,7 @@ export default function FeedbackScreen({ onBack }) {
       {/* Header */}
       <div style={{ width: "100%", textAlign: "center", paddingBottom: 4 }}>
         <span style={{ fontWeight: 900, fontSize: "clamp(1.2rem,5vw,1.6rem)", color: "var(--text)" }}>
-          Обратная связь
+          Написать разработчику
         </span>
       </div>
 

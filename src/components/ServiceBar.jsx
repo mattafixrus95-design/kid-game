@@ -81,7 +81,7 @@ export default function ServiceBar({ onBack, onFeedback }) {
         </button>}
         <button onClick={onFeedback} style={btnStyle}>
           <span style={iconStyle}>✉️</span>
-          <span style={labelStyle}>Обратная связь</span>
+          <span style={labelStyle}>Написать разработчику</span>
         </button>
         <button onClick={() => window.open(CLOUDTIPS_URL, "_blank")} style={btnStyle}>
           <span style={iconStyle}>💰</span>
