@@ -143,7 +143,10 @@ export default function GameCountingScreen({ config, items, label, record, onUpd
                 transition: "transform 0.2s, background 0.2s",
                 boxShadow: isActive ? "0 4px 12px rgba(255,107,53,0.4)" : "0 3px 0 rgba(0,0,0,0.08)",
               }}>
-                <span style={{ fontSize: "clamp(1.6rem,8vw,2.5rem)", lineHeight: 1 }}>{item.emoji}</span>
+                {item.image
+                  ? <img src={item.image} alt={item.name} decoding="sync"
+                      style={{ width: "85%", height: "85%", objectFit: "contain" }}/>
+                  : <span style={{ fontSize: "clamp(1.6rem,8vw,2.5rem)", lineHeight: 1 }}>{item.emoji}</span>}
               </div>
             );
           })}

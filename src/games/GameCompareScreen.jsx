@@ -41,9 +41,12 @@ function GroupPanel({ item, count, side, chosen, answerState, onClick }) {
         justifyItems: "center",
       }}>
         {Array.from({ length: count }, (_, i) => (
-          <span key={i} style={{ fontSize: "clamp(1.6rem,8vw,2.4rem)", lineHeight: 1, display: "block" }}>
-            {item.emoji}
-          </span>
+          item.image
+            ? <img key={i} src={item.image} alt={item.name} decoding="sync"
+                style={{ width: "clamp(1.8rem,9vw,2.8rem)", height: "clamp(1.8rem,9vw,2.8rem)", objectFit: "contain", display: "block" }}/>
+            : <span key={i} style={{ fontSize: "clamp(1.6rem,8vw,2.4rem)", lineHeight: 1, display: "block" }}>
+                {item.emoji}
+              </span>
         ))}
       </div>
     </button>

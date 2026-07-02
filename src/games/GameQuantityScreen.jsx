@@ -113,9 +113,10 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
               background: "var(--bg)",
               borderRadius: 14,
             }}>
-              <span style={{ fontSize: "clamp(2rem,10vw,3rem)", lineHeight: 1 }}>
-                {round.item.emoji}
-              </span>
+              {round.item.image
+                ? <img src={round.item.image} alt={round.item.name} decoding="sync"
+                    style={{ width: "85%", height: "85%", objectFit: "contain" }}/>
+                : <span style={{ fontSize: "clamp(2rem,10vw,3rem)", lineHeight: 1 }}>{round.item.emoji}</span>}
             </div>
           ))}
         </div>
