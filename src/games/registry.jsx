@@ -4,6 +4,7 @@ import { COLOR_SETS, isLightColor } from "../data/colors";
 import { SHAPE_SETS } from "../data/shapes";
 import { NUMBER_RANGES, NUMBER_WORDS } from "../data/numbers";
 import { FOOD_SETS, playFoodSound } from "../data/food";
+import { SPEECH_SOUNDS, SOUND_IDS } from "../data/speech";
 import VehicleSVG from "../assets/VehicleSVG";
 import ShapeSVG from "../assets/ShapeSVG";
 import { cardOptionStyle, answerBorder, optionTransform, learnSvgSize, LEARN_EMOJI_SIZE, LEARN_CIRCLE_SIZE } from "../lib/styles";
@@ -259,5 +260,22 @@ export const REGISTRY = {
       transition: "transform 0.15s,background 0.2s",
     }),
     optionsContainerStyle: { gap: "clamp(12px,3vw,20px)", maxWidth: 500 },
+  },
+
+  sounds: {
+    emoji: "🔤", title: "Звуки", recordKey: "rec_sounds",
+    supportsMechanics: ["letters", "repeat_word"],
+    defaultSettings: { sound: "Р" },
+    getDataset: settings => SPEECH_SOUNDS[settings.sound].words,
+    getSound: settings => SPEECH_SOUNDS[settings.sound],
+    getSettingsSections: (settings, onChangeSettings) => [
+      {
+        label: "Какой звук тренируем?", color: "var(--accent)",
+        value: settings.sound,
+        onChange: v => onChangeSettings({ ...settings, sound: v }),
+        options: SOUND_IDS.map(id => ({ id, label: id })),
+      },
+    ],
+    getKey: byName, getName: byName,
   },
 };

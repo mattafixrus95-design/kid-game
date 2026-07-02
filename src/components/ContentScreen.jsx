@@ -9,6 +9,7 @@ const CONTENT_COLORS = {
   colors:"#8E24AA",
   shapes:"#00ACC1",
   numbers:"#FF6B35",
+  sounds:"#4ECDC4",
 };
 
 export default function ContentScreen({ mechanic, onSelect, onBack, onFeedback }) {

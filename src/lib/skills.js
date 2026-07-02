@@ -12,6 +12,8 @@ export const MECHANICS = {
   speech: [
     { id: "words",       emoji: "📖", label: "Слова",             desc: "Изучаем новые слова",                    mechLevel: 1 },
     { id: "recognition", emoji: "🎯", label: "Узнавание",         desc: "Находим предмет по названию",           mechLevel: 2 },
+    { id: "letters",     emoji: "🔤", label: "Звуки",             desc: "Повторяем звуки и слоги",               mechLevel: 3 },
+    { id: "repeat_word", emoji: "🗣", label: "Повтори слово",     desc: "Тренируем звук в словах",               mechLevel: 4 },
     { id: "attributes",  emoji: "🔗", label: "Признаки",          desc: "Учимся различать свойства",             mechLevel: 3, wip: true },
     { id: "categories",  emoji: "📦", label: "Категории",         desc: "Учимся объединять похожее",             mechLevel: 4, wip: true },
   ],
@@ -41,6 +43,8 @@ export const MECHANICS = {
 export const MECH_SCREEN = {
   words:       "learn",
   recognition: "quiz",
+  letters:     "letters",
+  repeat_word: "repeat_word",
   attributes:  "quiz",
   categories:  "categories",
   who_missing: "who_missing",

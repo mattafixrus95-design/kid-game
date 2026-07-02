@@ -7,6 +7,8 @@ import MechanicsScreen from "./components/MechanicsScreen";
 import ContentScreen from "./components/ContentScreen";
 import SettingsScreen from "./components/SettingsScreen";
 import GameLearnScreen from "./games/GameLearnScreen";
+import GameLettersScreen from "./games/GameLettersScreen";
+import GameRepeatWordScreen from "./games/GameRepeatWordScreen";
 import GameQuizScreen from "./games/GameQuizScreen";
 import GameCategoriesScreen from "./games/GameCategoriesScreen";
 import GameWhoMissingScreen from "./games/GameWhoMissingScreen";
@@ -165,6 +167,8 @@ export default function App() {
     const commonProps = { key: gameKey, config, items, label, record, onUpdateRecord: v => upRecord(rubric, v), onBack: goBack };
 
     if (gameScreen === "learn")      return <GameLearnScreen      {...commonProps}/>;
+    if (gameScreen === "letters")     return <GameLettersScreen     {...commonProps} sound={config.getSound(settings)}/>;
+    if (gameScreen === "repeat_word") return <GameRepeatWordScreen {...commonProps} sound={config.getSound(settings)}/>;
     if (gameScreen === "quiz")       return <GameQuizScreen       {...commonProps}/>;
     if (gameScreen === "who_missing") return <GameWhoMissingScreen {...commonProps}/>;
     if (gameScreen === "memo")       return <GameMemoScreen       {...commonProps}/>;
