@@ -16,7 +16,9 @@ export default function SettingsScreen({ emoji, title, sections, onStart, onBack
           <p style={{fontWeight:700,fontSize:"clamp(0.95rem,3vw,1.2rem)",marginBottom:10,color:"var(--muted)"}}>
             {sec.label}
           </p>
-          <div style={{display:"flex",flexDirection:sec.column?"column":"row",flexWrap:"wrap",gap:10}}>
+          <div style={sec.grid
+            ? {display:"grid",gridTemplateColumns:`repeat(${sec.grid}, 1fr)`,gap:10}
+            : {display:"flex",flexDirection:sec.column?"column":"row",flexWrap:"wrap",gap:10}}>
             {sec.options.map(opt=>{
               const active = sec.multi ? sec.values.includes(opt.id) : sec.value===opt.id;
               const color = sec.multi ? "var(--primary)" : (sec.color||"var(--primary)");
@@ -25,6 +27,7 @@ export default function SettingsScreen({ emoji, title, sections, onStart, onBack
                   style={{
                     ...settingsOptStyle(active, color),
                     position:"relative",
+                    ...(sec.grid ? {fontSize:"clamp(1.5rem,7vw,2.2rem)",fontWeight:900,padding:"clamp(14px,4vw,20px) 0",aspectRatio:"1/1",display:"flex",alignItems:"center",justifyContent:"center"} : {}),
                     ...(sec.multi
                       ? {display:"flex",flexDirection:"column",alignItems:"flex-start",gap:2,textAlign:"left",paddingRight:40}
                       : (sec.column?{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:2}:{}))

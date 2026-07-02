@@ -270,7 +270,7 @@ export const REGISTRY = {
     getSound: settings => SPEECH_SOUNDS[settings.sound],
     getSettingsSections: (settings, onChangeSettings) => [
       {
-        label: "Какой звук тренируем?", color: "var(--accent)",
+        label: "Какой звук тренируем?", color: "var(--primary)", grid: 5,
         value: settings.sound,
         onChange: v => onChangeSettings({ ...settings, sound: v }),
         options: SOUND_IDS.map(id => ({ id, label: id })),

@@ -122,7 +122,17 @@ export default function App() {
   if (screen === "mechanics") return (
     <MechanicsScreen
       skill={skill}
-      onSelect={id => { setMechanic(id); goTo("content"); }}
+      onSelect={id => {
+        setMechanic(id);
+        // Если контент для механики один — пропускаем экран выбора темы
+        const available = Object.keys(REGISTRY).filter(k => REGISTRY[k].supportsMechanics?.includes(id));
+        if (available.length === 1) {
+          setRubric(available[0]);
+          goTo(id === "sort_groups" ? "game" : "subsets");
+        } else {
+          goTo("content");
+        }
+      }}
       onBack={goBack}
       onFeedback={() => goTo("feedback")}
     />
