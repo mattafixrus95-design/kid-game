@@ -182,7 +182,7 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
         <div style={{ fontSize: "clamp(0.95rem,3vw,1.3rem)", color: "var(--muted)", fontWeight: 700 }}>Попыток: {attempts}</div>
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={restart}>Далее ➡️</button>
+        <button className="btn btn-bar" onClick={restart}>Далее →</button>
       </BottomBar>
     </div>
   );
@@ -195,7 +195,7 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
         <MemoGrid cards={cards} config={config} phase="preview" onCardClick={() => {}}/>
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={startGame}>Начать ➡️</button>
+        <button className="btn btn-bar" onClick={startGame}>Начать →</button>
       </BottomBar>
     </div>
   );
@@ -208,7 +208,7 @@ export default function GameMemoScreen({ config, items, label, record, onUpdateR
         <MemoGrid cards={cards} config={config} phase="play" onCardClick={handleCard}/>
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={restart}>🔄 Заново</button>
+        <button className="btn btn-bar" onClick={restart}>🔄 Заново</button>
       </BottomBar>
     </div>
   );

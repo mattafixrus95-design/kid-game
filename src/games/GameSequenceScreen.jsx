@@ -204,8 +204,8 @@ export default function GameSequenceScreen({ config, items, label, record, onUpd
           </div>
 
           <BottomBar onBack={onBack}>
-            <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setChosen([])}>↩️ Сбросить</button>
-            <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Пропустить ➡️</button>
+            <button className="btn btn-bar" onClick={() => setChosen([])}>🔄 Сбросить</button>
+            <button className="btn btn-bar" onClick={advanceRound}>Пропустить →</button>
           </BottomBar>
         </>
       )}

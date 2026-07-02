@@ -159,8 +159,8 @@ export default function GameStreamSortScreen({ config, groups, label, record, on
       </div>
 
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(current.item.name)}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleSkip} disabled={nextDisabled}>Пропустить ➡️</button>
+        <button className="btn btn-bar" onClick={() => speak(current.item.name)}>🔊 Повторить</button>
+        <button className="btn btn-bar" onClick={handleSkip} disabled={nextDisabled}>Пропустить →</button>
       </BottomBar>
     </div>
   );

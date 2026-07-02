@@ -146,7 +146,7 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
         </div>
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={startQuiz}>Далее ➡️</button>
+        <button className="btn btn-bar" onClick={startQuiz}>Далее →</button>
       </BottomBar>
     </div>
   );
@@ -179,13 +179,13 @@ export default function GameWhoMissingScreen({ config, items, label, record, onU
       </div>
 
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak("Кто пропал?")}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
+        <button className="btn btn-bar" onClick={() => speak("Кто пропал?")}>🔊 Повторить</button>
+        <button className="btn btn-bar" onClick={() => {
           if (nextDisabled) return;
           setNextDisabled(true);
           setTimeout(() => setNextDisabled(false), 500);
           advanceRound();
-        }} disabled={nextDisabled}>Пропустить ➡️</button>
+        }} disabled={nextDisabled}>Пропустить →</button>
       </BottomBar>
     </div>
   );

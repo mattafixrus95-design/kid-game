@@ -1,8 +1,8 @@
-// Панель кнопок нижней части игры
+// Панель кнопок нижней части игры — все кнопки в едином стиле .btn-bar
 export default function BottomBar({ children, onBack, maxWidth = 540 }) {
   return (
-    <div style={{display:"flex",gap:12,width:"100%",maxWidth}}>
-      {onBack && <button className="btn btn-back" style={{flex:1}} onClick={onBack}>← Назад</button>}
+    <div style={{display:"flex",gap:10,width:"100%",maxWidth,justifyContent:"center",marginInline:"auto"}}>
+      {onBack && <button className="btn btn-bar" onClick={onBack}>← Назад</button>}
       {children}
     </div>
   );

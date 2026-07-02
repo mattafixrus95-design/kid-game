@@ -132,13 +132,13 @@ export default function GameOddOneScreen({ config, contentId, items, label, reco
         })}
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(task)}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
+        <button className="btn btn-bar" onClick={() => speak(task)}>🔊 Повторить</button>
+        <button className="btn btn-bar" onClick={() => {
           if (nextDisabled) return;
           setNextDisabled(true);
           setTimeout(() => setNextDisabled(false), 500);
           advanceRound();
-        }} disabled={nextDisabled}>Пропустить ➡️</button>
+        }} disabled={nextDisabled}>Пропустить →</button>
       </BottomBar>
     </div>
   );

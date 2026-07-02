@@ -130,8 +130,8 @@ export default function GameCategoriesScreen({ config, contentId, categoryLabel,
         })}
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={handleRepeat}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
+        <button className="btn btn-bar" onClick={handleRepeat}>🔊 Повторить</button>
+        <button className="btn btn-bar" onClick={handleNext} disabled={nextDisabled}>Далее →</button>
       </BottomBar>
     </div>
   );

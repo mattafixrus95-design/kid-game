@@ -123,7 +123,7 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
         </div>
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={advanceRound}>Ещё раз ➡️</button>
+        <button className="btn btn-bar" onClick={advanceRound}>Ещё раз →</button>
       </BottomBar>
     </div>
   );
@@ -181,7 +181,7 @@ export default function GameSpotDiffScreen({ config, items, label, record, onUpd
       </div>
 
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={advanceRound}>Пропустить ➡️</button>
+        <button className="btn btn-bar" onClick={advanceRound}>Пропустить →</button>
       </BottomBar>
     </div>
   );

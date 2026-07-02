@@ -132,11 +132,11 @@ export default function GameFastFindScreen({ config, items, label, record, onUpd
         </div>
       </div>
       <BottomBar onBack={onBack}>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => {
+        <button className="btn btn-bar" onClick={() => {
           setRoundScore(0);
           setTotalFound(0);
           startRound(null);
-        }}>Ещё раз ➡️</button>
+        }}>Ещё раз →</button>
       </BottomBar>
     </div>
   );

@@ -19,6 +19,11 @@ export const GLOBAL_STYLES = `
   .btn-ghost:active{background:#F5F5F5;}
   .btn-back{background:#fff;color:var(--muted);border:2px solid #E0E0E0;box-shadow:var(--shadow);}
   .btn-back:active{background:#F5F5F5;}
+  .btn-bar{flex:1 1 0;min-width:0;background:#fff;color:var(--text);
+    border:2px solid #E0E0E0;box-shadow:none;
+    padding:14px 8px;font-size:clamp(0.85rem,3vw,1.1rem);font-weight:800;
+    white-space:nowrap;overflow:hidden;}
+  .btn-bar:active{background:#F5F5F5;}
   .screen{display:flex;flex-direction:column;align-items:center;
     height:100dvh;width:100%;padding:clamp(12px,3vw,24px) clamp(12px,4vw,20px);
     overflow-y:auto;gap:clamp(8px,2vw,16px);}

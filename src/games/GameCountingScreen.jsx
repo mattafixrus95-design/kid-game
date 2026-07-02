@@ -163,8 +163,8 @@ export default function GameCountingScreen({ config, items, label, record, onUpd
       {phase === "reveal" ? (
         <BottomBar onBack={onBack}>
           {revealed < round.count ? (
-            <button className="btn btn-primary" style={{ flex: 1 }} onClick={revealNext}>
-              {revealed === 0 ? "Начать ▶️" : `Ещё ▶️ (${revealed}/${round.count})`}
+            <button className="btn btn-bar" onClick={revealNext}>
+              {revealed === 0 ? "Начать →" : `Ещё → (${revealed}/${round.count})`}
             </button>
           ) : (
             <div style={{ flex: 1, textAlign: "center", fontWeight: 700, color: "var(--muted)" }}>

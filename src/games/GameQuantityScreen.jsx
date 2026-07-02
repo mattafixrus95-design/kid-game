@@ -152,8 +152,8 @@ export default function GameQuantityScreen({ config, items, label, record, onUpd
       </div>
 
       <BottomBar onBack={onBack}>
-        <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => speak(task)}>🔊 Повторить</button>
-        <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleNext} disabled={nextDisabled}>Далее ➡️</button>
+        <button className="btn btn-bar" onClick={() => speak(task)}>🔊 Повторить</button>
+        <button className="btn btn-bar" onClick={handleNext} disabled={nextDisabled}>Далее →</button>
       </BottomBar>
     </div>
   );
