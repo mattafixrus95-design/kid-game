@@ -4,40 +4,6 @@ import { APP_VERSION } from "../version";
 const CLOUDTIPS_URL = "https://pay.cloudtips.ru/p/1a2f9898";
 
 function AboutModal({ onClose }) {
-  const [status, setStatus] = useState("idle"); // idle | checking | updated | no_update
-
-  async function handleUpdate() {
-    if (!("serviceWorker" in navigator)) { window.location.reload(); return; }
-    setStatus("checking");
-
-    const reg = await navigator.serviceWorker.getRegistration().catch(() => null);
-    if (!reg) { window.location.reload(); return; }
-
-    function activateAndReload(sw) {
-      navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload(), { once: true });
-      sw.postMessage({ type: "SKIP_WAITING" });
-    }
-
-    // Уже ждёт новый SW — активируем сразу
-    if (reg.waiting) { activateAndReload(reg.waiting); return; }
-
-    // Слушаем установку нового SW
-    reg.addEventListener("updatefound", () => {
-      const sw = reg.installing;
-      sw.addEventListener("statechange", () => {
-        if (sw.state === "installed") activateAndReload(sw);
-      });
-    });
-
-    await reg.update().catch(() => {});
-
-    // Новый SW не найден — просто перезагружаем
-    if (!reg.installing && !reg.waiting) {
-      setStatus("no_update");
-      setTimeout(() => window.location.reload(), 800);
-    }
-  }
-
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
@@ -50,10 +16,6 @@ function AboutModal({ onClose }) {
         <div style={{ fontSize: "2rem", marginBottom: 8 }}>🌟</div>
         <div style={{ fontWeight: 900, fontSize: "1.2rem", marginBottom: 4 }}>Развивашки</div>
         <div style={{ color: "var(--muted)", fontSize: "0.95rem", marginBottom: 20 }}>Версия {APP_VERSION}</div>
-        <button className="btn btn-primary" style={{ width: "100%", marginBottom: 10 }}
-          onClick={handleUpdate} disabled={status === "checking"}>
-          {status === "checking" ? "Проверяем..." : status === "no_update" ? "✅ Уже актуально" : "🔄 Проверить обновление"}
-        </button>
         <button className="btn btn-ghost" style={{ width: "100%" }} onClick={onClose}>
           Закрыть
         </button>
