@@ -24,3 +24,16 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Android / TWA release signing — секреты, никогда не коммитить
+android/*.keystore
+android/*.jks
+android/keystore-credentials.txt
+android/key.properties
+android/.gradle
+android/app/build
+android/build
+android/local.properties
+*.keystore
+*.jks
+keystore-credentials.txt

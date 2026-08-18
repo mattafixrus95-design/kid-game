@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ru.mattafixrus95.razvivashki",
+      "sha256_cert_fingerprints": [
+        "31:09:BC:45:D8:D6:58:31:1C:F9:D3:70:D9:13:D8:03:2D:26:AD:E1:D2:9A:51:D7:9F:04:FF:F5:95:FF:49:FE"
+      ]
+    }
+  }
+]
