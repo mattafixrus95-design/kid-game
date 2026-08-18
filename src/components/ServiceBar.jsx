@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { APP_VERSION } from "../version";
 import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
+import { trackFeedbackClick, trackDonateClick, trackAboutClick } from "../lib/analytics";
 
 const CLOUDTIPS_URL = "https://pay.cloudtips.ru/p/1a2f9898";
 
@@ -66,15 +67,15 @@ export default function ServiceBar({ onBack, onFeedback }) {
           <span style={iconStyle}>◀️</span>
           <span style={labelStyle}>Назад</span>
         </button>}
-        <button onClick={onFeedback} style={btnStyle}>
+        <button onClick={() => { trackFeedbackClick(); onFeedback(); }} style={btnStyle}>
           <span style={iconStyle}>✉️</span>
           <span style={labelStyle}>Написать разработчику</span>
         </button>
-        <button onClick={() => window.open(CLOUDTIPS_URL, "_blank")} style={btnStyle}>
+        <button onClick={() => { trackDonateClick(); window.open(CLOUDTIPS_URL, "_blank"); }} style={btnStyle}>
           <span style={iconStyle}>💰</span>
           <span style={labelStyle}>Поддержать</span>
         </button>
-        <button onClick={() => setAboutOpen(true)} style={btnStyle}>
+        <button onClick={() => { trackAboutClick(); setAboutOpen(true); }} style={btnStyle}>
           <span style={iconStyle}>ℹ️</span>
           <span style={labelStyle}>О приложении</span>
         </button>

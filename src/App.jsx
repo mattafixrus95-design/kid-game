@@ -23,6 +23,7 @@ import GameQuantityScreen from "./games/GameQuantityScreen";
 import GameCountingScreen from "./games/GameCountingScreen";
 import GameCompareScreen from "./games/GameCompareScreen";
 import FeedbackScreen from "./screens/FeedbackScreen";
+import { trackSkillOpen, trackMechanicStart } from "./lib/analytics";
 
 // Состояние, сохранённое перед обновлением приложения (см. VersionButton)
 const RESTORE = (() => {
@@ -108,7 +109,7 @@ export default function App() {
   // ---- НАВЫКИ ----
   if (screen === "skills") return (
     <>
-      <SkillsScreen onSelect={id => { setSkill(id); goTo("mechanics"); }} onFeedback={() => goTo("feedback")}/>
+      <SkillsScreen onSelect={id => { trackSkillOpen(id); setSkill(id); goTo("mechanics"); }} onFeedback={() => goTo("feedback")}/>
       {exitHint && (
         <div style={{
           position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
@@ -131,7 +132,8 @@ export default function App() {
         const available = Object.keys(REGISTRY).filter(k => REGISTRY[k].supportsMechanics?.includes(id));
         if (available.length === 1) {
           setRubric(available[0]);
-          goTo(id === "sort_groups" ? "game" : "subsets");
+          if (id === "sort_groups") { trackMechanicStart(id); goTo("game"); }
+          else goTo("subsets");
         } else {
           goTo("content");
         }
@@ -147,7 +149,7 @@ export default function App() {
       mechanic={mechanic}
       onSelect={id => {
         setRubric(id);
-        if (mechanic === "sort_groups") goTo("game");
+        if (mechanic === "sort_groups") { trackMechanicStart(mechanic); goTo("game"); }
         else goTo("subsets");
       }}
       onBack={goBack}
@@ -164,7 +166,7 @@ export default function App() {
     <SettingsScreen
       emoji={config.emoji} title={config.title}
       sections={config.getSettingsSections(settings, onChangeSettings)}
-      onStart={() => goTo("game")}
+      onStart={() => { trackMechanicStart(mechanic); goTo("game"); }}
       onBack={goBack}
       onFeedback={() => goTo("feedback")}
     />
