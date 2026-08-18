@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { APP_VERSION } from "../version";
+import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 
 const CLOUDTIPS_URL = "https://pay.cloudtips.ru/p/1a2f9898";
 
-function AboutModal({ onClose }) {
+function AboutModal({ onClose, onPrivacy }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
@@ -16,6 +17,9 @@ function AboutModal({ onClose }) {
         <div style={{ fontSize: "2rem", marginBottom: 8 }}>🌟</div>
         <div style={{ fontWeight: 900, fontSize: "1.2rem", marginBottom: 4 }}>Развивашки</div>
         <div style={{ color: "var(--muted)", fontSize: "0.95rem", marginBottom: 20 }}>Версия {APP_VERSION}</div>
+        <button className="btn btn-ghost" style={{ width: "100%", marginBottom: 10 }} onClick={onPrivacy}>
+          Политика конфиденциальности
+        </button>
         <button className="btn btn-ghost" style={{ width: "100%" }} onClick={onClose}>
           Закрыть
         </button>
@@ -26,6 +30,27 @@ function AboutModal({ onClose }) {
 
 export default function ServiceBar({ onBack, onFeedback }) {
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+
+  // Системная/внутренняя кнопка "Назад" во время просмотра политики
+  // должна вернуть на экран "О приложении", а не закрыть/уйти из приложения.
+  useEffect(() => {
+    function onPopState() {
+      setPrivacyOpen(open => {
+        if (!open) return open;
+        setAboutOpen(true);
+        return false;
+      });
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  function openPrivacy() {
+    setAboutOpen(false);
+    setPrivacyOpen(true);
+    window.history.pushState({ overlay: "privacy" }, "", "#privacy");
+  }
 
   return (
     <>
@@ -63,7 +88,8 @@ export default function ServiceBar({ onBack, onFeedback }) {
         v{APP_VERSION}
       </div>
 
-      {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)}/>}
+      {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} onPrivacy={openPrivacy}/>}
+      {privacyOpen && <PrivacyPolicyScreen onBack={() => window.history.back()}/>}
     </>
   );
 }

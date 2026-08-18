@@ -80,6 +80,9 @@ export default function App() {
       if (hash === "#content")   { setScreen("content");   return; }
       if (hash === "#subsets")   { setScreen("subsets");   return; }
       if (hash === "#game")      { setScreen("game");      return; }
+      // Оверлей "Политика конфиденциальности" (см. ServiceBar) сам слушает
+      // popstate и переключает себя/"О приложении" — здесь ничего не делаем.
+      if (hash === "#privacy")   { return; }
       // hash === "" — попытка выйти
       if (exitHintRef.current) return;
       exitHintRef.current = true;
