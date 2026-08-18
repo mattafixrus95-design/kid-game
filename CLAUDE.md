@@ -57,6 +57,10 @@ Skills → Mechanics → Content → Subsets → Game
 | `counting` | math | 🧮 | Счёт | ✅ активна | `counting` → GameCountingScreen |
 | `more_less` | math | ⚖️ | Больше / меньше | ✅ активна | `compare` → GameCompareScreen |
 | `numbers` | math | 🔢 | Цифры | ✅ активна | `quiz` → GameQuizScreen |
+| `letters` | speech | 🔤 | Звуки | ✅ активна | `letters` → GameLettersScreen |
+| `repeat_word` | speech | 🗣 | Повтори слово | ✅ активна | `repeat_word` → GameRepeatWordScreen |
+
+`letters`/`repeat_word` — логопедические механики (звуки/слоги и слова со звуком в разных позициях), контент `sounds`, данные в `src/data/speech.js`. Общая настройка «Какой звук тренируем» (Р, Л, Ш, Ж, С, З, Ц, Ч, Щ), экран subsets пропускается (единственный контент под эти механики).
 
 Определено в `src/lib/skills.js` → `MECHANICS{}` и `MECH_SCREEN{}`.
 
@@ -66,12 +70,13 @@ Skills → Mechanics → Content → Subsets → Game
 
 | id | Emoji | Название | Тип | Поддерживаемые механики |
 |---|---|---|---|---|
-| `animals` | 🐶 | Животные | emoji + аудио (`src/assets/sounds/*.wav`) | words, recognition, categories, who_missing, memori, sequence, odd_one, sort_groups, continue, spot_diff, find_fast, quantity, counting, more_less |
-| `vehicles` | 🚗 | Транспорт | SVG (`VehicleSVG.jsx`, пропс `color` для attributes) | words, recognition, attributes, memori, sequence, odd_one |
-| `food` | 🍎 | Еда | emoji (фрукты + овощи объединены) | words, recognition, categories, who_missing, memori, sequence, odd_one, sort_groups, continue, spot_diff, find_fast, quantity, counting, more_less |
+| `animals` | 🐶 | Животные | PNG-картинки (`src/assets/animals/`) + аудио (`src/assets/sounds/*.wav`), эмодзи-фоллбэк | words, recognition, categories, who_missing, memori, sequence, odd_one, sort_groups, continue, spot_diff, find_fast, quantity, counting, more_less |
+| `vehicles` | 🚗 | Транспорт | PNG-картинки (`src/assets/vehicles/`), SVG-фоллбэк (`VehicleSVG.jsx`, пропс `color` для attributes) | words, recognition, attributes, memori, sequence, odd_one, sort_groups |
+| `food` | 🍎 | Еда | PNG-картинки (`src/assets/fruits/`, `src/assets/vegetables/`), эмодзи-фоллбэк | words, recognition, categories, who_missing, memori, sequence, odd_one, sort_groups, continue, spot_diff, find_fast, quantity, counting, more_less |
 | `colors` | 🎨 | Цвета | CSS background (заливка кругом) | words, recognition |
-| `shapes` | 🔷 | Фигуры | SVG (`ShapeSVG.jsx`) | words, recognition, memori |
+| `shapes` | 🔷 | Фигуры | PNG-картинки (`src/assets/shapes/`), SVG-фоллбэк (`ShapeSVG.jsx`) | words, recognition, memori, categories, who_missing, sequence, odd_one, continue |
 | `numbers` | 🔢 | Цифры | текст | numbers, continue |
+| `sounds` | 🔤 | Звуки | текст (буква/слоги) + PNG-картинки в словах | letters, repeat_word |
 
 Определено в `src/games/registry.jsx` → `REGISTRY{}` с полем `supportsMechanics: string[]`.
 
@@ -140,6 +145,8 @@ Skills → Mechanics → Content → Subsets → Game
 | `GameQuantityScreen` | `quantity` | quantity |
 | `GameCountingScreen` | `counting` | counting |
 | `GameCompareScreen` | `compare` | more_less |
+| `GameLettersScreen` | `letters` | letters |
+| `GameRepeatWordScreen` | `repeat_word` | repeat_word |
 
 **Нельзя менять** `GameLearnScreen` и `GameQuizScreen` — это стабильное ядро. Для новых механик всегда создавать новый экран.
 
@@ -169,12 +176,55 @@ Skills → Mechanics → Content → Subsets → Game
 
 ## PWA / Service Worker
 
-Сборка: `npm run build` → Vite + vite-plugin-pwa.  
-Обновление: кнопка «О приложении» в ServiceBar → «Проверить обновление» → активирует новый SW и перезагружает.
+Сборка: `npm run build` → Vite + vite-plugin-pwa (`registerType: 'autoUpdate'`).
+Обновление полностью фоновое — ручной кнопки «Проверить обновление» в интерфейсе
+больше нет (убрана намеренно). Service worker сам проверяет новую версию при
+каждом открытии приложения и активирует её через `skipWaiting`/`clientsClaim`.
+
+`vite.config.js` → `workbox.globPatterns` включает `png,svg,webp,jpg,jpeg` —
+все игровые картинки из `dist/assets` попадают в precache при установке SW,
+чтобы механики не ждали сеть при первом открытии (реальные хэшированные URL,
+без ручного списка).
+
+## Аналитика — Яндекс Метрика
+
+Счётчик подключён один раз в `index.html` (id `111721456`), в React-компонентах
+`window.ym` напрямую не вызывается — только через `src/lib/analytics.js`:
+`trackEvent`, `trackSkillOpen`, `trackMechanicStart`, `trackFeedbackClick`,
+`trackDonateClick`, `trackAboutClick`. Каждое событие несёт параметр `platform`
+(`web` / `pwa` по `display-mode: standalone` / `apk_webview` по
+`window.APP_PLATFORM`, определяется централизованно внутри `analytics.js`).
+`trackMechanicStart` вызывается только в App.jsx в местах реального перехода
+к игре (не в render/useEffect игровых экранов — исключены дубли).
+
+## Политика конфиденциальности
+
+`src/screens/PrivacyPolicyScreen.jsx` — полный текст встроен в приложение,
+работает офлайн, без iframe и без внешнего URL. Открывается из модалки
+«О приложении» (`ServiceBar.jsx`) кнопкой «Политика конфиденциальности»,
+рендерится как оверлей (не отдельный `screen` в App.jsx). Кнопка «Назад»
+(и системная, и внутренняя) возвращает в «О приложении» — `ServiceBar` сам
+слушает `popstate` для этого перехода, отдельно от общей hash-навигации.
+
+## RuStore / Android (TWA)
+
+Приложение публикуется в RuStore как TWA (Trusted Web Activity) — тонкая
+нативная обёртка вокруг живого сайта, без нативного кода. Конфиг и инструкция
+по сборке — `android/twa-manifest.json`, `android/README.md`. Package name
+`ru.mattafixrus95.razvivashki` (менять нельзя после публикации). Digital Asset
+Links — `public/.well-known/assetlinks.json` (деплоится вместе с сайтом).
+
+Контентные обновления (весь обычный процесс работы в этом репозитории) не
+требуют пересборки APK — TWA открывает актуальный сайт, обновления прилетают
+через service worker всем сразу, включая пользователей RuStore. Пересборка
+APK нужна только при изменении нативной обёртки (иконка, permissions, домен,
+keystore) — это редкие релизы, не привязанные к `APP_VERSION`.
 
 ## Ветки и деплой
 
-- Основная ветка: `master` (деплой автоматический через CI)
+- Основная ветка: `master` (деплой автоматический через CI/Vercel)
 - Фича-ветки: `claude/<описание>`
-- Коммиты: на русском, формат `v3.X: краткое описание`
+- Коммиты: на русском; до релиза в RuStore — формат `vX.Y: краткое описание`
+  (нессемантическая версия), после — `X.Y.Z: краткое описание` (семантическая,
+  синхронизирована с версией APK, см. «Текущая версия» выше)
 - PR создавать с явным указанием версии в описании
