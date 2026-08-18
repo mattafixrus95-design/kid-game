@@ -9,6 +9,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'apple-touch-icon.png'],
+      workbox: {
+        // Прекэшируем все реальные (хэшированные Vite) URL картинок из dist/assets,
+        // чтобы игровые механики не ждали сеть при первом открытии
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg}'],
+      },
       manifest: {
         name: 'Развивашки',
         short_name: 'Развивашки',
