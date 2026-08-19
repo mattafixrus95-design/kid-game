@@ -1,5 +1,6 @@
 import { settingsOptStyle, checkboxDotStyle } from "../lib/styles";
 import ServiceBar from "./ServiceBar";
+import MenuHeader from "./MenuHeader";
 
 // Общий шаблон экрана настроек
 export default function SettingsScreen({ emoji, title, sections, onStart, onBack, onFeedback }) {
@@ -7,10 +8,7 @@ export default function SettingsScreen({ emoji, title, sections, onStart, onBack
   return (
     <div className="screen" style={{gap:"clamp(14px,3vw,24px)", paddingBottom: 64}}>
       <ServiceBar onBack={onBack} onFeedback={onFeedback}/>
-      <div style={{textAlign:"center"}}>
-        <div style={{fontSize:"clamp(2rem,7vw,3rem)"}}>{emoji}</div>
-        <h2 style={{fontSize:"clamp(1.5rem,6vw,2rem)",fontWeight:900,color:"var(--text)",marginTop:10}}>{title}</h2>
-      </div>
+      <MenuHeader emoji={emoji} title={title}/>
       {sections.map((sec,i)=>(
         <div key={i} style={{width:"100%",maxWidth:500}}>
           <p style={{fontWeight:700,fontSize:"clamp(0.95rem,3vw,1.2rem)",marginBottom:10,color:"var(--muted)"}}>
