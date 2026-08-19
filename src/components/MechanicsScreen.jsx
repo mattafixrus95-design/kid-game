@@ -1,6 +1,7 @@
 import { SKILLS, MECHANICS } from "../lib/skills";
 import { clamp } from "../lib/styles";
 import ServiceBar from "./ServiceBar";
+import MenuHeader from "./MenuHeader";
 
 export default function MechanicsScreen({ skill, onSelect, onBack, onFeedback }) {
   const skillDef = SKILLS.find(s => s.id === skill);
@@ -9,10 +10,7 @@ export default function MechanicsScreen({ skill, onSelect, onBack, onFeedback })
   return (
     <div className="screen" style={{ gap: clamp(14, 22), paddingBottom: 64 }}>
       <ServiceBar onBack={onBack} onFeedback={onFeedback}/>
-      <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: "clamp(2rem,7vw,3rem)" }}>{skillDef?.emoji}</div>
-        <h2 style={{ fontSize: "clamp(1.5rem,6vw,2rem)", fontWeight: 900, color: "var(--text)" }}>{skillDef?.label}</h2>
-      </div>
+      <MenuHeader emoji={skillDef?.emoji} title={skillDef?.label}/>
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(10px,2vw,14px)", width: "100%", maxWidth: 440 }}>
         {mechanics.map(m => {
           const color = skillDef?.color || "var(--primary)";

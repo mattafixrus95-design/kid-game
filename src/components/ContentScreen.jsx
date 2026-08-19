@@ -1,6 +1,7 @@
 import { REGISTRY } from "../games/registry";
 import { clamp } from "../lib/styles";
 import ServiceBar from "./ServiceBar";
+import MenuHeader from "./MenuHeader";
 
 const CONTENT_COLORS = {
   animals:"#4ECDC4",
@@ -19,9 +20,7 @@ export default function ContentScreen({ mechanic, onSelect, onBack, onFeedback }
   return (
     <div className="screen" style={{gap:clamp(16,24), paddingBottom: 64}}>
       <ServiceBar onBack={onBack} onFeedback={onFeedback}/>
-      <div style={{textAlign:"center",marginBottom:4}}>
-        <h2 style={{fontSize:"clamp(1.5rem,6vw,2rem)",fontWeight:900,color:"var(--text)"}}>Выбери тему</h2>
-      </div>
+      <MenuHeader emoji="🎨" title="Выбери тему"/>
       <div style={{display:"flex",flexDirection:"column",gap:"clamp(12px,2.5vw,18px)",width:"100%",maxWidth:440}}>
         {available.map(([id,cfg])=>{
           const color = CONTENT_COLORS[id]||"var(--primary)";
